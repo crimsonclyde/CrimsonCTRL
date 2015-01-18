@@ -1,0 +1,161 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/frameHead" >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CTRL"
+            android:id="@+id/headText"
+            android:layout_gravity="center_horizontal|bottom"
+            android:elegantTextHeight="false"
+            android:paddingBottom="40dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/headImageView"
+            android:layout_gravity="center_horizontal|top"
+            android:src="@drawable/crimson"
+            />
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Date:"
+        android:width="200dp"
+        android:id="@+id/dateTextView"
+        android:layout_below="@+id/frameHead"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Time:"
+        android:width="200dp"
+        android:id="@+id/timeTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/dateTextView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wifi signal strength:"
+        android:width="200dp"
+        android:id="@+id/wifiTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/timeTextView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temperature:"
+        android:width="200dp"
+        android:id="@+id/tempTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/wifiTextView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Photocell:"
+        android:width="200dp"
+        android:id="@+id/photoTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/tempTextView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stone Circle:"
+        android:width="200dp"
+        android:id="@+id/sclTextView"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/photoTextView"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:width="100dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:id="@+id/dataDateTextView"
+        android:layout_alignTop="@+id/dateTextView"
+        android:layout_alignEnd="@+id/frameHead" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:width="100dp"
+        android:textStyle="bold"
+        android:id="@+id/dataTimeTextView"
+        android:layout_alignTop="@+id/timeTextView"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:width="100dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:id="@+id/dataWifiTextView"
+        android:layout_above="@+id/tempTextView"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:width="100dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:id="@+id/dataTempTextView"
+        android:layout_alignTop="@+id/tempTextView"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:width="100dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:id="@+id/dataPhotoTextView"
+        android:layout_alignTop="@+id/photoTextView"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="..."
+        android:width="100dp"
+        android:textStyle="bold"
+        android:id="@+id/dataSclTextView"
+        android:layout_alignTop="@+id/sclTextView"
+        android:layout_alignParentEnd="true" />
+
+
+</RelativeLayout>

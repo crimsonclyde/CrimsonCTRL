@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.darkpack.crimsonctrl.MainActivity"
+    android:showAsAction="always">
+
+    // Refresh
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="1"
+        android:title="@string/action_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:showAsAction="ifRoom" />
+
+    // Info
+    <item
+        android:id="@+id/action_control"
+        android:orderInCategory="2"
+        android:title="@string/action_control"
+        android:showAsAction="never"/>
+
+    // Settings
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="3"
+        app:showAsAction="never" />
+
+    // Info
+    <item
+        android:id="@+id/action_info"
+        android:orderInCategory="4"
+        android:title="@string/action_info"
+        android:showAsAction="never"/>
+
+</menu>
