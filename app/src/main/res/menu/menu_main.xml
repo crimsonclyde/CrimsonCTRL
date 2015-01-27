@@ -12,11 +12,11 @@
         android:icon="@drawable/ic_action_refresh"
         android:showAsAction="ifRoom" />
 
-    // Info
+    // Cam
     <item
-        android:id="@+id/action_control"
+        android:id="@+id/action_cam"
         android:orderInCategory="2"
-        android:title="@string/action_control"
+        android:title="@string/action_cam"
         android:showAsAction="never"/>
 
     // Settings
@@ -32,5 +32,7 @@
         android:orderInCategory="4"
         android:title="@string/action_info"
         android:showAsAction="never"/>
+
+
 
 </menu>

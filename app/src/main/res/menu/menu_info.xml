@@ -8,19 +8,18 @@
         android:title="@string/action_main"
         android:showAsAction="never"/>
 
+    // Camera
+    <item
+        android:id="@+id/action_cam"
+        android:title="@string/action_cam"
+        android:orderInCategory="2"
+        android:showAsAction="never" />
+
     // Info
     <item
-        android:id="@+id/action_control"
-        android:orderInCategory="2"
-        android:title="@string/action_control"
-        android:showAsAction="never"/>
-
-
-    // Settings
-    <item
         android:id="@+id/action_settings"
-        android:title="@string/action_settings"
         android:orderInCategory="3"
-        android:showAsAction="never" />
+        android:title="@string/action_settings"
+        android:showAsAction="never"/>
 
 </menu>

@@ -10,10 +10,10 @@
         android:title="@string/action_main"
         android:showAsAction="never"/>
 
-    // Settings
+    // Camera
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:id="@+id/action_cam"
+        android:title="@string/action_cam"
         android:orderInCategory="2"
         android:showAsAction="never" />
 
