@@ -1,79 +1,134 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="net.darkpack.crimsonctrl.SettingsActivity">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/black">
+
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/scrollView"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+       <LinearLayout
+           android:layout_width="fill_parent"
+           android:layout_height="fill_parent"
+           android:orientation="vertical">
+
+           <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:id="@+id/imageViewHead"
+            android:src="@drawable/head"
+            android:scaleType="fitStart"/>
 
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/frameHead" >
-
-
-        <TextView
-            android:layout_width="wrap_content"
+        <EditText
             android:layout_height="wrap_content"
-            android:text="CTRL"
-            android:id="@+id/headText"
-            android:layout_gravity="center_horizontal|bottom"
-            android:elegantTextHeight="false"
-            android:paddingBottom="40dp"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/headImageView"
-            android:layout_gravity="center_horizontal|top"
-            android:src="@drawable/crimson"
-            />
-    </FrameLayout>
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:hint="Core ID"
+            android:id="@+id/edit_core_id"
+            android:layout_below="@+id/imageViewHead"
+            android:layout_weight="1">
+        </EditText>
 
 
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:hint="AccessToken"
+        android:id="@+id/edit_access_token"
+        android:inputType="textPassword"
+        android:layout_weight="1">
+    </EditText>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:hint="Camera URL"
+        android:id="@+id/edit_cam_url"
+        android:layout_weight="1">
+    </EditText>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:hint="ControlPIN"
+        android:id="@+id/edit_ctrl_pin"
+        android:layout_weight="1">
+    </EditText>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:hint="Function name"
+        android:id="@+id/edit_ctrl_value"
+        android:layout_weight="1">
+    </EditText>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:hint="Camera Auth User"
+        android:id="@+id/edit_cam_user"
+        android:layout_weight="1">
+    </EditText>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:hint="Camera Auth Password"
+        android:id="@+id/edit_cam_pass"
+        android:layout_weight="1">
+    </EditText>
+
+    <CheckBox
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:text="Show AccessToken"
+        android:id="@+id/checkBoxAccessToken"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:layout_width="fill_parent"
+        android:onClick="save"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_weight="1">
+    </Button>
+
+    <Button
+        android:id="@+id/button_reset"
+        android:layout_height="wrap_content"
+        android:text="Reset"
+        android:layout_width="fill_parent"
+        android:onClick="reset"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:layout_weight="1">
+    </Button>
 
 
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_margin="3dp"
-                android:layout_marginTop="6dp"
-                android:hint="Core ID"
-                android:id="@+id/edit_core_id"
-                android:layout_below="@+id/frameHead" >
-            </EditText>
-
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_margin="3dp"
-                android:hint="AccessToken"
-                android:id="@+id/edit_access_token"
-                android:layout_below="@+id/edit_core_id">
-                </EditText>
-
-
-            <Button
-                android:id="@+id/button_save"
-                android:layout_height="wrap_content"
-                android:text="Save"
-                android:layout_width="fill_parent"
-                android:layout_margin="3dp"
-                android:onClick="save"
-                android:layout_below="@+id/edit_access_token">
-             </Button>
-
-            <Button
-                android:id="@+id/button_reset"
-                android:layout_height="wrap_content"
-                android:text="Reset"
-                android:layout_width="fill_parent"
-                android:layout_margin="3dp"
-                android:onClick="reset"
-                android:layout_below="@+id/button_save">
-                </Button>
-
-
+       </LinearLayout>
+</ScrollView>
 
 </RelativeLayout>
