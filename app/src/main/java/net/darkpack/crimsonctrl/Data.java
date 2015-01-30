@@ -26,7 +26,7 @@ public class Data {
     private String time = null;
     private Integer wifi = null;
     private Integer photo = null;
-    private Integer temp = null;
+    private String temp = null;
     private Integer scl = null;
 
     public boolean isReady() {
@@ -54,10 +54,10 @@ public class Data {
     public void setWifi(Integer wifi) {this.wifi = wifi; }
 
     // Temperature
-    public Integer getTemp() {
+    public String getTemp() {
         return temp;
     }
-    public void setTemp(Integer temp) {
+    public void setTemp(String temp) {
         this.temp = temp;
     }
 
