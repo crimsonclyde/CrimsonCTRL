@@ -16,7 +16,10 @@ package net.darkpack.crimsonctrl;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
@@ -42,7 +46,9 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends Activity {
     // Set actvity name as debug tag
     public static final String TAG = HttpsClient.class.getSimpleName();
+    protected ProgressBar mProgressBar;
     Button scButton;
+
 
 
     @Override
@@ -52,7 +58,32 @@ public class MainActivity extends Activity {
 
         scButtonListener();
 
+        // Progress Bar
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        if (isNetworkAvailable()) {
 
+
+            mProgressBar.setVisibility(View.VISIBLE);
+            loadCrimsonCoreData();
+
+        } else {
+            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
+        }
+
+
+
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+        boolean isAvailable = false;
+        if (networkInfo != null && networkInfo.isConnected()) {
+            isAvailable = true;
+        }
+        return isAvailable;
     }
 
 
@@ -281,6 +312,7 @@ public class MainActivity extends Activity {
                 // Closing the stream
                 Log.d(TAG, "*******************  Stream closed, exiting     *****************************");
                 br.close();
+                mProgressBar.setVisibility(View.INVISIBLE);
             } catch (Exception e) {
                 this.exception = e;
                 return null;

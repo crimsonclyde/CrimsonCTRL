@@ -1,87 +1,119 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@android:color/black">
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".MainActivity"
+                android:background="@android:color/black">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="210dp"
+        android:id="@+id/headLayout"
+        android:focusable="false">
 
 
-    <ImageView
-        android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/head_image"
+            android:src="@drawable/head"
+            android:contentDescription="@string/head_image"
+            android:layout_alignParentStart="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/head_image"
-        android:src="@drawable/head"
-        android:layout_marginBottom="300dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:contentDescription="@string/head_image"
-        android:longClickable="true"/>
+        android:paddingTop="150dp"
+        android:id="@+id/tempLayout"
+        android:focusable="false">
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/tempButtonSelector"
+            android:background="@drawable/temp_button"
+            android:clickable="false"
+            android:layout_gravity="center"
+            android:layout_marginTop="130dp"/>
 
 
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="---"
+            android:id="@+id/textTemperature"
+            android:gravity="center"
+            android:layout_marginTop="125dp"/>
 
-    <Button
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:id="@+id/tempButtonSelector"
-        android:background="@drawable/temp_button"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="120dp"
-        android:clickable="false"/>
+        android:layout_height="fill_parent"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:id="@+id/sclLayout"
+        android:paddingTop="150dp"
+        android:layout_centerHorizontal="true">
 
-    <Button
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/scButtonSelector"
+            android:background="@drawable/sc_button"
+            android:layout_gravity="center"
+            android:layout_marginTop="130dp"/>
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="---"
+            android:id="@+id/textStoneCircle"
+            android:layout_marginTop="125dp"
+            android:gravity="center"/>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
         android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:id="@+id/scButtonSelector"
-        android:background="@drawable/sc_button"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="120dp" />
-
-
-    <Button
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:id="@+id/resButtonSelector"
-        android:background="@drawable/res_button"
+        android:layout_height="fill_parent"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="120dp" />
+        android:layout_alignParentStart="false"
+        android:id="@+id/resLayout"
+        android:paddingTop="150dp"
+        android:layout_marginLeft="12dp">
 
 
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:id="@+id/resButtonSelector"
+            android:background="@drawable/res_button"
+            android:layout_gravity="center"
+            android:layout_marginTop="130dp" />
 
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="---"
+            android:id="@+id/textResistance"
+            android:layout_marginTop="125dp"
+            android:gravity="center"/>
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="---"
-        android:id="@+id/textStoneCircle"
-        android:layout_alignTop="@+id/scButtonSelector"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="---"
-        android:id="@+id/textTemperature"
-        android:layout_alignTop="@+id/tempButtonSelector"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="40dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="---"
-        android:id="@+id/textResistance"
-        android:layout_alignTop="@+id/resButtonSelector"
-        android:layout_alignStart="@+id/resButtonSelector"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="40dp"/>
+    </RelativeLayout>
 
 </RelativeLayout>
