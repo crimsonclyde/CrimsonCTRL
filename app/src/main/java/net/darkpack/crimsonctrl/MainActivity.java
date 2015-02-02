@@ -40,6 +40,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
+import static android.view.View.INVISIBLE;
 import static net.darkpack.crimsonctrl.SettingsConnector.getEditor;
 
 
@@ -338,7 +339,7 @@ public class MainActivity extends Activity {
 
                 // Closing the stream
                 br.close();
-                mProgressBar.setVisibility(View.INVISIBLE);
+                mProgressBar.setVisibility(INVISIBLE);
                 Log.d(TAG, "**********************************************************************");
             } catch (Exception e) {
                 this.exception = e;
@@ -376,7 +377,7 @@ public class MainActivity extends Activity {
 
 
                 BufferedReader br1 = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                Data data = new Data();
+                final Data data = new Data();
 
                 while ((line = br1.readLine()) != null) {
                     if (line.contains("event")) {
@@ -487,7 +488,7 @@ public class MainActivity extends Activity {
                 con.setRequestMethod("POST");
                 con.setFixedLengthStreamingMode(param.getBytes().length);
                 con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                Log.d(TAG; "Con:       " + con);
+                Log.d(TAG, "Con:       " + con);
 
                 Log.d(TAG, "********************   Send params   ****************************");
                 // Send specified parameters to the api (registered function must be set by CrimsonCore)
