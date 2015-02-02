@@ -349,15 +349,19 @@ public class MainActivity extends Activity {
 
 
     /*
-    * Read value from spark-cloud
-    * Initiate ON/OFF function
+    *  (1)PreCheck
+    *  Read SCL value from the spark cloud to get current state
+    *
+    *  Maybe deprecated when time based storing is finally
+    *  implemented
     */
     class SclCtrl extends AsyncTask<String, Void, String> {
         private Exception exception;
         public String doInBackground(String... urls) {
 
             try {
-                Log.d(TAG, "*******************    Open Connection    *****************************");
+                Log.d(TAG, "********************************************************************");
+                Log.d(TAG, "********    1st step: Check if StoneCirle is on/off    *************");
                 URL url = new URL(urls[0]);
                 Log.d(TAG, "Received URL:  " + url);
 
@@ -388,35 +392,11 @@ public class MainActivity extends Activity {
                         //convert again
                         jObject = new JSONObject(json_data);
 
-                        //reading photocell
-                        if (jObject.has("Photocell")) {
-                            data.setPhoto(jObject.getInt("Photocell"));
-                        }
-
-                        //reading temp
-                        if (jObject.has("Temperature")) {
-                            data.setTemp(jObject.getString("Temperature"));
-                        }
-                        //reading wifi signal strength (RSSI)
-                        if (jObject.has("RSSI")) {
-                            data.setWifi(jObject.getInt("RSSI"));
-                        }
-
                         //reading StoneCircleLight (SCL)
                         if (jObject.has("SCL")) {
                             data.setSCL(jObject.getInt("SCL"));
                         }
 
-                        //reading date
-                        if (jObject.has("Day")) {
-                            //build date
-                            data.setDate(jObject.getInt("Year") + "-" + jObject.getInt("Month") + "-" + jObject.getInt("Day"));
-                        }
-                        //reading time
-                        if (jObject.has("Hours")) {
-                            //build time
-                            data.setTime(jObject.getInt("Hours") + ":" + jObject.getInt("Minutes") + ":" + jObject.getInt("Seconds"));
-                        }
                     }
                     //check if we have all needed data
                     if (data.isReady()) {
@@ -424,7 +404,6 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                final int gScl = data.getScl();                         // Needs to be converted to a string
 
 
                 // To access the findViewById we need this to runOnUiThread
@@ -433,7 +412,7 @@ public class MainActivity extends Activity {
                         final TextView updateScl   = (TextView) findViewById(R.id.textStoneCircle);
 
 
-                        if (gScl >= 1) {
+                        if (data.getScl() == 1) {
                             // Send LOW to set relay ON
                             Toast.makeText(MainActivity.this, "Switched ON", Toast.LENGTH_SHORT).show();
                             new PostClient().execute("LOW");
@@ -441,7 +420,7 @@ public class MainActivity extends Activity {
                             updateScl1.setText("ON");
 
                         }
-                        if (gScl == 0) {
+                        if (data.getScl() == 0) {
                             // Send HIGH to set relay LOW
                             Toast.makeText(MainActivity.this, "Switched OFF", Toast.LENGTH_SHORT).show();
                             new PostClient().execute("HIGH");
@@ -463,11 +442,10 @@ public class MainActivity extends Activity {
             return null; }
 
 
-
     }
 
     /*
-    * Restful Function
+    * (2) Restful Function
     *
     * POST value to the function initialized by CrimsonCore
     */
@@ -481,6 +459,7 @@ public class MainActivity extends Activity {
             try {
                 // Fetch CoreID + AccessToken from SharedPreferences and construct url and param string
                 Log.d(TAG, "********************************************************************");
+                Log.d(TAG, "***********    2st step: Send params to the Core    ****************");
                 Log.d(TAG, "**********   Retrieve value from SharedPreferences   ***************");
                 String coreid = SettingsConnector.readString(MainActivity.this, SettingsConnector.COREID, null);
                 String accesstoken = SettingsConnector.readString(MainActivity.this, SettingsConnector.ACCESSTOKEN, null);
@@ -534,6 +513,7 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
                 return null;
             }
+            Log.d(TAG, "********************************************************************");
             // Set null and we´re good to go
             return null;
         }
