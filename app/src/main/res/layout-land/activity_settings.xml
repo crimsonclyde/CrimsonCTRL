@@ -25,7 +25,6 @@
                 android:scaleType="centerCrop"
                 android:paddingBottom="50dp"/>
 
-
             <EditText
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
@@ -37,7 +36,6 @@
                 android:layout_weight="1">
             </EditText>
 
-
             <EditText
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
@@ -46,16 +44,6 @@
                 android:hint="AccessToken"
                 android:id="@+id/edit_access_token"
                 android:inputType="textPassword"
-                android:layout_weight="1">
-            </EditText>
-
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="Camera URL"
-                android:id="@+id/edit_cam_url"
                 android:layout_weight="1">
             </EditText>
 
@@ -84,6 +72,16 @@
                 android:layout_width="fill_parent"
                 android:layout_marginLeft="3dp"
                 android:layout_marginRight="3dp"
+                android:hint="Camera URL"
+                android:id="@+id/edit_cam_url"
+                android:layout_weight="1">
+            </EditText>
+
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
                 android:hint="Camera Auth User"
                 android:id="@+id/edit_cam_user"
                 android:layout_weight="1">
@@ -96,6 +94,7 @@
                 android:layout_marginRight="3dp"
                 android:hint="Camera Auth Password"
                 android:id="@+id/edit_cam_pass"
+                android:inputType="textPassword"
                 android:layout_weight="1">
             </EditText>
 
@@ -107,6 +106,16 @@
                 android:text="Show AccessToken"
                 android:id="@+id/checkBoxAccessToken"
                 android:layout_weight="1"/>
+
+            <CheckBox
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:text="Show Camera Password"
+                android:id="@+id/checkBoxCamPass"
+                android:layout_weight="1"/>
+
 
             <Button
                 android:id="@+id/button_save"
@@ -130,10 +139,6 @@
                 android:layout_weight="1">
             </Button>
 
-
         </LinearLayout>
     </ScrollView>
-
-
-
 </RelativeLayout>
