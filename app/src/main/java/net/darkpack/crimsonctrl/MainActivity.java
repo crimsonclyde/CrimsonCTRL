@@ -28,7 +28,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,14 +38,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
-
 import static android.view.View.INVISIBLE;
-import static net.darkpack.crimsonctrl.SettingsConnector.getEditor;
+
 
 
 public class MainActivity extends Activity {
-    // Set actvity name as debug tag
+    // Set Activity name as debug tag
     public static final String TAG = HttpsClient.class.getSimpleName();
+    public String mStoredTimestamp;
+    public int storedTimestamp;
+    public long currentTimestamp;
+    public int mCurrentTimestamp;
+    public static final String PREFS_NAME = "TEMP_SETTINGS";
     protected ProgressBar mProgressBar;
     Button scButton;
 
@@ -64,7 +67,30 @@ public class MainActivity extends Activity {
         if (isNetworkAvailable()) {
 
             mProgressBar.setVisibility(View.VISIBLE);
-            loadCrimsonCoreData();
+
+            // Set current timestamp (-60 seconds)
+            currentTimestamp =  System.currentTimeMillis()/1000-60;
+            mCurrentTimestamp = (int) currentTimestamp;
+
+            // Get stored timestamp
+            final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
+            mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
+            storedTimestamp = Integer.parseInt(mStoredTimestamp);
+
+
+            Log.d(TAG, "StoredTimestamp:  " + mStoredTimestamp);
+            Log.d(TAG, "CurrentTimestamp: " + mCurrentTimestamp);
+
+            if (mCurrentTimestamp <= storedTimestamp) {
+                // Do the Refresh Boogie
+                loadCrimsonCoreData();
+            } else {
+                Log.d(TAG, "Update from stored data in SharedPreferences");
+            }
+
+
+
+
         } else {
             Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
         }
@@ -199,7 +225,6 @@ public class MainActivity extends Activity {
     * and save 'em in Androids SharedPreferences
     */
     class HttpsClient extends AsyncTask<String, Void, String> {
-        public static final String PREFS_NAME = "TEMP_SETTINGS";
         public static final String mPHOTO = "PHOTO";
         public static final String mTEMP = "TEMP";
         public static final String mSCL = "SCL";
@@ -296,6 +321,12 @@ public class MainActivity extends Activity {
                 editor.putString("PHOTO", data.getPhoto().toString());
                 editor.putString("TEMP", data.getTemp());
                 editor.putString("SCL", data.getScl().toString());
+
+                // Save current timestamp
+                Long timestamp = System.currentTimeMillis()/1000;
+                editor.putString("TIMESTAMP", timestamp.toString());
+
+                // Save
                 editor.apply();
 
 
@@ -315,9 +346,13 @@ public class MainActivity extends Activity {
                         final String photo = sharedValues[0].getString("PHOTO", "");
                         final String temp = sharedValues[0].getString("TEMP", "");
                         final int scl = Integer.parseInt(sharedValues[0].getString("SCL", ""));
-                        Log.d(TAG, "photo var in shared pref: " + photo);
-                        Log.d(TAG, "temp var in shared pref: " + temp);
-                        Log.d(TAG, "scl var in shared pref: " + scl);
+                        mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
+
+
+                        Log.d(TAG, "SharedPreferences - photo:      " + photo);
+                        Log.d(TAG, "SharedPreferences - temp:       " + temp);
+                        Log.d(TAG, "SharedPreferences - scl:        " + scl);
+                        Log.d(TAG, "SharedPreferences - timestamp:  " + mStoredTimestamp);
 
 
                         // Update the TextViews
