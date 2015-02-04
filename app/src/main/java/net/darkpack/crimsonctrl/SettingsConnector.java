@@ -27,6 +27,12 @@ public class SettingsConnector {
 
     public static final String COREID = "COREID";
     public static final String ACCESSTOKEN = "ACCESSTOKEN";
+    public static final String CAMURL = "CAMURL";
+    public static final String CTRLPIN = "CTRLPIN";
+    public static final String CTRLVALUE = "CTRLVALUE";
+    public static final String CAMUSER = "CAMUSER";
+    public static final String CAMPASS = "CAMPASS";
+
 
 
     public static void writeString(Context context, String key, String value) {
