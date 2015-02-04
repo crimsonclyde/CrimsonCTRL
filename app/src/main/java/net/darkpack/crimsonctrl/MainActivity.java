@@ -40,18 +40,17 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import static android.view.View.INVISIBLE;
 
-
+/* ****************************************************************************************** */
 
 public class MainActivity extends Activity {
-    // Set Activity name as debug tag
+    // Initiate Variables and Defaults
     public static final String TAG = HttpsClient.class.getSimpleName();
-    public String mStoredTimestamp;
-    public int storedTimestamp;
-    public long currentTimestamp;
-    public int mCurrentTimestamp;
-    public static final String PREFS_NAME = "TEMP_SETTINGS";
+    protected static final String PREFS_NAME = "TEMP_SETTINGS";
+    protected final static int mRefreshTimeout = 60;
+    protected String mStoredTimestamp;
+    protected String mCurrentTimestamp;
     protected ProgressBar mProgressBar;
-    Button scButton;
+    protected Button scButton;
 
 
 
@@ -60,42 +59,19 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Assign and declare the ProgressBar
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        // Initiate the ButtonListener
         scButtonListener();
 
-        // Progress Bar
-        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        if (isNetworkAvailable()) {
+        // Calling the construct
+        theFramework();
 
-            mProgressBar.setVisibility(View.VISIBLE);
-
-            // Set current timestamp (-60 seconds)
-            currentTimestamp =  System.currentTimeMillis()/1000-60;
-            mCurrentTimestamp = (int) currentTimestamp;
-
-            // Get stored timestamp
-            final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
-            mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
-            storedTimestamp = Integer.parseInt(mStoredTimestamp);
-
-
-            Log.d(TAG, "StoredTimestamp:  " + mStoredTimestamp);
-            Log.d(TAG, "CurrentTimestamp: " + mCurrentTimestamp);
-
-            if (mCurrentTimestamp <= storedTimestamp) {
-                // Do the Refresh Boogie
-                loadCrimsonCoreData();
-            } else {
-                Log.d(TAG, "Update from stored data in SharedPreferences");
-            }
-
-
-
-
-        } else {
-            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
-        }
     }
 
+
+    /* ****************************************************************************************** */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -114,13 +90,13 @@ public class MainActivity extends Activity {
 
         // Refresh action
         case R.id.action_refresh:
-            Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_SHORT).show();
-            loadCrimsonCoreData();
+            //Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
+            theFramework();
             break;
 
         // Cam Action
         case R.id.action_cam:
-            Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();         // Could be removed, only for debugging reasons
+            //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();
 
             // Change Activity
             Intent intentCam = new Intent(MainActivity.this, MjpegActivity.class);
@@ -129,7 +105,7 @@ public class MainActivity extends Activity {
 
         // Settings action
         case R.id.action_settings:
-            Toast.makeText(this, "Starting - Settings Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
+            //Toast.makeText(this, "Starting - Settings Activity", Toast.LENGTH_SHORT).show();
 
             // Change Activity
             Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
@@ -139,7 +115,7 @@ public class MainActivity extends Activity {
         // Info Screen
         case R.id.action_info:
             // Just for debugging
-            Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_LONG).show();             // Could be removed, only for debugging reasons
+            //Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_LONG).show();
 
             // Change Activity
             Intent intentInfo = new Intent(MainActivity.this, InfoActivity.class);
@@ -154,11 +130,80 @@ public class MainActivity extends Activity {
 
     }
 
-    /*
-    * IsNetworkAvailable
-    *
-    * Check if Network is up and running
-    */
+    /* ******************************************************************************************
+     *
+     * theFramework
+     *
+     *  I am the Architect. I created CrimsonCTRL. I have been waiting for you. You have many
+     *  questions and though the process has altered your consciousness, you remain irrevocably human.
+     *  Ergo, some of this code you will understand, some of them you will not. Concurrently,
+     *  while your first question may be the most pertinent, you may or may not realize,
+     *  it is also the most irrelevant.
+     *  This function is the sum of a remainder of an unbalanced equation inherent to the programming
+     *  of CrimsonCTRL.
+     *
+     *  1. Check network coverage
+     *  2. Compare current/stored timestamp
+     *  3. Do refresh or don´t
+     */
+
+    public void theFramework() {
+        // Netowork availability check
+        if (isNetworkAvailable()) {
+
+            Log.d(TAG, "**********************************************************************");
+            Log.d(TAG, "*****        _____                                 _            ******");
+            Log.d(TAG, "*****       |   __|___ ___ _____ ___ _ _ _ ___ ___| |_          ******");
+            Log.d(TAG, "*****       |   __|  _| .'|     | -_| | | | . |  _| '_|         ******");
+            Log.d(TAG, "*****       |__|  |_| |__,|_|_|_|___|_____|___|_| |_,_|         ******");
+            Log.d(TAG, "**********************************************************************");
+            Log.d(TAG, "*********************    TimeStamp Check    **************************");
+
+            // Set current timestamp (-60 seconds)
+            mCurrentTimestamp =  String.valueOf((System.currentTimeMillis() / 1000) - mRefreshTimeout);
+            final int cTime = Integer.parseInt(mCurrentTimestamp);
+
+            // Get stored timestamp
+            final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
+            mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
+            final int sTime = Integer.parseInt(mStoredTimestamp);
+
+            // Debug
+            Log.d(TAG, "StoredTimestamp:  " + sTime);
+            Log.d(TAG, "CurrentTimestamp: " + cTime);
+
+            // Decide if update is necessary
+            if (cTime > sTime) {
+                // Values stored are too old, do the refresh boogie
+                Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
+                mProgressBar.setVisibility(View.VISIBLE);
+                loadCrimsonCoreData();
+
+            } else {
+                // Values stored are not older than 60 secs, do nothing
+                mProgressBar.setVisibility(INVISIBLE);
+                Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
+                int pastTime = sTime - cTime;
+                Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
+                updateViews();
+            }
+
+        } else {
+            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
+        }
+
+
+    }
+
+
+
+
+    /* ******************************************************************************************
+     *
+     * IsNetworkAvailable
+     *
+     * Check if Network is up and running
+     */
     private boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -172,12 +217,12 @@ public class MainActivity extends Activity {
     }
 
 
-
-    /*
-    * Create OnClickListener
-    *
-    * Create listener for the refresh function
-    */
+    /* ******************************************************************************************
+     *
+     * Create OnClickListener
+     *
+     * Create listener for the refresh function
+     */
     public void scButtonListener() {
 
         scButton = (Button) findViewById(R.id.scButtonSelector);
@@ -198,13 +243,13 @@ public class MainActivity extends Activity {
     }
 
 
-
-    /*
-    * Initiate HttpClient
-    *
-    * Retrieve CoreID & AccessToken from SharedPreferences
-    * Execute HttpClient
-    */
+    /* ******************************************************************************************
+     *
+     * Initiate HttpClient
+     *
+     * Retrieve CoreID & AccessToken from SharedPreferences
+     * Execute HttpClient
+     */
     private void loadCrimsonCoreData() {
         // Get CoreID + AccessToken from shared preferences
         String coreid = SettingsConnector.readString(this, SettingsConnector.COREID, null);
@@ -218,16 +263,15 @@ public class MainActivity extends Activity {
     }
 
 
-    /*
-    * Restful Events from Spark-Cloud
-    *
-    * GET values stored in the cloud via httpsurlconnection
-    * and save 'em in Androids SharedPreferences
-    */
+
+    /* ******************************************************************************************
+     *
+     * Restful Events from Spark-Cloud
+     *
+     * GET values stored in the cloud via httpsurlconnection
+     * and save 'em in Androids SharedPreferences
+     */
     class HttpsClient extends AsyncTask<String, Void, String> {
-        public static final String mPHOTO = "PHOTO";
-        public static final String mTEMP = "TEMP";
-        public static final String mSCL = "SCL";
         private Exception exception;
 
 
@@ -330,45 +374,8 @@ public class MainActivity extends Activity {
                 editor.apply();
 
 
-                // To access the findViewById we need this to runOnUiThread
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Log.d(TAG, "*******************    Run UI Thread     *****************************");
-                        // Assign & declare TextViews
-                        final TextView updateTemp = (TextView) findViewById(R.id.textTemperature);
-                        final TextView updatePhoto = (TextView) findViewById(R.id.textResistance);
-                        final TextView updateScl = (TextView) findViewById(R.id.textStoneCircle);
-
-
-                        // Retrieve data from shared preferences
-                        Log.d(TAG, "************    Retrieve data from Shared Preferences     ************");
-                        sharedValues[0] = MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-                        final String photo = sharedValues[0].getString("PHOTO", "");
-                        final String temp = sharedValues[0].getString("TEMP", "");
-                        final int scl = Integer.parseInt(sharedValues[0].getString("SCL", ""));
-                        mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
-
-
-                        Log.d(TAG, "SharedPreferences - photo:      " + photo);
-                        Log.d(TAG, "SharedPreferences - temp:       " + temp);
-                        Log.d(TAG, "SharedPreferences - scl:        " + scl);
-                        Log.d(TAG, "SharedPreferences - timestamp:  " + mStoredTimestamp);
-
-
-                        // Update the TextViews
-                        Log.d(TAG, "*****************    Update TextView       ***************************");
-                        if      (temp != null)  { updateTemp.setText(temp); }
-                        else                    { updateTemp.setText("ERROR"); }
-
-                        if      (photo != null) { updatePhoto.setText(photo); }
-                        else                    { updatePhoto.setText("ERROR"); }
-
-                        if      (scl == 1)  { updateScl.setText("Off"); }
-                        else if (scl == 0)  { updateScl.setText("On");  }
-                        else                { updateScl.setText("ERROR"); }
-                    }
-
-                });
+                // Update
+                updateViews();
 
                 Log.d(TAG, "****************  Closing stream, exiting     ************************");
 
@@ -383,7 +390,54 @@ public class MainActivity extends Activity {
             return null; }
     }
 
+    /* ******************************************************************************************
+     *
+     * Update TextViews
+     */
 
+    public void updateViews() {
+        // To access the findViewById we need this to runOnUiThread
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.d(TAG, "*******************    Run UI Thread     *****************************");
+                // Assign & declare TextViews
+                final TextView updateTemp = (TextView) findViewById(R.id.textTemperature);
+                final TextView updatePhoto = (TextView) findViewById(R.id.textResistance);
+                final TextView updateScl = (TextView) findViewById(R.id.textStoneCircle);
+
+
+                // Retrieve data from shared preferences
+                Log.d(TAG, "************    Retrieve data from Shared Preferences     ************");
+                final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
+                final String photo = sharedValues[0].getString("PHOTO", "");
+                final String temp = sharedValues[0].getString("TEMP", "");
+                final int scl = Integer.parseInt(sharedValues[0].getString("SCL", ""));
+                mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
+
+
+                Log.d(TAG, "SharedPreferences - photo:      " + photo);
+                Log.d(TAG, "SharedPreferences - temp:       " + temp);
+                Log.d(TAG, "SharedPreferences - scl:        " + scl);
+                Log.d(TAG, "SharedPreferences - timestamp:  " + mStoredTimestamp);
+
+
+                // Update the TextViews
+                Log.d(TAG, "*****************    Update TextView       ***************************");
+                if      (temp != null)  { updateTemp.setText(temp); }
+                else                    { updateTemp.setText("ERROR"); }
+
+                if      (photo != null) { updatePhoto.setText(photo); }
+                else                    { updatePhoto.setText("ERROR"); }
+
+                if      (scl == 1)  { updateScl.setText("Off"); }
+                else if (scl == 0)  { updateScl.setText("On");  }
+                else                { updateScl.setText("ERROR"); }
+            }
+
+        });
+    }
+
+    /* ****************************************************************************************** */
     /*
     *  (1)PreCheck
     *  Read SCL value from the spark cloud to get current state
@@ -480,6 +534,8 @@ public class MainActivity extends Activity {
 
     }
 
+
+    /* ****************************************************************************************** */
     /*
     * (2) Restful Function
     *
