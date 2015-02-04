@@ -7,13 +7,12 @@ package net.darkpack.crimsonctrl;
  * \     \____|  | \/  |  | |  \\___ (  <_> )   |  \
  *  \______  /|__|  |__|__|_|  /____  >____/|___|  /
  *         \/                \/     \/           \/
+ *
  * Project: CrimsonCTRL
- * File: InfoActivity.java
+*
  *
  * Author : CrimsonClyde
- * E-Mail : clyde_at_darkpack.net
- * Thx    : 4nt1g, Seelenfaenger, Bonnie
- * Use at your own risk! Keep Mordor tidy
+ * E-Mail : clyde_AT_darkpack.net
  */
 
 import android.app.Activity;
@@ -62,12 +61,12 @@ public class InfoActivity extends Activity {
                 startActivity(intentMain);
                 break;
 
-            // SCL Control
-            case R.id.action_control:
-                Toast.makeText(this, "Starting - Control Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
+            // Camera Activity
+            case R.id.action_cam:
+                Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
 
                 // Change Activity
-                Intent intentControl = new Intent(InfoActivity.this, ControlActivity.class);
+                Intent intentControl = new Intent(InfoActivity.this, MjpegActivity.class);
                 startActivity(intentControl);
                 break;
 
