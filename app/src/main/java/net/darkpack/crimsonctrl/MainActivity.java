@@ -38,7 +38,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
-import static android.view.View.INVISIBLE;
+
 
 /* ****************************************************************************************** */
 
@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
     public static final String TAG = HttpsClient.class.getSimpleName();
     protected static final String PREFS_NAME = "TEMP_SETTINGS";
     protected final static int mRefreshTimeout = 60;
-    protected String mStoredTimestamp;
+    protected String mStoredTimestamp = "0";
     protected String mCurrentTimestamp;
     protected ProgressBar mProgressBar;
     protected Button scButton;
@@ -166,6 +166,10 @@ public class MainActivity extends Activity {
             // Get stored timestamp
             final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
             mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
+            // Initial bugfix for the first run
+            if ( mStoredTimestamp == "") {
+                mStoredTimestamp = "0";
+            }
             final int sTime = Integer.parseInt(mStoredTimestamp);
 
             // Debug
@@ -178,10 +182,11 @@ public class MainActivity extends Activity {
                 Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
                 mProgressBar.setVisibility(View.VISIBLE);
                 loadCrimsonCoreData();
+                updateViews();
 
             } else {
                 // Values stored are not older than 60 secs, do nothing
-                mProgressBar.setVisibility(INVISIBLE);
+                mProgressBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
                 int pastTime = sTime - cTime;
                 Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
@@ -356,8 +361,7 @@ public class MainActivity extends Activity {
 
 
 
-                // Let´s put the results into the shared preferences
-                // TODO: Time+Date query if stored data <1Minute use data from shared preferences
+                // Store results in SharedPreferences
                 Log.d(TAG, "***********    Store Data in Shared Preferences     ******************");
                 final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
                 SharedPreferences.Editor editor = sharedValues[0].edit();
@@ -373,15 +377,12 @@ public class MainActivity extends Activity {
                 // Save
                 editor.apply();
 
-
-                // Update
-                updateViews();
-
                 Log.d(TAG, "****************  Closing stream, exiting     ************************");
+
 
                 // Closing the stream
                 br.close();
-                mProgressBar.setVisibility(INVISIBLE);
+
                 Log.d(TAG, "**********************************************************************");
             } catch (Exception e) {
                 this.exception = e;
@@ -597,7 +598,7 @@ public class MainActivity extends Activity {
                 } else {
                     in = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     Log.d(TAG, "POST request send successful: " + in);
-                };
+                }
 
 
             } catch (Exception e) {
