@@ -45,9 +45,9 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends Activity {
     // Initiate Variables and Defaults
     public static final String TAG = HttpsClient.class.getSimpleName();
-    protected static final String PREFS_NAME = "TEMP_SETTINGS";
+    protected static final String PREF_NAME = "CTRL_SETTINGS";
     protected final static int mRefreshTimeout = 60;
-    protected String mStoredTimestamp = "0";
+    protected String mStoredTimestamp;
     protected String mCurrentTimestamp;
     protected ProgressBar mProgressBar;
     protected Button scButton;
@@ -164,40 +164,60 @@ public class MainActivity extends Activity {
             final int cTime = Integer.parseInt(mCurrentTimestamp);
 
             // Get stored timestamp
-            final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
-            mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
-            // Initial bugfix for the first run
-            if ( mStoredTimestamp == "") {
-                mStoredTimestamp = "0";
+            mStoredTimestamp   = SettingsConnector.readString(this, SettingsConnector.TIMESTAMP, null);
+            String coreid      = SettingsConnector.readString(this, SettingsConnector.COREID, null);
+            String accesstoken = SettingsConnector.readString(this, SettingsConnector.ACCESSTOKEN, null);
+            String scl         = SettingsConnector.readString(this, SettingsConnector.SCL, null);
+
+             // Initial bugfix for the first run
+            if ( mStoredTimestamp == null) { mStoredTimestamp = "468545003"; }
+
+            Log.d(TAG, "mStoredTimestamp:  " + mStoredTimestamp);
+            Log.d(TAG, "coreid:            " + coreid);
+            Log.d(TAG, "accesstoken:       " + accesstoken);
+            Log.d(TAG, "scl:               " + scl);
+
+
+            if (accesstoken == null || coreid == null) {
+                Log.d(TAG, "CoreID/AccessToken is empty - starting SettingsActivity: " + coreid + accesstoken );
+                Intent initSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(initSettings);
+            } else if (scl == null) {
+                // When their is no spoon, we set a spoon
+                Log.d(TAG, "SCL empty");
+                // Set initial default value (1=off)
+                SettingsConnector.writeString(this, SettingsConnector.SCL, "1");
+                Log.d(TAG, "SCL applied, restart activity");
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            } else {
+                final int sTime = Integer.parseInt(mStoredTimestamp);
+
+                // Debug
+                Log.d(TAG, "StoredTimestamp:  " + sTime);
+                Log.d(TAG, "CurrentTimestamp: " + cTime);
+
+                // Decide if update is necessary
+                if (cTime > sTime) {
+                    // Values stored are too old, do the refresh boogie
+                    Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    loadCrimsonCoreData();
+
+                } else {
+                    // Values stored are not older than 60 secs, do nothing
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
+                    int pastTime = sTime - cTime;
+                    Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
+                    updateViews();
+                }
             }
-            final int sTime = Integer.parseInt(mStoredTimestamp);
-
-            // Debug
-            Log.d(TAG, "StoredTimestamp:  " + sTime);
-            Log.d(TAG, "CurrentTimestamp: " + cTime);
-
-            // Decide if update is necessary
-            if (cTime > sTime) {
-                // Values stored are too old, do the refresh boogie
-                Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
-                mProgressBar.setVisibility(View.VISIBLE);
-                loadCrimsonCoreData();
-                updateViews();
 
             } else {
-                // Values stored are not older than 60 secs, do nothing
-                mProgressBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
-                int pastTime = sTime - cTime;
-                Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
-                updateViews();
-            }
-
-        } else {
-            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
         }
-
-
     }
 
 
@@ -351,7 +371,7 @@ public class MainActivity extends Activity {
 
                 // Now we create finalized containers for further usage
                 Log.d(TAG, "**********************************************************************");
-                Log.d(TAG, "*********************    Data received    ****************************");
+                Log.d(TAG, "***********    Store Data in Shared Preferences     ******************");
                 Log.d(TAG, "gDate:   " + data.getDate());
                 Log.d(TAG, "gTime:   " + data.getTime());
                 Log.d(TAG, "gWifi:   " + data.getWifi().toString());
@@ -360,29 +380,22 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "gScl:    " + data.getScl().toString());
 
 
-
-                // Store results in SharedPreferences
-                Log.d(TAG, "***********    Store Data in Shared Preferences     ******************");
-                final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
-                SharedPreferences.Editor editor = sharedValues[0].edit();
-                editor.clear();
-                editor.putString("PHOTO", data.getPhoto().toString());
-                editor.putString("TEMP", data.getTemp());
-                editor.putString("SCL", data.getScl().toString());
+                SettingsConnector.writeString(MainActivity.this, SettingsConnector.PHOTO, data.getPhoto().toString());
+                SettingsConnector.writeString(MainActivity.this, SettingsConnector.TEMP, data.getTemp());
+                SettingsConnector.writeString(MainActivity.this, SettingsConnector.SCL, data.getScl().toString());
 
                 // Save current timestamp
                 Long timestamp = System.currentTimeMillis()/1000;
-                editor.putString("TIMESTAMP", timestamp.toString());
+                SettingsConnector.writeString(MainActivity.this, SettingsConnector.TIMESTAMP, timestamp.toString());
 
-                // Save
-                editor.apply();
+                Log.d(TAG, "Data stored in SharedPreferences");
 
                 Log.d(TAG, "****************  Closing stream, exiting     ************************");
 
 
                 // Closing the stream
                 br.close();
-
+                updateViews();
                 Log.d(TAG, "**********************************************************************");
             } catch (Exception e) {
                 this.exception = e;
@@ -409,11 +422,10 @@ public class MainActivity extends Activity {
 
                 // Retrieve data from shared preferences
                 Log.d(TAG, "************    Retrieve data from Shared Preferences     ************");
-                final SharedPreferences[] sharedValues = {MainActivity.this.getSharedPreferences(PREFS_NAME, MODE_PRIVATE)};
-                final String photo = sharedValues[0].getString("PHOTO", "");
-                final String temp = sharedValues[0].getString("TEMP", "");
-                final int scl = Integer.parseInt(sharedValues[0].getString("SCL", ""));
-                mStoredTimestamp = sharedValues[0].getString("TIMESTAMP", "");
+                String photo     = SettingsConnector.readString(MainActivity.this, SettingsConnector.PHOTO, null);
+                String temp      = SettingsConnector.readString(MainActivity.this, SettingsConnector.TEMP, null);
+                String scl       = SettingsConnector.readString(MainActivity.this, SettingsConnector.SCL, null);
+                mStoredTimestamp = SettingsConnector.readString(MainActivity.this, SettingsConnector.TIMESTAMP, null);
 
 
                 Log.d(TAG, "SharedPreferences - photo:      " + photo);
@@ -430,9 +442,18 @@ public class MainActivity extends Activity {
                 if      (photo != null) { updatePhoto.setText(photo); }
                 else                    { updatePhoto.setText("ERROR"); }
 
-                if      (scl == 1)  { updateScl.setText("Off"); }
-                else if (scl == 0)  { updateScl.setText("On");  }
-                else                { updateScl.setText("ERROR"); }
+                switch (scl) {
+                    case "1":
+                        updateScl.setText("Off");
+                        break;
+                    case "0":
+                        updateScl.setText("On");
+                        break;
+                    default:
+                        updateScl.setText("ERROR");
+                }
+
+                mProgressBar.setVisibility(View.INVISIBLE);
             }
 
         });
