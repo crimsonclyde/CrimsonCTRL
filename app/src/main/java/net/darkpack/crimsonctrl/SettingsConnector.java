@@ -8,12 +8,9 @@ package net.darkpack.crimsonctrl;
  *  \______  /|__|  |__|__|_|  /____  >____/|___|  /
  *         \/                \/     \/           \/
  * Project: CrimsonCTRL
- * File: SettingsConnector.java
  *
  * Author : CrimsonClyde
  * E-Mail : clyde_at_darkpack.net
- * Thx    : 4nt1g, Seelenfaenger, Bonnie
- * Use at your own risk! Keep Mordor tidy
  */
 
 import android.content.Context;
@@ -32,6 +29,10 @@ public class SettingsConnector {
     public static final String CTRLVALUE = "CTRLVALUE";
     public static final String CAMUSER = "CAMUSER";
     public static final String CAMPASS = "CAMPASS";
+    public static final String TIMESTAMP = "TIMESTAMP";
+    public static final String SCL = "SCL";
+    public static final String PHOTO = "PHOTO";
+    public static final String TEMP = "TEMP";
 
 
 
