@@ -10,9 +10,8 @@ package net.darkpack.crimsonctrl;
  *
  * Project: CrimsonCTRL
  *
- *
  * Author : CrimsonClyde
- * E-Mail : clyde_AT_darkpack.net
+ * E-Mail : clyde at darkpack.net
  */
 
 import android.app.Activity;
@@ -157,7 +156,7 @@ public class MainActivity extends Activity {
             Log.d(TAG, "*****       |   __|  _| .'|     | -_| | | | . |  _| '_|         ******");
             Log.d(TAG, "*****       |__|  |_| |__,|_|_|_|___|_____|___|_| |_,_|         ******");
             Log.d(TAG, "**********************************************************************");
-            Log.d(TAG, "*********************    TimeStamp Check    **************************");
+            Log.d(TAG, "*****************    Summoning the Construct    **********************");
 
             // Set current timestamp (-60 seconds)
             mCurrentTimestamp =  String.valueOf((System.currentTimeMillis() / 1000) - mRefreshTimeout);
@@ -169,51 +168,52 @@ public class MainActivity extends Activity {
             String accesstoken = SettingsConnector.readString(this, SettingsConnector.ACCESSTOKEN, null);
             String scl         = SettingsConnector.readString(this, SettingsConnector.SCL, null);
 
-             // Initial bugfix for the first run
+             // First run fix: If mStoredTime is empty set it to 05.11.1984 23:23:23
             if ( mStoredTimestamp == null) { mStoredTimestamp = "468545003"; }
 
-            Log.d(TAG, "mStoredTimestamp:  " + mStoredTimestamp);
-            Log.d(TAG, "coreid:            " + coreid);
-            Log.d(TAG, "accesstoken:       " + accesstoken);
-            Log.d(TAG, "scl:               " + scl);
+                Log.d(TAG, "mStoredTimestamp:  " + mStoredTimestamp);
+                Log.d(TAG, "coreid:            " + coreid);
+                Log.d(TAG, "accesstoken:       " + accesstoken);
+                Log.d(TAG, "scl:               " + scl);
 
-
-            if (accesstoken == null || coreid == null) {
-                Log.d(TAG, "CoreID/AccessToken is empty - starting SettingsActivity: " + coreid + accesstoken );
-                Intent initSettings = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(initSettings);
-            } else if (scl == null) {
-                // When their is no spoon, we set a spoon
-                Log.d(TAG, "SCL empty");
-                // Set initial default value (1=off)
-                SettingsConnector.writeString(this, SettingsConnector.SCL, "1");
-                Log.d(TAG, "SCL applied, restart activity");
-                Intent intent = getIntent();
-                finish();
-                startActivity(intent);
-            } else {
-                final int sTime = Integer.parseInt(mStoredTimestamp);
-
-                // Debug
-                Log.d(TAG, "StoredTimestamp:  " + sTime);
-                Log.d(TAG, "CurrentTimestamp: " + cTime);
-
-                // Decide if update is necessary
-                if (cTime > sTime) {
-                    // Values stored are too old, do the refresh boogie
-                    Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    loadCrimsonCoreData();
-
+                if (accesstoken == null || coreid == null) {
+                    Log.d(TAG, "CoreID or AccessToken not set, starting SettingsActivity");
+                    Log.d(TAG, "CoreID:       " + coreid );
+                    Log.d(TAG, "AccessToken:  " + accesstoken);
+                    Intent initSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(initSettings);
+                } else if (scl == null) {
+                    // SCL Value is empty, write /default 1 (off)
+                    Log.d(TAG, "SCL value not set!");
+                    // Set initial default value (1=off)
+                    SettingsConnector.writeString(this, SettingsConnector.SCL, "1");
+                    // Restart MainActivity
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
                 } else {
-                    // Values stored are not older than 60 secs, do nothing
-                    mProgressBar.setVisibility(View.VISIBLE);
-                    Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
-                    int pastTime = sTime - cTime;
-                    Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
-                    updateViews();
+                    final int sTime = Integer.parseInt(mStoredTimestamp);
+
+                    // Debug
+                    Log.d(TAG, "StoredTimestamp:  " + sTime);
+                    Log.d(TAG, "CurrentTimestamp: " + cTime);
+
+                    // Decide if update is necessary
+                    if (cTime > sTime) {
+                        // Values stored are too old, do the refresh boogie
+                        Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        loadCrimsonCoreData();
+
+                    } else {
+                        // Values stored are not older than 60 secs, do nothing
+                        mProgressBar.setVisibility(View.VISIBLE);
+                        Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
+                        int pastTime = sTime - cTime;
+                        Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
+                        updateViews();
+                    }
                 }
-            }
 
             } else {
                 Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
