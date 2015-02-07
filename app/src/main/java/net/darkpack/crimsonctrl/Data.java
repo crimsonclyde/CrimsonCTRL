@@ -33,7 +33,7 @@ public class Data {
         return (date != null && time != null && photo != null && temp != null && wifi != null);
     }
 
-    // Data
+    // Date
     public String getDate() {
         return date;
     }
