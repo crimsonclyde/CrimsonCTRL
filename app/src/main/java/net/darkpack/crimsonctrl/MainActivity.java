@@ -44,7 +44,6 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends Activity {
     // Initiate Variables and Defaults
     public static final String TAG = HttpsClient.class.getSimpleName();
-    protected static final String PREF_NAME = "CTRL_SETTINGS";
     protected final static int mRefreshTimeout = 60;
     protected String mStoredTimestamp;
     protected String mCurrentTimestamp;
@@ -61,7 +60,7 @@ public class MainActivity extends Activity {
         // Assign and declare the ProgressBar
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        // Initiate the ButtonListener
+        // Initiate the ButtonListener (LongClick)
         scButtonListener();
 
         // Calling the construct
@@ -256,10 +255,11 @@ public class MainActivity extends Activity {
             @Override
             public boolean onLongClick(View v) {
                 // Get CoreID + AccessToken from shared preferences
-                String coreid = SettingsConnector.readString(MainActivity.this, SettingsConnector.COREID, null);
+                String coreid      = SettingsConnector.readString(MainActivity.this, SettingsConnector.COREID, null);
                 String accesstoken = SettingsConnector.readString(MainActivity.this, SettingsConnector.ACCESSTOKEN, null);
-                // Execute
-                new SclCtrl().execute("https://api.spark.io/v1/devices/"+coreid+"/events/?access_token="+accesstoken);
+
+                // Execute TODO: Remove hardcoded function name
+                new SclCtrl().execute("https://api.spark.io/v1/devices/"+coreid+"/events/pMisc/?access_token="+accesstoken);
 
                 return false;
             }
@@ -306,9 +306,9 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "**********************************************************************");
                 Log.d(TAG, "******************    HttpsUrlConnection    **************************");
                 URL url = new URL(urls[0]);
-                Log.d(TAG, "Received URL:  " + url);
+                Log.d(TAG, "Received URL:    " + url);
                 HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-                Log.d(TAG, "Con Status: " + con);
+                Log.d(TAG, "Con Status:      " + con);
                 InputStream in = con.getInputStream();
                 Log.d(TAG, "GetInputStream:  " + in);
 
@@ -471,90 +471,51 @@ public class MainActivity extends Activity {
         private Exception exception;
         public String doInBackground(String... urls) {
 
-            try {
-                Log.d(TAG, "********************************************************************");
-                Log.d(TAG, "********    1st step: Check if StoneCirle is on/off    *************");
-                URL url = new URL(urls[0]);
-                Log.d(TAG, "Received URL:  " + url);
+            Log.d(TAG, "********************************************************************");
+            Log.d(TAG, "***************    1st step: Reload data        ********************");
 
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
-                Log.d(TAG, "Con Status: " + con);
+            // To access the findViewById we need this to runOnUiThread
+            runOnUiThread(new Runnable() {
+                public void run() {
+                    mProgressBar.setVisibility(View.VISIBLE);
 
-                InputStream in = con.getInputStream();
-                Log.d(TAG, "GetInputStream:  " + in);
+                    // reload
+                    loadCrimsonCoreData();
 
-                Log.d(TAG, "*******************    String Builder     *****************************");
-                String line = null;
-
-
-                BufferedReader br1 = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                final Data data = new Data();
-
-                while ((line = br1.readLine()) != null) {
-                    if (line.contains("event")) {
-                        //do nothing since the event tag is of no interest
-                        Log.d(TAG, "Loop: no needed content detected, try once again...");
-                        Log.d(TAG, line + "");
-                        continue;
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    if (line.contains("data: ")) {
-                        //convert to JSON (stripping the beginning "data: "
-                        JSONObject jObject = new JSONObject(line.substring(6));
-                        String json_data = (String) jObject.get("data");
-                        //convert again
-                        jObject = new JSONObject(json_data);
 
-                        //reading StoneCircleLight (SCL)
-                        if (jObject.has("SCL")) {
-                            data.setSCL(jObject.getInt("SCL"));
-                        }
 
+                    // Fetch value from SharedPreferences
+                    String scl       = SettingsConnector.readString(MainActivity.this, SettingsConnector.SCL, null);
+                    Log.d(TAG, "Current SCL value: " + scl);
+
+
+                    if (scl.equals("1")) {
+                        // Send LOW to set relay ON
+                        Toast.makeText(MainActivity.this, "Switched ON", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Set pin to low");
+                        new PostClient().execute("LOW");
+                    } else if (scl.equals("0")) {
+                        // Send HIGH to set relay LOW
+                        Toast.makeText(MainActivity.this, "Switched OFF", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "Set pin to high");
+                        new PostClient().execute("HIGH");
                     }
-                    //check if we have all needed data
-                    if (data.isReady()) {
-                        break;
-                    }
+
                 }
+            });
 
 
 
-                // To access the findViewById we need this to runOnUiThread
-                runOnUiThread(new Runnable(){
-                    public void run() {
-                        final TextView updateScl   = (TextView) findViewById(R.id.textStoneCircle);
-
-
-                        if (data.getScl() == 1) {
-                            // Send LOW to set relay ON
-                            Toast.makeText(MainActivity.this, "Switched ON", Toast.LENGTH_SHORT).show();
-                            new PostClient().execute("LOW");
-                            final TextView updateScl1   = (TextView) findViewById(R.id.textStoneCircle);
-                            updateScl1.setText("ON");
-
-                        }
-                        if (data.getScl() == 0) {
-                            // Send HIGH to set relay LOW
-                            Toast.makeText(MainActivity.this, "Switched OFF", Toast.LENGTH_SHORT).show();
-                            new PostClient().execute("HIGH");
-                            final TextView updateScl2   = (TextView) findViewById(R.id.textStoneCircle);
-                            updateScl2.setText("OFF");
-
-
-                        }
-                    }
-
-                });
-                // Closing the stream
-                Log.d(TAG, "*******************  Stream closed, exiting     *****************************");
-                br1.close();
-            } catch (Exception e) {
-                this.exception = e;
-                return null;
-            }
-            return null; }
-
-
+        return null;
+        }
     }
+
+
 
 
     /* ****************************************************************************************** */
@@ -567,7 +528,7 @@ public class MainActivity extends Activity {
         public String doInBackground(String... IO) {
 
             // Predefine variables
-            String io = new String(IO[0]);
+            final String io = new String(IO[0]);
             URL url;
 
             try {
@@ -615,10 +576,30 @@ public class MainActivity extends Activity {
                 BufferedReader in = null;
                 if (con.getResponseCode() != 200) {
                     in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-                    Log.d(TAG, "!=200: " + in);
+                    Log.d(TAG, "Post request failed (Statuscode != 200): " + in);
                 } else {
                     in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    Log.d(TAG, "POST request send successful: " + in);
+                    Log.d(TAG, "POST request send successful:            " + in);
+
+                    // Update TextViews
+                    runOnUiThread(new Runnable() {
+                        public void run () {
+
+                            // Declare & Assign the TextView
+                            final TextView updateScl = (TextView) findViewById(R.id.textStoneCircle);
+
+                            if (io.equals("HIGH")) {
+                                // High = OFF
+                                Log.d(TAG, "Update TextView to OFF.");
+                                updateScl.setText("OFF");
+                            } else if (io.equals("LOW")) {
+                                // LOW = ON
+                                updateScl.setText("ON");
+                                Log.d(TAG, "Update TextView to ON.");
+                            }
+
+                        }
+                    });
                 }
 
 
@@ -627,7 +608,7 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
                 return null;
             }
-            Log.d(TAG, "********************************************************************");
+            Log.d(TAG, "*****************************EOF************************************");
             // Set null and we´re good to go
             return null;
         }
