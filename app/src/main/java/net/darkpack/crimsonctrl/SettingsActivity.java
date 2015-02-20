@@ -24,10 +24,14 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 
 public class SettingsActivity extends Activity {
@@ -39,6 +43,22 @@ public class SettingsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         init();
+
+
+        Button btn = (Button) findViewById(R.id.scan_qrcode);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IntentIntegrator integrator = new IntentIntegrator(SettingsActivity.this);
+                integrator.addExtra("SCAN_WIDTH", 640);
+                integrator.addExtra("SCAN_HEIGHT", 480);
+                integrator.addExtra("SCAN_MODE", "QR_CODE_MODE");
+                //customize the prompt message before scanning
+                integrator.addExtra("PROMPT_MESSAGE", "Scanner Start!");
+                integrator.initiateScan(IntentIntegrator.QR_CODE_TYPES);
+            }
+        });
+
 
         mCheckBoxAccessToken = (CheckBox) findViewById(R.id.checkBoxAccessToken);
         mCheckBoxCamPass = (CheckBox) findViewById(R.id.checkBoxCamPass);
@@ -76,6 +96,91 @@ public class SettingsActivity extends Activity {
 
 
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (result != null) {
+            final String contents = result.getContents();
+            if (contents != null) {
+                Toast.makeText(this, "Scan successfull", Toast.LENGTH_SHORT).show();
+                System.out.println("Result:            " + result);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // First split the scan result
+                        String[] seperateScanResult = contents.split("\\r?\\n");
+
+                        // Second, some debug info
+                        for ( String c : seperateScanResult )
+                            System.out.println(c);
+
+                        System.out.println("SeperateScanResult Length:  " + seperateScanResult.length);
+                        System.out.println("CoreID 1:                   " + seperateScanResult[0]);
+                        System.out.println("Cam Password 7:             " + seperateScanResult[6]);
+                        // Third split the array into value & content
+
+                        // 0 CoreID
+                        if ( seperateScanResult[0].contains("CoreId") ) {
+                            String coreSplit[] = seperateScanResult[0].split("::");
+                            System.out.println("Update CoreID:       " + coreSplit[1]);
+                            coreid.setText(coreSplit[1]);
+                        }
+                        // 1 AccessToken
+                        if ( seperateScanResult[1].contains("AccessToken") ) {
+                            String accesstokenSplit[] = seperateScanResult[1].split("::");
+                            System.out.println("Update AccessToken:  " + accesstokenSplit[1]);
+                            accesstoken.setText(accesstokenSplit[1]);
+                        }
+
+                        // 2 ControlPin
+                        if ( seperateScanResult[2].contains("ControlPin") ) {
+                            String controlpinSplit[] = seperateScanResult[2].split("::");
+                            System.out.println("Update ControlPin:   " + controlpinSplit[1]);
+                            ctrlpin.setText(controlpinSplit[1]);
+                        }
+
+                        // 3 Function Name
+                        if ( seperateScanResult[3].contains("FunctionName") ) {
+                            String functionnameSplit[] = seperateScanResult[3].split("::");
+                            System.out.println("Update FunctionName: " + functionnameSplit[1]);
+                            ctrlvalue.setText(functionnameSplit[1]);
+                        }
+
+                        // 4 Camera URL
+                        if ( seperateScanResult[4].contains("CamURL") ) {
+                            String camurlSplit[] = seperateScanResult[4].split("::");
+                            System.out.println("Update CamURL:      " + camurlSplit[1]);
+                            camurl.setText(camurlSplit[1]);
+                        }
+
+                        // 5 Camera Auth User
+                        if ( seperateScanResult[5].contains("CamUser") ) {
+                            String camusrSplit[] = seperateScanResult[5].split("::");
+                            System.out.println("Update CamPass:    " + camusrSplit[1]);
+                            mCamUser.setText(camusrSplit[1]);
+                        }
+
+                        // 6 Camera Password
+                        if ( seperateScanResult[6].contains("CamPassword") ) {
+                            String accesstokenSplit[] = seperateScanResult[6].split("::");
+                            System.out.println(accesstokenSplit[1]);
+                            mCamPass.setText(accesstokenSplit[1]);
+                        }
+
+                    }
+                });
+
+
+
+            } else {
+                Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
     private void init() {
         coreid = (EditText) findViewById(R.id.edit_core_id);

@@ -137,6 +137,16 @@
                 android:layout_weight="1">
             </Button>
 
+           <Button
+               android:id="@+id/scan_qrcode"
+               android:layout_height="wrap_content"
+               android:text="Scan QR Code"
+               android:layout_width="fill_parent"
+               android:layout_marginLeft="3dp"
+               android:layout_marginRight="3dp"
+               android:layout_weight="1">
+           </Button>
+
        </LinearLayout>
     </ScrollView>
 </RelativeLayout>
