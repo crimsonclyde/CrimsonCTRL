@@ -7,36 +7,34 @@ package net.darkpack.crimsonctrl;
  * \     \____|  | \/  |  | |  \\___ (  <_> )   |  \
  *  \______  /|__|  |__|__|_|  /____  >____/|___|  /
  *         \/                \/     \/           \/
+ *
  * Project: CrimsonCTRL
- * File: SettingsActivity.java
  *
  * Author : CrimsonClyde
- * E-Mail : clyde_at_darkpack.net
- * Thx    : 4nt1g, Seelenfaenger, Bonnie
- * Use at your own risk! Keep Mordor tidy
+ * E-Mail : clyde at darkpack.net
  */
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 
 public class SettingsActivity extends Activity {
-    EditText coreid, accesstoken, camurl, ctrlpin, ctrlvalue, mCamUser, mCamPass;
-    CheckBox mCheckBoxAccessToken, mCheckBoxCamPass;
+    EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass;
+    ImageButton mShowAccessToken, mShowCamPass, mScanQrCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +42,15 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
         init();
 
+        /* Header font adjustments */
+        TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
+        Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
+        crimsonHead.setTypeface(fontFace);
+        crimsonHead.setGravity(Gravity.CENTER);
 
-        Button btn = (Button) findViewById(R.id.scan_qrcode);
-        btn.setOnClickListener(new View.OnClickListener() {
+        /* ZXing Scanner Button */
+        mScanQrCode = (ImageButton) findViewById(R.id.qrcodeImageButton);
+        mScanQrCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 IntentIntegrator integrator = new IntentIntegrator(SettingsActivity.this);
@@ -60,40 +64,40 @@ public class SettingsActivity extends Activity {
         });
 
 
-        mCheckBoxAccessToken = (CheckBox) findViewById(R.id.checkBoxAccessToken);
-        mCheckBoxCamPass = (CheckBox) findViewById(R.id.checkBoxCamPass);
-
-
-        // Listener to show AccessToken
-        mCheckBoxAccessToken.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        /* Visibility Button Core Access Token */
+        mShowAccessToken = (ImageButton) findViewById(R.id.accesstokenImageButton);
+        mShowAccessToken.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.selector));
+        mShowAccessToken.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    // Show Access Token
-                    accesstoken.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                } else {
-                    // Hide Access Token
-                    accesstoken.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                }
+            public void onClick(View button) {
+                button.setSelected(!button.isSelected());
 
+                if (button.isSelected()) {
+                    mAccessToken.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                } else {
+                    mAccessToken.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }
             }
         });
 
-        // Listener to show Camera Password
-        mCheckBoxCamPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        /* Visibilty Button Camera Password*/
+        mShowCamPass = (ImageButton) findViewById(R.id.campassImageButton);
+        mShowCamPass.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.selector));
+        mShowCamPass.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!isChecked) {
-                    // Show Access Token
+            public void onClick(View button) {
+                button.setSelected(!button.isSelected());
+
+                if (button.isSelected()) {
                     mCamPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
                 } else {
-                    // Hide Access Token
                     mCamPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
                 }
 
             }
         });
-
 
     }
 
@@ -125,34 +129,34 @@ public class SettingsActivity extends Activity {
                         if ( seperateScanResult[0].contains("CoreId") ) {
                             String coreSplit[] = seperateScanResult[0].split("::");
                             System.out.println("Update CoreID:       " + coreSplit[1]);
-                            coreid.setText(coreSplit[1]);
+                            mCoreId.setText(coreSplit[1]);
                         }
                         // 1 AccessToken
                         if ( seperateScanResult[1].contains("AccessToken") ) {
                             String accesstokenSplit[] = seperateScanResult[1].split("::");
                             System.out.println("Update AccessToken:  " + accesstokenSplit[1]);
-                            accesstoken.setText(accesstokenSplit[1]);
+                            mAccessToken.setText(accesstokenSplit[1]);
                         }
 
                         // 2 ControlPin
                         if ( seperateScanResult[2].contains("ControlPin") ) {
                             String controlpinSplit[] = seperateScanResult[2].split("::");
                             System.out.println("Update ControlPin:   " + controlpinSplit[1]);
-                            ctrlpin.setText(controlpinSplit[1]);
+                            mCtrlPin.setText(controlpinSplit[1]);
                         }
 
                         // 3 Function Name
                         if ( seperateScanResult[3].contains("FunctionName") ) {
                             String functionnameSplit[] = seperateScanResult[3].split("::");
                             System.out.println("Update FunctionName: " + functionnameSplit[1]);
-                            ctrlvalue.setText(functionnameSplit[1]);
+                            mCtrlValue.setText(functionnameSplit[1]);
                         }
 
                         // 4 Camera URL
                         if ( seperateScanResult[4].contains("CamURL") ) {
                             String camurlSplit[] = seperateScanResult[4].split("::");
                             System.out.println("Update CamURL:      " + camurlSplit[1]);
-                            camurl.setText(camurlSplit[1]);
+                            mCamUrl.setText(camurlSplit[1]);
                         }
 
                         // 5 Camera Auth User
@@ -183,22 +187,22 @@ public class SettingsActivity extends Activity {
 
 
     private void init() {
-        coreid = (EditText) findViewById(R.id.edit_core_id);
-        accesstoken = (EditText) findViewById(R.id.edit_access_token);
-        camurl = (EditText) findViewById(R.id.edit_cam_url);
-        ctrlpin = (EditText) findViewById(R.id.edit_ctrl_pin);
-        ctrlvalue = (EditText) findViewById(R.id.edit_ctrl_value);
+        mCoreId = (EditText) findViewById(R.id.edit_core_id);
+        mAccessToken = (EditText) findViewById(R.id.edit_access_token);
+        mCamUrl = (EditText) findViewById(R.id.edit_cam_url);
+        mCtrlPin = (EditText) findViewById(R.id.edit_ctrl_pin);
+        mCtrlValue = (EditText) findViewById(R.id.edit_ctrl_value);
         mCamUser = (EditText) findViewById(R.id.edit_cam_user);
         mCamPass = (EditText) findViewById(R.id.edit_cam_pass);
         readSettings();
     }
 
     public void save(View view) {
-        String coreIdText = coreid.getText().toString();
-        String accessTokenText = accesstoken.getText().toString();
-        String camUrlText = camurl.getText().toString();
-        String ctrlPinText = ctrlpin.getText().toString();
-        String ctrlValueText = ctrlvalue.getText().toString();
+        String coreIdText = mCoreId.getText().toString();
+        String accessTokenText = mAccessToken.getText().toString();
+        String camUrlText = mCamUrl.getText().toString();
+        String ctrlPinText = mCtrlPin.getText().toString();
+        String ctrlValueText = mCtrlValue.getText().toString();
         String camUserText = mCamUser.getText().toString();
         String camPassText = mCamPass.getText().toString();
 
@@ -243,11 +247,11 @@ public class SettingsActivity extends Activity {
      * Read the data refer to saved person and visualize them into Edittexts
      */
     private void readSettings() {
-        coreid.setText(SettingsConnector.readString(this, SettingsConnector.COREID, null));
-        accesstoken.setText(SettingsConnector.readString(this, SettingsConnector.ACCESSTOKEN, null));
-        camurl.setText(SettingsConnector.readString(this, SettingsConnector.CAMURL, null));
-        ctrlpin.setText(SettingsConnector.readString(this, SettingsConnector.CTRLPIN, null));
-        ctrlvalue.setText(SettingsConnector.readString(this, SettingsConnector.CTRLVALUE, null));
+        mCoreId.setText(SettingsConnector.readString(this, SettingsConnector.COREID, null));
+        mAccessToken.setText(SettingsConnector.readString(this, SettingsConnector.ACCESSTOKEN, null));
+        mCamUrl.setText(SettingsConnector.readString(this, SettingsConnector.CAMURL, null));
+        mCtrlPin.setText(SettingsConnector.readString(this, SettingsConnector.CTRLPIN, null));
+        mCtrlValue.setText(SettingsConnector.readString(this, SettingsConnector.CTRLVALUE, null));
         mCamUser.setText(SettingsConnector.readString(this, SettingsConnector.CAMUSER, null));
         mCamPass.setText(SettingsConnector.readString(this, SettingsConnector.CAMPASS, null));
     }
