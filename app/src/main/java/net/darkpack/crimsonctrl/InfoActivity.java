@@ -17,10 +17,13 @@ package net.darkpack.crimsonctrl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class InfoActivity extends Activity {
@@ -31,7 +34,23 @@ public class InfoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        /* Header font adjustments */
+        TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
+        Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
+        crimsonHead.setTypeface(fontFace);
+        crimsonHead.setGravity(Gravity.CENTER);
 
+        /* TextView font adjustments */
+        TextView authorText    = (TextView) findViewById(R.id.authorTextView);
+        TextView emailText     = (TextView) findViewById(R.id.emailTextView);
+        TextView homeText      = (TextView) findViewById(R.id.homeTextView);
+        TextView thankyouText  = (TextView) findViewById(R.id.thankyouTextView);
+        TextView copyrightText = (TextView) findViewById(R.id.copyrightTextView);
+        authorText.setTypeface(fontFace);
+        emailText.setTypeface(fontFace);
+        homeText.setTypeface(fontFace);
+        thankyouText.setTypeface(fontFace);
+        copyrightText.setTypeface(fontFace);
     }
 
 
