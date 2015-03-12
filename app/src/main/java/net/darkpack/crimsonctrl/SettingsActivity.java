@@ -15,11 +15,16 @@ package net.darkpack.crimsonctrl;
  */
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,6 +38,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 
 public class SettingsActivity extends Activity {
+    public static final String TAG = SettingsActivity.class.getSimpleName();
     EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass;
     ImageButton mShowAccessToken, mShowCamPass, mScanQrCode;
 
@@ -107,7 +113,7 @@ public class SettingsActivity extends Activity {
         if (result != null) {
             final String contents = result.getContents();
             if (contents != null) {
-                Toast.makeText(this, "Scan successfull", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Scan successful", Toast.LENGTH_SHORT).show();
                 System.out.println("Result:            " + result);
 
                 runOnUiThread(new Runnable() {
@@ -120,7 +126,7 @@ public class SettingsActivity extends Activity {
                         for ( String c : seperateScanResult )
                             System.out.println(c);
 
-                        System.out.println("SeperateScanResult Length:  " + seperateScanResult.length);
+                        System.out.println("SeparateScanResult Length:  " + seperateScanResult.length);
                         System.out.println("CoreID 1:                   " + seperateScanResult[0]);
                         System.out.println("Cam Password 7:             " + seperateScanResult[6]);
                         // Third split the array into value & content
@@ -227,20 +233,11 @@ public class SettingsActivity extends Activity {
     }
 
     public void reset(View view) {
-		/* A better way to delete all is:
-		 * PreferenceConnector.getEditor(this).clear().commit();
-		 */
-        SettingsConnector.getEditor(this).remove(SettingsConnector.COREID).commit();
-        SettingsConnector.getEditor(this).remove(SettingsConnector.ACCESSTOKEN).commit();
-        SettingsConnector.getEditor(this).remove(SettingsConnector.CAMURL).commit();
-        SettingsConnector.getEditor(this).remove(SettingsConnector.CTRLPIN).commit();
-        SettingsConnector.getEditor(this).remove(SettingsConnector.CTRLVALUE).commit();
-        SettingsConnector.getEditor(this).remove(SettingsConnector.CAMUSER).commit();
-        SettingsConnector.getEditor(this).remove(SettingsConnector.CAMPASS).commit();
-        readSettings();
+		/* Show Dialog before wiping data
+		*  TODO: Update deprecated showDialog(int)
+		*/
+        showDialog(DIALOG_ALERT);
 
-        // User Feedback
-        Toast.makeText(this, "RESET DATA", Toast.LENGTH_SHORT).show();
     }
 
     /*
@@ -308,5 +305,49 @@ public class SettingsActivity extends Activity {
         return true;
 
     }
+
+
+    // constant for identifying the dialog
+    private static final int DIALOG_ALERT = 10;
+
+
+
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DIALOG_ALERT:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("This will delete settings data.");
+                builder.setCancelable(true);
+                builder.setPositiveButton("Delete", new OkOnClickListener());
+                builder.setNegativeButton("Cancel", new CancelOnClickListener());
+                AlertDialog dialog = builder.create();
+                dialog.show();
+        }
+        return super.onCreateDialog(id);
+    }
+
+    private final class CancelOnClickListener implements
+            DialogInterface.OnClickListener {
+        public void onClick(DialogInterface dialog, int which) {
+        Log.d(TAG, "Data persists.");
+        }
+    }
+
+    private final class OkOnClickListener implements
+            DialogInterface.OnClickListener {
+        public void onClick(DialogInterface dialog, int which) {
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.COREID).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.ACCESSTOKEN).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CAMURL).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CTRLPIN).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CTRLVALUE).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CAMUSER).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CAMPASS).commit();
+            readSettings();
+        }
+    }
+
 
 }
