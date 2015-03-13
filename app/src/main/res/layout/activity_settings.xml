@@ -24,6 +24,7 @@
             android:textColor="#FFCCCCCC"
             android:textStyle="bold" />
 
+
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -59,7 +60,8 @@
                android:layout_marginTop="2dp"
                android:layout_marginStart="30dp"
                android:onClick="save"
-               android:background="@android:color/transparent"/>
+               android:background="@android:color/transparent"
+               android:clickable="true"/>
 
            <ImageButton
                android:layout_width="45dp"
@@ -70,18 +72,23 @@
                android:layout_marginTop="2dp"
                android:layout_centerHorizontal="true"
                android:onClick="reset"
-               android:background="@android:color/transparent"/>
+               android:background="@android:color/transparent"
+               android:clickable="true"/>
 
            <ImageButton
-              android:layout_width="45dp"
-              android:layout_height="45dp"
+              android:layout_width="40dp"
+              android:layout_height="40dp"
               android:id="@+id/qrcodeImageButton"
               android:src="@drawable/ic_qrcode_grey600_48dp"
-              android:scaleType="centerCrop"
+              android:scaleType="fitEnd"
               android:layout_alignParentEnd="true"
-              android:layout_marginTop="2dp"
+              android:layout_marginTop="5dp"
               android:layout_marginEnd="30dp"
-              android:background="@android:color/transparent"/>
+              android:background="@android:color/transparent"
+              android:layout_alignParentStart="false"
+              android:elevation="10dp"
+              android:clickable="true"
+               />
 
 
 
@@ -107,7 +114,6 @@
                 android:hint="AccessToken"
                 android:id="@+id/edit_access_token"
                 android:inputType="textPassword"
-                android:cursorVisible="false"
                 android:layout_below="@+id/edit_core_id"/>
 
 
@@ -171,7 +177,6 @@
                 android:layout_marginRight="3dp"
                 android:hint="Camera Auth Password"
                 android:id="@+id/edit_cam_pass"
-                android:cursorVisible="false"
                 android:inputType="textPassword"
                 android:layout_below="@+id/edit_cam_user" />
 

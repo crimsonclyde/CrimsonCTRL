@@ -18,11 +18,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,6 +58,12 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /* Header font adjustments */
+        TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
+        Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
+        crimsonHead.setTypeface(fontFace);
+        crimsonHead.setGravity(Gravity.CENTER);
 
         // Assign and declare the ProgressBar
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
