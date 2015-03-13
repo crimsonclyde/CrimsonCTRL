@@ -42,44 +42,46 @@
                android:id="@+id/seperator1"
                android:background="#FF333333"
                android:longClickable="true"
-               android:layout_alignParentStart="true"/>
+               android:layout_alignParentStart="true" />
            <View
                android:layout_width="fill_parent"
                android:layout_height="46dp"
                android:background="#FF000000"
                android:id="@+id/seperator2"
-               android:layout_margin="2dp"
-               />
+               android:layout_margin="2dp" />
 
            <ImageButton
                android:layout_width="45dp"
                android:layout_height="45dp"
                android:id="@+id/saveImageButton"
                android:src="@drawable/ic_checkbox_marked_outline_grey600_48dp"
-               android:scaleType="fitXY"
+               android:scaleType="centerCrop"
                android:layout_marginTop="2dp"
                android:layout_marginStart="30dp"
-               android:onClick="save"/>
+               android:onClick="save"
+               android:background="@android:color/transparent"/>
 
            <ImageButton
                android:layout_width="45dp"
                android:layout_height="45dp"
                android:id="@+id/resetImageButton"
                android:src="@drawable/ic_close_box_outline_grey600_48dp"
-               android:scaleType="fitXY"
+               android:scaleType="centerCrop"
                android:layout_marginTop="2dp"
                android:layout_centerHorizontal="true"
-               android:onClick="reset"/>
+               android:onClick="reset"
+               android:background="@android:color/transparent"/>
 
            <ImageButton
               android:layout_width="45dp"
               android:layout_height="45dp"
               android:id="@+id/qrcodeImageButton"
               android:src="@drawable/ic_qrcode_grey600_48dp"
-              android:scaleType="fitXY"
+              android:scaleType="centerCrop"
               android:layout_alignParentEnd="true"
               android:layout_marginTop="2dp"
-              android:layout_marginRight="30dp"/>
+              android:layout_marginEnd="30dp"
+              android:background="@android:color/transparent"/>
 
 
 
@@ -110,15 +112,16 @@
 
 
            <ImageButton
-               android:layout_width="50dp"
-               android:layout_height="45dp"
+               android:layout_width="40dp"
+               android:layout_height="40dp"
                android:id="@+id/accesstokenImageButton"
                android:src="@drawable/selector"
                android:scaleType="fitXY"
                android:layout_marginEnd="10dp"
                android:layout_alignParentEnd="true"
                android:layout_alignBottom="@+id/edit_access_token"
-               android:backgroundTint="@android:color/transparent"/>
+               android:background="@android:color/transparent"
+               android:layout_marginBottom="2dp"/>
 
 
             <EditText
@@ -174,16 +177,17 @@
 
 
            <ImageButton
-               android:layout_width="50dp"
-               android:layout_height="45dp"
+               android:layout_width="40dp"
+               android:layout_height="40dp"
                android:id="@+id/campassImageButton"
                android:src="@drawable/ic_visibility_grey600_48dp"
-               android:scaleType="fitXY"
+               android:scaleType="centerCrop"
                android:layout_marginEnd="10dp"
                android:layout_alignParentEnd="true"
                android:layout_alignBottom="@+id/edit_cam_pass"
                android:clickable="false"
-               android:backgroundTint="@android:color/transparent"/>
+               android:background="@android:color/transparent"
+               android:layout_marginBottom="2dp"/>
 
 
 

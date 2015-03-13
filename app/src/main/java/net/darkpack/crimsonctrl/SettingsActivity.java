@@ -20,7 +20,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -87,7 +86,7 @@ public class SettingsActivity extends Activity {
         });
 
 
-        /* Visibilty Button Camera Password*/
+        /* Visibility Button Camera Password*/
         mShowCamPass = (ImageButton) findViewById(R.id.campassImageButton);
         mShowCamPass.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.selector));
         mShowCamPass.setOnClickListener(new View.OnClickListener() {
