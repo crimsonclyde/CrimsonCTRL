@@ -3,16 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF000000"
     app:parallax_factor="1.9"
     tools:context=".SettingsActivity" >
 
+
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/crimsonHead"
@@ -29,175 +30,278 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@+id/crimsonHead"
-            android:id="@+id/scrollView"
+            android:id="@+id/actionBarScrollView"
             xmlns:android="http://schemas.android.com/apk/res/android">
 
-       <RelativeLayout
-           android:layout_width="fill_parent"
-           android:layout_height="wrap_content"
-           android:orientation="vertical">
-
-           <View
-               android:layout_width="fill_parent"
-               android:layout_height="50dp"
-               android:id="@+id/seperator1"
-               android:background="#FF333333"
-               android:longClickable="true"
-               android:layout_alignParentStart="true" />
-           <View
-               android:layout_width="fill_parent"
-               android:layout_height="46dp"
-               android:background="#FF000000"
-               android:id="@+id/seperator2"
-               android:layout_margin="2dp" />
-
-           <ImageButton
-               android:layout_width="45dp"
-               android:layout_height="45dp"
-               android:id="@+id/saveImageButton"
-               android:src="@drawable/ic_checkbox_marked_outline_grey600_48dp"
-               android:scaleType="centerCrop"
-               android:layout_marginTop="2dp"
-               android:layout_marginStart="30dp"
-               android:onClick="save"
-               android:background="@android:color/transparent"
-               android:clickable="true"/>
-
-           <ImageButton
-               android:layout_width="45dp"
-               android:layout_height="45dp"
-               android:id="@+id/resetImageButton"
-               android:src="@drawable/ic_close_box_outline_grey600_48dp"
-               android:scaleType="centerCrop"
-               android:layout_marginTop="2dp"
-               android:layout_centerHorizontal="true"
-               android:onClick="reset"
-               android:background="@android:color/transparent"
-               android:clickable="true"/>
-
-           <ImageButton
-              android:layout_width="40dp"
-              android:layout_height="40dp"
-              android:id="@+id/qrcodeImageButton"
-              android:src="@drawable/ic_qrcode_grey600_48dp"
-              android:scaleType="fitEnd"
-              android:layout_alignParentEnd="true"
-              android:layout_marginTop="5dp"
-              android:layout_marginEnd="30dp"
-              android:background="@android:color/transparent"
-              android:layout_alignParentStart="false"
-              android:elevation="10dp"
-              android:clickable="true"
-               />
-
-
-
-
-
-
-           <EditText
-                android:layout_height="wrap_content"
+            <RelativeLayout
                 android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="Core ID"
-                android:id="@+id/edit_core_id"
-                android:layout_below="@id/seperator1"
-                android:layout_marginTop="20dp"/>
+                android:layout_height="wrap_content">
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="50dp"
+                    android:id="@+id/topSeparator"
+                    android:background="#FF333333"
+                    android:layout_alignParentStart="true" />
 
 
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="AccessToken"
-                android:id="@+id/edit_access_token"
-                android:inputType="textPassword"
-                android:layout_below="@+id/edit_core_id"/>
+                <ImageButton
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:id="@+id/saveImageButton"
+                    android:src="@drawable/ic_checkbox_marked_outline_grey600_48dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="30dp"
+                    android:onClick="save"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:elevation="10dp" />
+
+                <ImageButton
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:id="@+id/resetImageButton"
+                    android:src="@drawable/ic_close_box_outline_grey600_48dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginTop="2dp"
+                    android:layout_centerHorizontal="true"
+                    android:onClick="reset"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:elevation="10dp" />
+
+                <ImageButton
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/qrcodeImageButton"
+                    android:src="@drawable/ic_qrcode_grey600_48dp"
+                    android:scaleType="fitEnd"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="30dp"
+                    android:background="@android:color/transparent"
+                    android:layout_alignParentStart="false"
+                    android:elevation="10dp"
+                    android:clickable="true" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="46dp"
+                    android:background="#FF000000"
+                    android:id="@+id/bottomSeparator"
+                    android:layout_margin="2dp" />
 
 
-           <ImageButton
-               android:layout_width="40dp"
-               android:layout_height="40dp"
-               android:id="@+id/accesstokenImageButton"
-               android:src="@drawable/selector"
-               android:scaleType="fitXY"
-               android:layout_marginEnd="10dp"
-               android:layout_alignParentEnd="true"
-               android:layout_alignBottom="@+id/edit_access_token"
-               android:background="@android:color/transparent"
-               android:layout_marginBottom="2dp"/>
+                <!-- Spark Core Card-->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/coreCard"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_below="@+id/bottomSeparator"
+                    card_view:cardBackgroundColor="#FFE6E6E6"
+                    card_view:cardCornerRadius="8dp" >
 
 
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="ControlPIN"
-                android:id="@+id/edit_ctrl_pin"
-                android:layout_below="@+id/edit_access_token">
-            </EditText>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="Function name"
-                android:id="@+id/edit_ctrl_value"
-                android:layout_below="@+id/edit_ctrl_pin">
-            </EditText>
-
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="Camera URL"
-                android:id="@+id/edit_cam_url"
-                android:layout_below="@+id/edit_ctrl_value">
-             </EditText>
-
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="Camera Auth User"
-                android:id="@+id/edit_cam_user"
-                android:layout_below="@+id/edit_cam_url">
-            </EditText>
-
-            <EditText
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:layout_marginLeft="3dp"
-                android:layout_marginRight="3dp"
-                android:hint="Camera Auth Password"
-                android:id="@+id/edit_cam_pass"
-                android:inputType="textPassword"
-                android:layout_below="@+id/edit_cam_user" />
+                        <EditText
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:hint="Core ID"
+                            android:id="@+id/edit_core_id"
+                            android:layout_marginTop="5dp"
+                            android:textColor="@android:color/black"
+                            android:textColorHint="@android:color/darker_gray" />
 
 
-           <ImageButton
-               android:layout_width="40dp"
-               android:layout_height="40dp"
-               android:id="@+id/campassImageButton"
-               android:src="@drawable/ic_visibility_grey600_48dp"
-               android:scaleType="centerCrop"
-               android:layout_marginEnd="10dp"
-               android:layout_alignParentEnd="true"
-               android:layout_alignBottom="@+id/edit_cam_pass"
-               android:clickable="false"
-               android:background="@android:color/transparent"
-               android:layout_marginBottom="2dp"/>
+                        <EditText
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:hint="Core AccessToken"
+                            android:id="@+id/edit_access_token"
+                            android:inputType="textPassword"
+                            android:layout_below="@+id/edit_core_id"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:textColor="@android:color/black" />
+
+
+                        <ImageButton
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/accesstokenImageButton"
+                            android:src="@drawable/selector"
+                            android:scaleType="fitXY"
+                            android:layout_marginEnd="10dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignBottom="@+id/edit_access_token"
+                            android:background="@android:color/transparent"
+                            android:layout_marginBottom="2dp"/>
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <!-- Control Pin Card-->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/controlPinCard"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_below="@+id/coreCard"
+                    card_view:cardBackgroundColor="#FFE6E6E6"
+                    card_view:cardCornerRadius="8dp" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:hint="Core Control Pin"
+                            android:id="@+id/edit_ctrl_pin"
+                            android:layout_below="@+id/edit_access_token"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:textColor="@android:color/black" />
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+
+                <!-- Control Function Card-->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/controlFunctionCard"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_below="@+id/controlPinCard"
+                    card_view:cardBackgroundColor="#FFE6E6E6"
+                    card_view:cardCornerRadius="8dp" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <EditText
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:hint="Core Function Name"
+                            android:id="@+id/edit_ctrl_value"
+                            android:layout_below="@+id/edit_ctrl_pin"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:textColor="@android:color/black" />
+
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
+
+                <!-- Cam Card-->
+                <android.support.v7.widget.CardView
+                    android:id="@+id/camCard"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:elevation="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_below="@+id/controlFunctionCard"
+                    card_view:cardBackgroundColor="#FFE6E6E6"
+                    card_view:cardCornerRadius="8dp" >
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+
+                        <EditText
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:hint="Camera URL"
+                            android:id="@+id/edit_cam_url"
+                            android:layout_below="@+id/edit_ctrl_value"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:textColor="@android:color/black"/>
+
+                        <EditText
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:hint="Camera Auth User"
+                            android:id="@+id/edit_cam_user"
+                            android:layout_below="@+id/edit_cam_url"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:textColor="@android:color/black"/>
+
+                        <EditText
+                            android:layout_height="wrap_content"
+                            android:layout_width="fill_parent"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:hint="Camera Auth Password"
+                            android:id="@+id/edit_cam_pass"
+                            android:inputType="textPassword"
+                            android:layout_below="@+id/edit_cam_user"
+                            android:textColorHint="@android:color/darker_gray"
+                            android:textColor="@android:color/black" />
+
+
+                        <ImageButton
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:id="@+id/campassImageButton"
+                            android:src="@drawable/ic_visibility_grey600_48dp"
+                            android:scaleType="centerCrop"
+                            android:layout_marginEnd="10dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignBottom="@+id/edit_cam_pass"
+                            android:clickable="false"
+                            android:background="@android:color/transparent"
+                            android:layout_marginBottom="2dp"/>
+                    </RelativeLayout>
+                </android.support.v7.widget.CardView>
 
 
 
-       </RelativeLayout>
-    </ScrollView>
+
+
+
+
+            </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+        </ScrollView>
     </RelativeLayout>
-
 </com.nirhart.parallaxscroll.views.ParallaxScrollView>
