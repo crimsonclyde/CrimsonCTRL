@@ -14,7 +14,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:id="@+id/saveImageButton"
-        android:src="@drawable/account-box"
+        android:src="@drawable/checkboxmarkedoutline"
         android:scaleType="centerCrop"
         android:layout_marginTop="2dp"
         android:layout_marginStart="30dp"
