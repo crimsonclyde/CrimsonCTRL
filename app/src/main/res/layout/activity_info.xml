@@ -30,7 +30,7 @@
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             card_view:cardBackgroundColor="#FFE6E6E6"
             card_view:cardCornerRadius="4dp"
-            android:id="@+id/infoCard"
+            android:id="@+id/authorCard"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:elevation="10dp"
@@ -39,10 +39,6 @@
             android:layout_marginEnd="10dp" >
 
 
-
-            <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -63,7 +59,7 @@
                         android:text="CrimsonClyde"
                         android:textSize="20sp"
                         android:layout_toEndOf="@id/authorImageView"
-                        android:textColor="@color/accent_material_dark"/>
+                        android:textColor="@color/secondary_text_default_material_light"/>
 
 
                     <ImageView
@@ -83,9 +79,8 @@
                         android:layout_alignTop="@+id/emailImageView"
                         android:layout_toEndOf="@+id/emailImageView"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"/>
-
-
+                        android:layout_marginTop="5dp"
+                        android:textColor="secondary_text_default_material_light" />
 
                     <ImageView
                         android:layout_width="30dp"
@@ -104,15 +99,30 @@
                         android:layout_alignTop="@+id/homeImageView"
                         android:layout_toEndOf="@+id/homeImageView"
                         android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"/>
+                        android:layout_marginTop="5dp"
+                        android:textColorHint="@color/secondary_text_default_material_light" />
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:id="@+id/seperator1"
-                        android:background="@android:color/darker_gray"
-                        android:layout_below="@+id/homeImageView"
-                        android:layout_marginTop="30dp"/>
+                    </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardBackgroundColor="#FFE6E6E6"
+            card_view:cardCornerRadius="4dp"
+            android:id="@+id/thankyouCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -120,17 +130,30 @@
                         android:id="@+id/thankyouTextView"
                         android:text="@string/thankyou_text"
                         android:autoLink="all"
-                        android:layout_below="@+id/seperator1"
+                        android:layout_below="@+id/authorCard"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/accent_material_dark"/>
+                        android:textColor="@color/secondary_text_default_material_light"
+                        android:singleLine="false" />
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:id="@+id/seperator2"
-                        android:background="@android:color/darker_gray"
-                        android:layout_below="@+id/thankyouTextView"
-                        android:layout_marginTop="10dp"/>
+            </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            card_view:cardBackgroundColor="#FFE6E6E6"
+            card_view:cardCornerRadius="4dp"
+            android:id="@+id/copyrightCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
 
                     <TextView
@@ -139,15 +162,15 @@
                         android:id="@+id/copyrightTextView"
                         android:autoLink="all"
                         android:text="@string/copyright"
-                        android:layout_below="@+id/seperator2"
+                        android:layout_below="@+id/copyrightCard"
                         android:layout_marginTop="10dp"
-                        android:textColor="@color/accent_material_dark" />
+                        android:textColor="@color/secondary_text_default_material_light" />
 
                 </RelativeLayout>
 
-            </ScrollView>
-
         </android.support.v7.widget.CardView>
+
+    </ScrollView>
 
     </LinearLayout>
 
