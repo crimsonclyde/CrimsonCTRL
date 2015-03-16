@@ -3,7 +3,7 @@
     <!-- NOTE: order is important (the first matching state(s) is what is rendered) -->
     <item
         android:state_selected="true"
-        android:drawable="@drawable/ic_visibility_grey600_48dp" />
+        android:drawable="@drawable/eye" />
     <item
-        android:drawable="@drawable/ic_visibility_off_grey600_48dp" />
+        android:drawable="@drawable/eye_off" />
 </selector>

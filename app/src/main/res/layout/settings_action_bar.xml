@@ -14,7 +14,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:id="@+id/saveImageButton"
-        android:src="@drawable/ic_checkbox_marked_outline_grey600_48dp"
+        android:src="@drawable/account-box"
         android:scaleType="centerCrop"
         android:layout_marginTop="2dp"
         android:layout_marginStart="30dp"
@@ -27,20 +27,20 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:id="@+id/resetImageButton"
-        android:src="@drawable/ic_close_box_outline_grey600_48dp"
+        android:src="@drawable/closeboxoutline"
         android:scaleType="centerCrop"
         android:layout_marginTop="2dp"
         android:layout_centerHorizontal="true"
         android:onClick="reset"
-        android:background="@android:color/transparent"
         android:clickable="true"
-        android:elevation="10dp" />
+        android:elevation="10dp"
+        android:background="@android:color/transparent" />
 
     <ImageButton
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:id="@+id/qrcodeImageButton"
-        android:src="@drawable/ic_qrcode_grey600_48dp"
+        android:src="@drawable/qrcode"
         android:scaleType="fitEnd"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="5dp"
