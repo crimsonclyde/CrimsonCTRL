@@ -37,60 +37,11 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content">
 
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="50dp"
-                    android:id="@+id/topSeparator"
-                    android:background="#FF333333"
-                    android:layout_alignParentStart="true" />
+                <include
+                    layout="@layout/settings_action_bar"
+                    android:id="@+id/action_bar_layout"/>
 
 
-                <ImageButton
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:id="@+id/saveImageButton"
-                    android:src="@drawable/ic_checkbox_marked_outline_grey600_48dp"
-                    android:scaleType="centerCrop"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginStart="30dp"
-                    android:onClick="save"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:elevation="10dp" />
-
-                <ImageButton
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:id="@+id/resetImageButton"
-                    android:src="@drawable/ic_close_box_outline_grey600_48dp"
-                    android:scaleType="centerCrop"
-                    android:layout_marginTop="2dp"
-                    android:layout_centerHorizontal="true"
-                    android:onClick="reset"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:elevation="10dp" />
-
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/qrcodeImageButton"
-                    android:src="@drawable/ic_qrcode_grey600_48dp"
-                    android:scaleType="fitEnd"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="30dp"
-                    android:background="@android:color/transparent"
-                    android:layout_alignParentStart="false"
-                    android:elevation="10dp"
-                    android:clickable="true" />
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="46dp"
-                    android:background="#FF000000"
-                    android:id="@+id/bottomSeparator"
-                    android:layout_margin="2dp" />
 
 
                 <!-- Spark Core Card-->
@@ -102,7 +53,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_below="@+id/bottomSeparator"
+                    android:layout_below="@+id/action_bar_layout"
                     card_view:cardBackgroundColor="#FFE6E6E6"
                     card_view:cardCornerRadius="8dp" >
 
