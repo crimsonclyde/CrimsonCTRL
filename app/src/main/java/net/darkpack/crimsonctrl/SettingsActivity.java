@@ -28,6 +28,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -52,6 +53,11 @@ public class SettingsActivity extends Activity {
         Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
+
+        /* Suppress opening virtual keyboard */
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+        );
 
         /* ZXing Scanner Button */
         mScanQrCode = (ImageButton) findViewById(R.id.qrcodeImageButton);
@@ -182,7 +188,6 @@ public class SettingsActivity extends Activity {
                 });
 
 
-
             } else {
                 Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
             }
@@ -227,7 +232,7 @@ public class SettingsActivity extends Activity {
             SettingsConnector.writeString(this, SettingsConnector.CAMPASS, camPassText);
 
         // User Feedback
-        Toast.makeText(this, "SAVED", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Successfully saved", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -310,16 +315,14 @@ public class SettingsActivity extends Activity {
     private static final int DIALOG_ALERT = 10;
 
 
-
-
     @Override
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DIALOG_ALERT:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("This will delete settings data.");
+                builder.setMessage("Clear all settings data?");
                 builder.setCancelable(true);
-                builder.setPositiveButton("Delete", new OkOnClickListener());
+                builder.setPositiveButton("Clear", new OkOnClickListener());
                 builder.setNegativeButton("Cancel", new CancelOnClickListener());
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -330,7 +333,7 @@ public class SettingsActivity extends Activity {
     private final class CancelOnClickListener implements
             DialogInterface.OnClickListener {
         public void onClick(DialogInterface dialog, int which) {
-        Log.d(TAG, "Data persists.");
+            Log.d(TAG, "Canceled");
         }
     }
 

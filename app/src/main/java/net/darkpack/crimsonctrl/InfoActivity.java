@@ -19,6 +19,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,13 +46,17 @@ public class InfoActivity extends Activity {
         TextView authorText    = (TextView) findViewById(R.id.authorTextView);
         TextView emailText     = (TextView) findViewById(R.id.emailTextView);
         TextView homeText      = (TextView) findViewById(R.id.homeTextView);
-        TextView thankyouText  = (TextView) findViewById(R.id.thankyouTextView);
+        TextView thankYouText  = (TextView) findViewById(R.id.thankYouTextView);
         TextView copyrightText = (TextView) findViewById(R.id.copyrightTextView);
         authorText.setTypeface(fontFace);
         emailText.setTypeface(fontFace);
         homeText.setTypeface(fontFace);
-        thankyouText.setTypeface(fontFace);
+        thankYouText.setTypeface(fontFace);
         copyrightText.setTypeface(fontFace);
+
+        /* Transform HTML Link*/
+        thankYouText.setText(Html.fromHtml(getString(R.string.thankyou_text)));
+        thankYouText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
 
