@@ -120,7 +120,7 @@
                     android:layout_marginRight="3dp"
                     android:hint="Core Control Pin"
                     android:id="@+id/edit_ctrl_pin"
-                    android:layout_below="@+id/edit_access_token"
+
                     android:textColor="@android:color/primary_text_dark"
                     android:textColorHint="#ff960018"
                     android:elegantTextHeight="true"/>

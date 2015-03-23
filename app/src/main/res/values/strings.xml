@@ -10,13 +10,12 @@
     <string name="action_cam">Camera</string>
     <string name="title_activity_settings">Settings</string>
     <string name="thankyou_text">
-      CrimsonCTRL is a part of the CrimsonHome Project. See https://universe.crimson.space for more information.\n\nThank you: \n4nt1g, without you and your huge work on the httpsurlconnection and parsing the JSON Data I were totally lost \nseelenfaenger, for your initial code example. You were right with your Java-Fu, my apologize.\nbonnie, for being there for sustain me over the past years. &#9829;\n
+        CrimsonCTRL is a part of the CrimsonHome Project. See  <![CDATA[ <a href="https://universe.crimson.space">CrimsonUniverse</a>]]>  for more information.<![CDATA[ <br/><br/> ]]>Thank you:<![CDATA[ <br/><b> ]]>4nt1g<![CDATA[</b>]]>, without you and your huge work on the httpsurlconnection and parsing the JSON Data I were totally lost.<![CDATA[ <br/><b> ]]>seelenfänger<![CDATA[</b>]]>, for your initial code example. You were right with your Java-Fu, my apologize.<![CDATA[ <br/><b> ]]>bonnie<![CDATA[</b>]]>, for just being there over the past years. &#9829;\n
     </string>
     <string name="copyright">
         &#0169; 2015 CrimsonClyde\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, see http://www.gnu.org/licenses.\n\nAdditional permission under GNU GPL version 3 section 7
     </string>
     <string name="title_activity_mjpeg">MjpegActivity</string>
-    <string name="hello_world">Hello world!</string>
     <string name="head_image">CrimsonHeadImage</string>
     <string name="crimson">
         <![CDATA[
