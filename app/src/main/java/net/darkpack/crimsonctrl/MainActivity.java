@@ -109,6 +109,15 @@ public class MainActivity extends Activity {
             startActivity(intentCam);
             break;
 
+        // Temperature Plot
+        case R.id.action_temp:
+            //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
+
+            // Change Activity
+            Intent intentTempPlot = new Intent(MainActivity.this, TempActivity.class);
+            startActivity(intentTempPlot);
+            break;
+
         // Settings action
         case R.id.action_settings:
             //Toast.makeText(this, "Starting - Settings Activity", Toast.LENGTH_SHORT).show();
@@ -183,10 +192,11 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "accesstoken:       " + accesstoken);
                 Log.d(TAG, "scl:               " + scl);
 
-                if (accesstoken == null || coreid == null) {
+                if (accesstoken.equals("") || coreid.equals("")) {
                     Log.d(TAG, "CoreID or AccessToken not set, starting SettingsActivity");
                     Log.d(TAG, "CoreID:       " + coreid );
                     Log.d(TAG, "AccessToken:  " + accesstoken);
+                    Toast.makeText(MainActivity.this, "CoreID/AccessToken empty", Toast.LENGTH_LONG).show();
                     Intent initSettings = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(initSettings);
                 } else if (scl == null) {

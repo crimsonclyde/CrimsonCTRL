@@ -33,6 +33,7 @@ public class SettingsConnector {
     public static final String SCL = "SCL";
     public static final String PHOTO = "PHOTO";
     public static final String TEMP = "TEMP";
+    public static final String TEMPSERVICEURL = "TEMPSERVICEURL";
 
 
 

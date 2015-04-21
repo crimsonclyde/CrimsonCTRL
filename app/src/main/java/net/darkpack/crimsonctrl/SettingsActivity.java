@@ -39,7 +39,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class SettingsActivity extends Activity {
     public static final String TAG = SettingsActivity.class.getSimpleName();
-    EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass;
+    EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass, mTempServiceUrl;
     ImageButton mShowAccessToken, mShowCamPass, mScanQrCode;
 
     @Override
@@ -184,12 +184,17 @@ public class SettingsActivity extends Activity {
                             mCamPass.setText(accesstokenSplit[1]);
                         }
 
+                        if ( seperateScanResult[7].contains("TemperatureServiceUrl") ) {
+                            String tempServiceUrlSplit[] = seperateScanResult[7].split("::");
+                            mTempServiceUrl.setText(tempServiceUrlSplit[1]);
+                        }
+
                     }
                 });
 
 
             } else {
-                Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Fail converting results", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -197,24 +202,26 @@ public class SettingsActivity extends Activity {
 
 
     private void init() {
-        mCoreId = (EditText) findViewById(R.id.edit_core_id);
-        mAccessToken = (EditText) findViewById(R.id.edit_access_token);
-        mCamUrl = (EditText) findViewById(R.id.edit_cam_url);
-        mCtrlPin = (EditText) findViewById(R.id.edit_ctrl_pin);
-        mCtrlValue = (EditText) findViewById(R.id.edit_ctrl_value);
-        mCamUser = (EditText) findViewById(R.id.edit_cam_user);
-        mCamPass = (EditText) findViewById(R.id.edit_cam_pass);
+        mCoreId         = (EditText) findViewById(R.id.edit_core_id);
+        mAccessToken    = (EditText) findViewById(R.id.edit_access_token);
+        mCamUrl         = (EditText) findViewById(R.id.edit_cam_url);
+        mCtrlPin        = (EditText) findViewById(R.id.edit_ctrl_pin);
+        mCtrlValue      = (EditText) findViewById(R.id.edit_ctrl_value);
+        mCamUser        = (EditText) findViewById(R.id.edit_cam_user);
+        mCamPass        = (EditText) findViewById(R.id.edit_cam_pass);
+        mTempServiceUrl = (EditText) findViewById(R.id.edit_temp_service);
         readSettings();
     }
 
     public void save(View view) {
-        String coreIdText = mCoreId.getText().toString();
-        String accessTokenText = mAccessToken.getText().toString();
-        String camUrlText = mCamUrl.getText().toString();
-        String ctrlPinText = mCtrlPin.getText().toString();
-        String ctrlValueText = mCtrlValue.getText().toString();
-        String camUserText = mCamUser.getText().toString();
-        String camPassText = mCamPass.getText().toString();
+        String coreIdText       = mCoreId.getText().toString();
+        String accessTokenText  = mAccessToken.getText().toString();
+        String camUrlText       = mCamUrl.getText().toString();
+        String ctrlPinText      = mCtrlPin.getText().toString();
+        String ctrlValueText    = mCtrlValue.getText().toString();
+        String camUserText      = mCamUser.getText().toString();
+        String camPassText      = mCamPass.getText().toString();
+        String tempServiceUrl   = mTempServiceUrl.getText().toString();
 
         if (coreIdText != null)
             SettingsConnector.writeString(this, SettingsConnector.COREID, coreIdText);
@@ -230,6 +237,8 @@ public class SettingsActivity extends Activity {
             SettingsConnector.writeString(this, SettingsConnector.CAMUSER, camUserText);
         if (camPassText != null)
             SettingsConnector.writeString(this, SettingsConnector.CAMPASS, camPassText);
+        if (tempServiceUrl != null)
+            SettingsConnector.writeString(this, SettingsConnector.TEMPSERVICEURL, tempServiceUrl);
 
         // User Feedback
         Toast.makeText(this, "Successfully saved", Toast.LENGTH_SHORT).show();
@@ -255,6 +264,7 @@ public class SettingsActivity extends Activity {
         mCtrlValue.setText(SettingsConnector.readString(this, SettingsConnector.CTRLVALUE, null));
         mCamUser.setText(SettingsConnector.readString(this, SettingsConnector.CAMUSER, null));
         mCamPass.setText(SettingsConnector.readString(this, SettingsConnector.CAMPASS, null));
+        mTempServiceUrl.setText(SettingsConnector.readString(this, SettingsConnector.TEMPSERVICEURL, null));
     }
 
 
@@ -278,16 +288,25 @@ public class SettingsActivity extends Activity {
             // MainActivity
             case R.id.action_main:
                 // Just for debugging
-                Toast.makeText(this, "Starting - Main Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
+                //Toast.makeText(this, "Starting - Main Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
 
                 // Change Activity
                 Intent intentMain = new Intent(SettingsActivity.this, MainActivity.class);
                 startActivity(intentMain);
                 break;
 
+            // Temperature Plot
+            case R.id.action_temp:
+                //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
+
+                // Change Activity
+                Intent intentTempPlot = new Intent(SettingsActivity.this, TempActivity.class);
+                startActivity(intentTempPlot);
+                break;
+
             // Camera Activity
             case R.id.action_cam:
-                Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
+                //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
 
                 // Change Activity
                 Intent intentControl = new Intent(SettingsActivity.this, MjpegActivity.class);
@@ -296,7 +315,7 @@ public class SettingsActivity extends Activity {
 
             // Info action
             case R.id.action_info:
-                Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
+                //Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
 
                 // Change Activity
                 Intent intentInfo = new Intent(SettingsActivity.this, InfoActivity.class);
@@ -347,6 +366,7 @@ public class SettingsActivity extends Activity {
             SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CTRLVALUE).commit();
             SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CAMUSER).commit();
             SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CAMPASS).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.TEMPSERVICEURL).commit();
             readSettings();
         }
     }

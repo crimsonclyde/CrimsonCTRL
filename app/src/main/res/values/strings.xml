@@ -8,6 +8,7 @@
     <string name="action_refresh">Refresh</string>
     <string name="action_main">Main</string>
     <string name="action_cam">Camera</string>
+    <string name="action_temp">Temperature Graph</string>
     <string name="title_activity_settings">Settings</string>
     <string name="thankyou_text">
         CrimsonCTRL is a part of the CrimsonHome Project. See  <![CDATA[ <a href="https://universe.crimson.space">CrimsonUniverse</a>]]>  for more information.<![CDATA[ <br/><br/> ]]>Thank you:<![CDATA[ <br/><b> ]]>4nt1g<![CDATA[</b>]]>, without you and your huge work on the httpsurlconnection and parsing the JSON Data I were totally lost.<![CDATA[ <br/><b> ]]>seelenfänger<![CDATA[</b>]]>, for your initial code example. You were right with your Java-Fu, my apologize.<![CDATA[ <br/><b> ]]>bonnie<![CDATA[</b>]]>, for just being there over the past years. &#9829;\n
@@ -27,5 +28,8 @@
             \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\\/\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\\/\u0020\u0020\u0020\u0020\u0020\\/\u0020\u0020\u0020CTRL\u0020\u0020\u0020\u0020\\/\u0020\u0020
          ]]>
     </string>
+    <string name="title_activity_temp">TempActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
