@@ -134,6 +134,7 @@ public class SettingsActivity extends Activity {
                         System.out.println("SeparateScanResult Length:  " + seperateScanResult.length);
                         System.out.println("CoreID 1:                   " + seperateScanResult[0]);
                         System.out.println("Cam Password 7:             " + seperateScanResult[6]);
+                        System.out.println("WebService URL:             " + seperateScanResult[7]);
                         // Third split the array into value & content
 
                         // 0 CoreID
@@ -186,7 +187,10 @@ public class SettingsActivity extends Activity {
 
                         if ( seperateScanResult[7].contains("TemperatureServiceUrl") ) {
                             String tempServiceUrlSplit[] = seperateScanResult[7].split("::");
-                            mTempServiceUrl.setText(tempServiceUrlSplit[1]);
+                            String mTempServiceUrlSplitted = tempServiceUrlSplit[1];
+                            String mTempServiceUrlConverted = mTempServiceUrlSplitted.replace("&amp;","&");
+                            mTempServiceUrl.setText(mTempServiceUrlConverted);
+
                         }
 
                     }

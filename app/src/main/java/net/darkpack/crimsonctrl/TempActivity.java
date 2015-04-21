@@ -81,7 +81,7 @@ public class TempActivity extends Activity {
         Log.d(TAG, "tempserviceurl:     " + tempserviceurl);
 
         // Check if WebSerice URL is set
-        if ( tempserviceurl.equals("") ) {
+        if ( tempserviceurl == null ) {
             Toast.makeText(TempActivity.this, "TempService URL empty", Toast.LENGTH_LONG).show();
             Intent initSettings = new Intent(TempActivity.this, SettingsActivity.class);
             startActivity(initSettings);

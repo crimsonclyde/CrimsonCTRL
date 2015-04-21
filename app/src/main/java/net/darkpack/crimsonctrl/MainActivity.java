@@ -192,7 +192,7 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "accesstoken:       " + accesstoken);
                 Log.d(TAG, "scl:               " + scl);
 
-                if (accesstoken.equals("") || coreid.equals("")) {
+                if (accesstoken == null || coreid == null) {
                     Log.d(TAG, "CoreID or AccessToken not set, starting SettingsActivity");
                     Log.d(TAG, "CoreID:       " + coreid );
                     Log.d(TAG, "AccessToken:  " + accesstoken);

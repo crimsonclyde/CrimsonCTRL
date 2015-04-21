@@ -79,16 +79,25 @@ public class InfoActivity extends Activity {
             // MainActivity
             case R.id.action_main:
                 // Just for debugging
-                Toast.makeText(this, "Starting - Main Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
+                //Toast.makeText(this, "Starting - Main Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
 
                 // Change Activity
                 Intent intentMain = new Intent(InfoActivity.this, MainActivity.class);
                 startActivity(intentMain);
                 break;
 
+            // Temperature Plot
+            case R.id.action_temp:
+                //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
+
+                // Change Activity
+                Intent intentTempPlot = new Intent(InfoActivity.this, TempActivity.class);
+                startActivity(intentTempPlot);
+                break;
+
             // Camera Activity
             case R.id.action_cam:
-                Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
+                //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
 
                 // Change Activity
                 Intent intentControl = new Intent(InfoActivity.this, MjpegActivity.class);
@@ -97,7 +106,7 @@ public class InfoActivity extends Activity {
 
             // Settings action
             case R.id.action_settings:
-                Toast.makeText(this, "Starting Settings Activity", Toast.LENGTH_SHORT).show();      // Could be removed, only for debugging reasons
+                //Toast.makeText(this, "Starting Settings Activity", Toast.LENGTH_SHORT).show();      // Could be removed, only for debugging reasons
 
                 // Change Activity
                 Intent intentSettings = new Intent(InfoActivity.this, SettingsActivity.class);
