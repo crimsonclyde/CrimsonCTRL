@@ -31,6 +31,10 @@
             android:name=".MjpegActivity"
             android:label="@string/title_activity_mjpeg" >
         </activity>
+        <activity
+            android:name=".TempActivity"
+            android:label="@string/title_activity_temp" >
+        </activity>
     </application>
 
 </manifest>
