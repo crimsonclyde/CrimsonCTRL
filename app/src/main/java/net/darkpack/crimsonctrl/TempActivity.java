@@ -17,13 +17,18 @@ package net.darkpack.crimsonctrl;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.androidplot.xy.SimpleXYSeries;
@@ -36,6 +41,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.net.ssl.HttpsURLConnection;
@@ -44,7 +50,7 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * A straightforward example of using AndroidPlot to plot some data.
  */
-public class TempActivity extends Activity {
+public class TempActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = TempActivity.class.getSimpleName();
     private XYPlot plot;
@@ -56,6 +62,11 @@ public class TempActivity extends Activity {
     XYSeries series1;
     LineAndPointFormatter series1Format;
     String tempserviceurl;
+    Spinner tempSpin;
+    String tempTime    = "8";    // Default value
+    // TODO: New Spinner for result amount
+    String tempAmount  = "10";   // Default value
+    String format      = "json"; // Default value
 
 
     @Override
@@ -76,7 +87,21 @@ public class TempActivity extends Activity {
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
 
-        // Get values from SharedPreferences
+        /* Temperature Time Spinner */
+        tempSpin = (Spinner) findViewById(R.id.temp_time_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+        R.array.temptime_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        tempSpin.setAdapter(adapter);
+        // OnSelect Listener
+        tempSpin.setOnItemSelectedListener(this);
+
+
+
+        /* Get values from SharedPreferences */
         tempserviceurl = SettingsConnector.readString(TempActivity.this, SettingsConnector.TEMPSERVICEURL, null);
         Log.d(TAG, "tempserviceurl:     " + tempserviceurl);
 
@@ -88,12 +113,78 @@ public class TempActivity extends Activity {
 
         } else {
             // Run the pull request
-            Toast.makeText(TempActivity.this, "TempService URL OK", Toast.LENGTH_LONG).show();
-            new WebServiceClient().execute(tempserviceurl);
+            //Toast.makeText(TempActivity.this, "TempService URL OK", Toast.LENGTH_LONG).show();
+            //new WebServiceClient().execute(tempserviceurl);
         }
 
 
     }
+
+    /* Spinner Temperature Action */
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        tempSpin.getItemAtPosition(pos);
+        Log.d(TAG, "Spinner selected time:    " + pos);
+
+        switch (pos) {
+            case 0:
+                tempTime = "8";
+                break;
+            case 1:
+                tempTime = "10";
+                clearPlot();
+                break;
+            case 2:
+                tempTime = "12";
+                clearPlot();
+                break;
+            case 3:
+                tempTime = "14";
+                clearPlot();
+                break;
+            case 4:
+                tempTime = "16";
+                clearPlot();
+                break;
+            case 5:
+                tempTime = "18";
+                clearPlot();
+                break;
+            case 6:
+                tempTime = "20";
+                clearPlot();
+                break;
+            case 7:
+                tempTime = "22";
+                clearPlot();
+                break;
+            default:
+                tempTime = "8";
+                break;
+        }
+
+        Log.d(TAG, "TempTime:       " + tempTime);
+
+        new WebServiceClient().execute(tempserviceurl);
+
+
+
+    }
+
+    public void clearPlot() {
+        // Clear up the Graph
+        plot.clear();
+        plot.redraw();
+        // Clear the ArrayList (failing results in adding new values to the array)
+        tempArrayList.clear();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
 
     /* ****************************************************************************************** */
     @Override
@@ -184,9 +275,16 @@ public class TempActivity extends Activity {
             try {
                 Log.d(TAG, "**********************************************************************");
                 Log.d(TAG, "******************    HttpsUrlConnection    **************************");
+                // Building the URL
                 URL url = new URL(urls[0]);
-                Log.d(TAG, "Received URL:    " + url);
-                HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+                String s_time   = URLEncoder.encode(tempTime, "UTF-8");
+                String s_amount = URLEncoder.encode(tempAmount, "UTF-8");
+                String s_url = url + "&num=" + s_amount + "&time=" + s_time + "&format=" + format;
+                URL finalUrl = new URL(s_url);
+
+
+                Log.d(TAG, "Received URL:    " + finalUrl);
+                HttpsURLConnection con = (HttpsURLConnection) finalUrl.openConnection();
                 Log.d(TAG, "Con Status:      " + con);
                 InputStream in = con.getInputStream();
                 Log.d(TAG, "GetInputStream:  " + in);
@@ -289,6 +387,7 @@ public class TempActivity extends Activity {
             Log.d(TAG, "tempArrayList:     " + tempArrayList.toString());
             Log.d(TAG, "tempArraySize:     " + tempArrayList.size());
 
+
             Number[] finalTemp = new Number[tempArrayList.size()];
             tempArrayList.toArray(finalTemp);
             Log.d(TAG, "finalTemp Array;   " + finalTemp.toString());
@@ -332,6 +431,7 @@ public class TempActivity extends Activity {
 
                     // add a new series' to the xyplot:
                     plot.addSeries(series1, series1Format);
+
 
                     // reduce the number of range labels
                     plot.setTicksPerRangeLabel(3);
