@@ -15,8 +15,15 @@ package net.darkpack.crimsonctrl;
  */
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.LinearGradient;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -31,6 +38,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.androidplot.Plot;
+import com.androidplot.ui.AnchorPosition;
+import com.androidplot.ui.SizeLayoutType;
+import com.androidplot.ui.SizeMetrics;
+import com.androidplot.ui.XLayoutStyle;
+import com.androidplot.ui.YLayoutStyle;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
@@ -42,6 +56,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.net.ssl.HttpsURLConnection;
@@ -63,7 +78,7 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
     LineAndPointFormatter series1Format;
     String tempserviceurl;
     Spinner tempSpin;
-    String tempTime    = "8";    // Default value
+    String tempTime;
     // TODO: New Spinner for result amount
     String tempAmount  = "10";   // Default value
     String format      = "json"; // Default value
@@ -76,8 +91,8 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
 
         // fun little snippet that prevents users from taking screenshots
         // on ICS+ devices :-)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+        //        WindowManager.LayoutParams.FLAG_SECURE);
 
         setContentView(R.layout.activity_temp);
 
@@ -173,7 +188,7 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
     }
 
     public void clearPlot() {
-        // Clear up the Graph
+        // Clear the graph
         plot.clear();
         plot.redraw();
         // Clear the ArrayList (failing results in adding new values to the array)
@@ -262,6 +277,7 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
         private Exception exception;
 
 
+
         public Number[] doInBackground(String... urls) {
 
             Log.d(TAG, "**********************************************************************");
@@ -271,129 +287,136 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
             Log.d(TAG, "*****       |__|  |_| |__,|_|_|_|___|_____|___|_| |_,_|         ******");
             Log.d(TAG, "**********************************************************************");
             Log.d(TAG, "*****************    Summoning the Construct    **********************");
-
-            try {
-                Log.d(TAG, "**********************************************************************");
-                Log.d(TAG, "******************    HttpsUrlConnection    **************************");
-                // Building the URL
-                URL url = new URL(urls[0]);
-                String s_time   = URLEncoder.encode(tempTime, "UTF-8");
-                String s_amount = URLEncoder.encode(tempAmount, "UTF-8");
-                String s_url = url + "&num=" + s_amount + "&time=" + s_time + "&format=" + format;
-                URL finalUrl = new URL(s_url);
-
-
-                Log.d(TAG, "Received URL:    " + finalUrl);
-                HttpsURLConnection con = (HttpsURLConnection) finalUrl.openConnection();
-                Log.d(TAG, "Con Status:      " + con);
-                InputStream in = con.getInputStream();
-                Log.d(TAG, "GetInputStream:  " + in);
-
-                Log.d(TAG, "*******************    Buffered Reader    *****************************");
-                String line = null;
-
+            if (isNetworkAvailable()) {
                 try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(
-                            in, "iso-8859-1"), 8);
-                    StringBuilder sb = new StringBuilder();
-                    while ((line = reader.readLine()) != null) {
-                        sb.append(line + "\n");
-                    }
-                    in.close();
-                    result = sb.toString();
-                } catch (Exception e) {
-                    Log.e("log_tag", "Error converting result " + e.toString());
-                }
+                    Log.d(TAG, "**********************************************************************");
+                    Log.d(TAG, "******************    HttpsUrlConnection    **************************");
+                    // Building the URL
+                    URL url = new URL(urls[0]);
+                    String s_time = URLEncoder.encode(tempTime, "UTF-8");
+                    String s_amount = URLEncoder.encode(tempAmount, "UTF-8");
+                    String s_url = url + "&num=" + s_amount + "&time=" + s_time + "&format=" + format;
+                    URL finalUrl = new URL(s_url);
 
 
-                Log.d(TAG, "*******************    Parse JSON         *****************************");
+                    Log.d(TAG, "Received URL:    " + finalUrl);
+                    HttpsURLConnection con = (HttpsURLConnection) finalUrl.openConnection();
+                    Log.d(TAG, "Con Status:      " + con);
+                    InputStream in = con.getInputStream();
+                    Log.d(TAG, "GetInputStream:  " + in);
 
-                // Selecting the Array Node
-                try {
-                    jObject = new JSONObject(result);
-                } catch (JSONException e) {
-                    Log.e(TAG, "Error parsing data " + e.toString());
-                }
-                Log.d(TAG, "jObject:         " + jObject );
-                Log.d(TAG, "jObject Length:  " + jObject.length());
+                    Log.d(TAG, "*******************    Buffered Reader    *****************************");
+                    String line = null;
 
-
-
-                if ( jObject != null ) {
                     try {
-                        // Select the Object Node
-                        jArray = jObject.getJSONArray("jArrayNode");
-                        Log.d(TAG, "jArray:         " + jArray);
-                        Log.d(TAG, "jArray Length:  " + jArray.length());
-
-
-                        // Now we are able to loop through the array
-                        Log.d(TAG, "*** Entering Loop ***");
-                        for (int i = 0; i < jArray.length(); i++) {
-                            Log.d(TAG, i + "");
-
-                            // Dive into JSON Object "jObject"
-                            JSONObject jObjectNode = jArray.getJSONObject(i);
-                            Log.d(TAG, "JObjectNode:    " + jObjectNode);
-
-                            // Deep-dive into single JSON Object
-                            JSONObject object = jObjectNode.getJSONObject("jObject");
-                            Log.d(TAG, "Object:         " + object);
-
-
-                            // Extract the data
-                            Log.d(TAG, "************************    Values    ******************************** ");
-                            int json_id = i;
-                            Log.d(TAG, json_id + "");
-
-                            String id   = object.getString("id");
-                            Log.d(TAG, "id:                " + id);
-
-                            String year = object.getString("year");
-                            Log.d(TAG, "year:              " + year);
-
-                            String month = object.getString("month");
-                            Log.d(TAG, "month:             " + month);
-
-                            String day   = object.getString("day");
-                            Log.d(TAG, "day:               " + day);
-
-                            String time  = object.getString("time");
-                            Log.d(TAG, "time:              " + time);
-
-                            String temp = object.getString("temp");
-                            Log.d(TAG, "temp:              " + temp);
-
-                            float floatTemp  = Float.parseFloat(temp);
-                            Log.d(TAG, "floatTemp          " + floatTemp);
-
-                            Log.d(TAG, "***********************************************************************");
-
-
-                            // Add items to ArrayList
-                            tempArrayList.add(floatTemp);
-
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(
+                                in, "iso-8859-1"), 8);
+                        StringBuilder sb = new StringBuilder();
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line + "\n");
                         }
-
+                        in.close();
+                        result = sb.toString();
                     } catch (Exception e) {
-                        this.exception = e;
+                        Log.e("log_tag", "Error converting result " + e.toString());
                     }
+
+
+                    Log.d(TAG, "*******************    Parse JSON         *****************************");
+
+                    // Selecting the Array Node
+                    try {
+                        jObject = new JSONObject(result);
+                    } catch (JSONException e) {
+                        Log.e(TAG, "Error parsing data " + e.toString());
+                    }
+                    Log.d(TAG, "jObject:         " + jObject);
+                    Log.d(TAG, "jObject Length:  " + jObject.length());
+
+
+                    if (jObject != null) {
+                        try {
+                            // Select the Object Node
+                            jArray = jObject.getJSONArray("jArrayNode");
+                            Log.d(TAG, "jArray:         " + jArray);
+                            Log.d(TAG, "jArray Length:  " + jArray.length());
+
+
+                            // Now we are able to loop through the array
+                            Log.d(TAG, "*** Entering Loop ***");
+                            for (int i = 0; i < jArray.length(); i++) {
+                                Log.d(TAG, i + "");
+
+                                // Dive into JSON Object "jObject"
+                                JSONObject jObjectNode = jArray.getJSONObject(i);
+                                Log.d(TAG, "JObjectNode:    " + jObjectNode);
+
+                                // Deep-dive into single JSON Object
+                                JSONObject object = jObjectNode.getJSONObject("jObject");
+                                Log.d(TAG, "Object:         " + object);
+
+
+                                // Extract the data
+                                Log.d(TAG, "************************    Values    ******************************** ");
+                                int json_id = i;
+                                Log.d(TAG, json_id + "");
+
+                                String id = object.getString("id");
+                                Log.d(TAG, "id:                " + id);
+
+                                String year = object.getString("year");
+                                Log.d(TAG, "year:              " + year);
+
+                                String month = object.getString("month");
+                                Log.d(TAG, "month:             " + month);
+
+                                String day = object.getString("day");
+                                Log.d(TAG, "day:               " + day);
+
+                                String time = object.getString("time");
+                                Log.d(TAG, "time:              " + time);
+
+                                String temp = object.getString("temp");
+                                Log.d(TAG, "temp:              " + temp);
+
+                                float floatTemp = Float.parseFloat(temp);
+                                Log.d(TAG, "floatTemp          " + floatTemp);
+
+                                Log.d(TAG, "***********************************************************************");
+
+
+                                // Add items to ArrayList
+                                tempArrayList.add(floatTemp);
+
+                            }
+
+                        } catch (Exception e) {
+                            this.exception = e;
+                        }
+                    }
+                } catch (Exception e) {
+                    this.exception = e;
                 }
-            } catch (Exception e) {
-                this.exception = e;
+                Log.d(TAG, "*******************    Building Array     *****************************");
+                Log.d(TAG, "***********************************************************************");
+                Log.d(TAG, "tempArrayList:     " + tempArrayList.toString());
+                Log.d(TAG, "tempArraySize:     " + tempArrayList.size());
+
+
+                Number[] finalTemp = new Number[tempArrayList.size()];
+                tempArrayList.toArray(finalTemp);
+                Log.d(TAG, "finalTemp Array;   " + finalTemp.toString());
+
+
+                return finalTemp;
+            } else {
+            Toast.makeText(TempActivity.this, "Network not available", Toast.LENGTH_LONG).show();
+
             }
-            Log.d(TAG, "*******************    Building Array     *****************************");
-            Log.d(TAG, "***********************************************************************");
-            Log.d(TAG, "tempArrayList:     " + tempArrayList.toString());
-            Log.d(TAG, "tempArraySize:     " + tempArrayList.size());
+        return null;
+        }
 
 
-            Number[] finalTemp = new Number[tempArrayList.size()];
-            tempArrayList.toArray(finalTemp);
-            Log.d(TAG, "finalTemp Array;   " + finalTemp.toString());
-
-
-            return finalTemp; }
 
 
 
@@ -415,12 +438,23 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
                     // initialize our XYPlot reference:
                     plot = (XYPlot) findViewById(R.id.weatherPlot);
 
+                    // TODO: build dynamic based array to protect different array sizes
+                    // while (int i, i < finalTemp.length )  { array ++ }
+                     Number[] series2Days = {1,2,3,4,5,6,7,8,9,10};
+
+                    //Number [] series2Days = new int[finalTemp.length];
+
+
                     series1Numbers = finalTemp;
-                    //series1Numbers = new Number[]{6, 5, 4, 3, 2, 1};
+
 
 
                     // Turn the above arrays into XYSeries':
-                    series1 = new SimpleXYSeries(Arrays.asList(series1Numbers), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "Series1");
+                    series1 = new SimpleXYSeries(
+                            Arrays.asList(series2Days),             // X-Axis
+                            Arrays.asList(series1Numbers),          // Y-Axis
+                            "Temperature");                         // Title
+
 
                     // Create a formatter to use for drawing a series using LineAndPointRenderer
                     // and configure it from xml:
@@ -437,6 +471,39 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
                     plot.setTicksPerRangeLabel(3);
                     plot.getGraphWidget().setDomainLabelOrientation(-45);
 
+                    // Design
+
+
+                    plot.setBackgroundColor(Color.WHITE);
+                    plot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, series2Days.length);
+                    plot.setBorderStyle(Plot.BorderStyle.NONE, null, null);
+                    plot.setPlotMargins(0, 0, 0, 0);
+                    plot.setPlotPadding(0, 0, 0, 0);
+                    plot.setGridPadding(0, 0, 0, 0);
+                    plot.setBackgroundColor(Color.argb(00, 00, 00, 00));
+
+
+                    plot.getGraphWidget().getBackgroundPaint().setColor(Color.WHITE);
+                    plot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
+
+                    plot.getGraphWidget().getDomainLabelPaint().setColor(Color.BLACK);
+                    plot.getGraphWidget().getRangeLabelPaint().setColor(Color.BLACK);
+
+                    plot.getGraphWidget().getDomainOriginLabelPaint().setColor(Color.BLACK);
+                    plot.getGraphWidget().getDomainOriginLinePaint().setColor(Color.BLACK);
+                    plot.getGraphWidget().getRangeOriginLinePaint().setColor(Color.BLACK);
+
+
+
+                    //Remove legend
+                    plot.getLayoutManager().remove(plot.getLegendWidget());
+                    plot.getLayoutManager().remove(plot.getDomainLabelWidget());
+                    plot.getLayoutManager().remove(plot.getRangeLabelWidget());
+                    plot.getLayoutManager().remove(plot.getTitleWidget());
+
+
+
+                    plot.setMarkupEnabled(false);
                     plot.redraw();
 
 
@@ -444,5 +511,24 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
             });
 
         }
+        /* ******************************************************************************************
+     *
+     * IsNetworkAvailable
+     *
+     * Check if Network is up and running
+     */
+        private boolean isNetworkAvailable() {
+            ConnectivityManager manager = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+
+            boolean isAvailable = false;
+            if (networkInfo != null && networkInfo.isConnected()) {
+                isAvailable = true;
+            }
+            return isAvailable;
+        }
+
+
     }
 }

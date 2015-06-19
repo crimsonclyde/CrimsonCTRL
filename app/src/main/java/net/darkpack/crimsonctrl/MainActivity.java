@@ -23,6 +23,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -34,10 +36,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import org.json.JSONObject;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URL;
+import java.net.UnknownHostException;
+
 import javax.net.ssl.HttpsURLConnection;
 
 
@@ -51,6 +58,7 @@ public class MainActivity extends Activity {
     protected String mCurrentTimestamp;
     protected ProgressBar mProgressBar;
     protected Button scButton;
+    public String socketOutput = "s0";
 
 
 
@@ -302,7 +310,7 @@ public class MainActivity extends Activity {
         Log.d(TAG, "AccessToken:   " + accesstoken);
 
         Log.d(TAG, "*********************    Execute HttpsClient     *********************");
-        new HttpsClient().execute("https://api.spark.io/v1/devices/"+coreid+"/events/?access_token="+accesstoken);
+        new HttpsClient().execute("https://api.spark.io/v1/devices/" + coreid + "/events/?access_token=" + accesstoken);
     }
 
 
@@ -316,6 +324,10 @@ public class MainActivity extends Activity {
      */
     class HttpsClient extends AsyncTask<String, Void, String> {
         private Exception exception;
+
+        public String ipAddress;
+        public int socketPort = 5000;
+        public InetAddress getIpFromHostname;
 
 
         public String doInBackground(String... urls) {
@@ -413,6 +425,48 @@ public class MainActivity extends Activity {
 
                 // Closing the stream
                 br.close();
+
+                /*
+                 * Global CrimsonHome Server Information System
+                 *
+                 * TODO: Parse output store in shared prefs and update views
+                 */
+                Log.d(TAG, "**********************************************************************");
+                Log.d(TAG, "****************  CrimsonHome Server Info     ************************");
+
+                // 1. Resolve IP from URL
+                try {
+                    getIpFromHostname = InetAddress.getByName("www.crimson.space");
+                    Log.d(TAG, "WebSocket - GetIpFromHost: " + getIpFromHostname.getHostAddress());
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                ipAddress = getIpFromHostname.getHostAddress();
+
+
+                // 2. Prepare the socket connection
+                try {
+                    // Create Socket instance
+                    Socket socket = new Socket(ipAddress, socketPort);
+                    // Get input buffer
+                    BufferedReader websocketReader = new BufferedReader(
+                            new InputStreamReader(socket.getInputStream()));
+                    socketOutput = websocketReader.readLine();
+                    br.close();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                // 3. Get some output
+                if      (socketOutput.contains("s1")) { Log.d(TAG, "WebSocket - Online " + socketOutput); }
+                else if (socketOutput.contains("s0")) { Log.d(TAG, "WebSocket - Offline " + socketOutput); }
+                else                                  { Log.d(TAG, "WebSocket: Error! " + socketOutput); }
+
+
+
+                // Read - now update the UI
                 updateViews();
                 Log.d(TAG, "**********************************************************************");
             } catch (Exception e) {
@@ -421,6 +475,12 @@ public class MainActivity extends Activity {
             }
             return null; }
     }
+
+
+
+
+
+
 
     /* ******************************************************************************************
      *
@@ -436,6 +496,7 @@ public class MainActivity extends Activity {
                 final TextView updateTemp = (TextView) findViewById(R.id.textTemperature);
                 final TextView updatePhoto = (TextView) findViewById(R.id.textResistance);
                 final TextView updateScl = (TextView) findViewById(R.id.textStoneCircle);
+                final TextView updateServer = (TextView)  findViewById(R.id.textCrimsonHomeState);
 
 
                 // Retrieve data from shared preferences
@@ -470,6 +531,9 @@ public class MainActivity extends Activity {
                     default:
                         updateScl.setText("ERROR");
                 }
+
+                if (socketOutput.contains("ServerUp,s1;"))  { updateServer.setText("On"); socketOutput = "s0"; }
+                else                                        { updateServer.setText("Off"); }
 
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
@@ -544,6 +608,7 @@ public class MainActivity extends Activity {
     */
     class PostClient extends AsyncTask<String, Void, String> {
         public String doInBackground(String... IO) {
+            mProgressBar.setVisibility(View.VISIBLE);
 
             // Predefine variables
             final String io = new String(IO[0]);
@@ -619,7 +684,7 @@ public class MainActivity extends Activity {
                         }
                     });
                 }
-
+                mProgressBar.setVisibility(View.INVISIBLE);
 
             } catch (Exception e) {
                 Log.d(TAG, "Exception");
