@@ -73,6 +73,7 @@ public class Data {
     public Integer getScl() { return scl;}
     public void setSCL(Integer scl) {this.scl = scl; }
 
+
     public Date getDatestamp() throws ParseException{
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.parse(date + " " + time);

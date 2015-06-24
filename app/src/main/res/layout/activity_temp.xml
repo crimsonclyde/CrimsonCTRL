@@ -2,7 +2,8 @@
 
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="fill_parent"
-    android:layout_width="fill_parent">
+    android:layout_width="fill_parent"
+    android:background="#000000">
 
     <TextView
         android:id="@+id/crimsonHead"
@@ -14,26 +15,24 @@
         android:textColor="#FFCCCCCC"
         android:textStyle="bold" />
 
-
-    <com.androidplot.xy.XYPlot
-        android:id="@+id/weatherPlot"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginTop="120dp"
-        android:elevation="10dp"
-        androidPlot.title="Weather Data"
-        androidPlot.rangeLabel="°Celsius"
-        androidPlot.setPlotPadding="10dp 10dp 10dp 10dp"
-        androidPlot.titleWidget.labelPaint.textSize="@dimen/title_font_size"
-        androidPlot.rangeLabelWidget.labelPaint.textSize="@dimen/range_label_font_size"
-        androidPlot.graphWidget.rangeLabelPaint.textSize="@dimen/range_tick_label_font_size"
-        androidPlot.graphWidget.rangeOriginLabelPaint.textSize="@dimen/range_tick_label_font_size"
-        androidPlot.legendWidget.textPaint.textSize="@dimen/legend_text_font_size"
-        androidPlot.legendWidget.iconSizeMetrics.heightMetric.value="50dp"
-        androidPlot.legendWidget.iconSizeMetrics.widthMetric.value="50dp"
-        androidPlot.legendWidget.heightMetric.value="25dp"
-        androidPlot.legendWidget.positionMetrics.anchor="right_bottom"
-        androidPlot.graphWidget.gridLinePaint.color="#ffffff"/>
+        android:background="#000000" >
+
+
+        <com.androidplot.xy.XYPlot
+            android:id="@+id/weatherPlot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10sp"
+            android:background="#000000"
+            android:elevation="10dp" />
+
+
+    </RelativeLayout>
+
     
     <Spinner
         android:id="@+id/temp_time_spinner"

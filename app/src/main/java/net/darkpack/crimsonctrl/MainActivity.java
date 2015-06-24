@@ -19,8 +19,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.media.audiofx.BassBoost;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -191,6 +193,8 @@ public class MainActivity extends Activity {
             String coreid      = SettingsConnector.readString(this, SettingsConnector.COREID, null);
             String accesstoken = SettingsConnector.readString(this, SettingsConnector.ACCESSTOKEN, null);
             String scl         = SettingsConnector.readString(this, SettingsConnector.SCL, null);
+            String socketurl   = SettingsConnector.readString(this, SettingsConnector.WEBSOCKETURL, null);
+            String socketport  = SettingsConnector.readString(this, SettingsConnector.WEBSOCKETPORT, null);
 
              // First run fix: If mStoredTime is empty set it to 05.11.1984 23:23:23
             if ( mStoredTimestamp == null) { mStoredTimestamp = "468545003"; }
@@ -200,11 +204,13 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "accesstoken:       " + accesstoken);
                 Log.d(TAG, "scl:               " + scl);
 
-                if (accesstoken == null || coreid == null) {
-                    Log.d(TAG, "CoreID or AccessToken not set, starting SettingsActivity");
+                if (accesstoken == null || coreid == null || socketurl == null || socketport == null) {
+                    Log.d(TAG, "CoreID, AccessToken, SocketURL or SocketPort not set, starting SettingsActivity");
                     Log.d(TAG, "CoreID:       " + coreid );
                     Log.d(TAG, "AccessToken:  " + accesstoken);
-                    Toast.makeText(MainActivity.this, "CoreID/AccessToken empty", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "SocketURL:    " + socketurl);
+                    Log.d(TAG, "SocketPort:   " + socketport);
+                    Toast.makeText(MainActivity.this, "Core+Socket must be set ", Toast.LENGTH_LONG).show();
                     Intent initSettings = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(initSettings);
                 } else if (scl == null) {
@@ -305,6 +311,7 @@ public class MainActivity extends Activity {
         // Get CoreID + AccessToken from shared preferences
         String coreid = SettingsConnector.readString(this, SettingsConnector.COREID, null);
         String accesstoken = SettingsConnector.readString(this, SettingsConnector.ACCESSTOKEN, null);
+
         Log.d(TAG, "************    Retrieve data from Shared Preferences     ************");
         Log.d(TAG, "CoreID:        " + coreid);
         Log.d(TAG, "AccessToken:   " + accesstoken);
@@ -325,8 +332,8 @@ public class MainActivity extends Activity {
     class HttpsClient extends AsyncTask<String, Void, String> {
         private Exception exception;
 
-        public String ipAddress;
-        public int socketPort = 5000;
+        //public String ipAddress;
+        //public int socketPort = 5000;
         public InetAddress getIpFromHostname;
 
 
@@ -434,36 +441,52 @@ public class MainActivity extends Activity {
                 Log.d(TAG, "**********************************************************************");
                 Log.d(TAG, "****************  CrimsonHome Server Info     ************************");
 
-                // 1. Resolve IP from URL
-                try {
-                    getIpFromHostname = InetAddress.getByName("www.crimson.space");
-                    Log.d(TAG, "WebSocket - GetIpFromHost: " + getIpFromHostname.getHostAddress());
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
+                // Retrieve URL + Port from SharedPreferences
+                String websocketurl = SettingsConnector.readString(MainActivity.this, SettingsConnector.WEBSOCKETURL, null);
+                String websocketport = SettingsConnector.readString(MainActivity.this, SettingsConnector.WEBSOCKETPORT, null);
+
+                if (websocketurl != null && websocketport != null) {
+                    // Convert websocketport to an integer
+                    int websocketportInt = Integer.parseInt(websocketport);
+
+                    // 1. Resolve IP from URL
+                    try {
+                        getIpFromHostname = InetAddress.getByName(websocketurl);
+                        Log.d(TAG, "WebSocket - GetIpFromHost: " + getIpFromHostname.getHostAddress());
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                    String ipAddress = getIpFromHostname.getHostAddress();
+
+
+                    // 2. Prepare the socket connection
+                    try {
+                        // Create Socket instance
+                        Socket socket = new Socket(ipAddress, websocketportInt);
+                        // Get input buffer
+                        BufferedReader websocketReader = new BufferedReader(
+                                new InputStreamReader(socket.getInputStream()));
+                        socketOutput = websocketReader.readLine();
+                        br.close();
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    // 3. Debug info
+                    if (socketOutput.contains("s1")) {
+                        Log.d(TAG, "WebSocket - Online " + socketOutput);
+                    } else if (socketOutput.contains("s0")) {
+                        Log.d(TAG, "WebSocket - Offline " + socketOutput);
+                    } else {
+                        Log.d(TAG, "WebSocket: Error! " + socketOutput);
+                    }
+
+                    // 4. Save result into shared preferences
+                    SettingsConnector.writeString(MainActivity.this, SettingsConnector.WEBSOCKETOUTPUT, socketOutput);
                 }
-                ipAddress = getIpFromHostname.getHostAddress();
-
-
-                // 2. Prepare the socket connection
-                try {
-                    // Create Socket instance
-                    Socket socket = new Socket(ipAddress, socketPort);
-                    // Get input buffer
-                    BufferedReader websocketReader = new BufferedReader(
-                            new InputStreamReader(socket.getInputStream()));
-                    socketOutput = websocketReader.readLine();
-                    br.close();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                // 3. Get some output
-                if      (socketOutput.contains("s1")) { Log.d(TAG, "WebSocket - Online " + socketOutput); }
-                else if (socketOutput.contains("s0")) { Log.d(TAG, "WebSocket - Offline " + socketOutput); }
-                else                                  { Log.d(TAG, "WebSocket: Error! " + socketOutput); }
-
 
 
                 // Read - now update the UI
@@ -497,6 +520,9 @@ public class MainActivity extends Activity {
                 final TextView updatePhoto = (TextView) findViewById(R.id.textResistance);
                 final TextView updateScl = (TextView) findViewById(R.id.textStoneCircle);
                 final TextView updateServer = (TextView)  findViewById(R.id.textCrimsonHomeState);
+                final TextView serviceApache = (TextView) findViewById(R.id.textCrimsonHomeApache);
+                final TextView uptimeServer = (TextView) findViewById(R.id.textCrimsonHomeUptime);
+                final TextView uptimeDetails = (TextView) findViewById(R.id.crimsonHomeUptimeTextView);
 
 
                 // Retrieve data from shared preferences
@@ -504,23 +530,29 @@ public class MainActivity extends Activity {
                 String photo     = SettingsConnector.readString(MainActivity.this, SettingsConnector.PHOTO, null);
                 String temp      = SettingsConnector.readString(MainActivity.this, SettingsConnector.TEMP, null);
                 String scl       = SettingsConnector.readString(MainActivity.this, SettingsConnector.SCL, null);
+                String websocket = SettingsConnector.readString(MainActivity.this, SettingsConnector.WEBSOCKETOUTPUT, null);
                 mStoredTimestamp = SettingsConnector.readString(MainActivity.this, SettingsConnector.TIMESTAMP, null);
+
 
 
                 Log.d(TAG, "SharedPreferences - photo:      " + photo);
                 Log.d(TAG, "SharedPreferences - temp:       " + temp);
                 Log.d(TAG, "SharedPreferences - scl:        " + scl);
+                Log.d(TAG, "SharedPreferences - websocket:  " + websocket);
                 Log.d(TAG, "SharedPreferences - timestamp:  " + mStoredTimestamp);
 
 
                 // Update the TextViews
                 Log.d(TAG, "*****************    Update TextView       ***************************");
+                // Temperature State
                 if      (temp != null)  { updateTemp.setText(temp); }
                 else                    { updateTemp.setText("ERROR"); }
 
+                // Photoresistor State
                 if      (photo != null) { updatePhoto.setText(photo); }
                 else                    { updatePhoto.setText("ERROR"); }
 
+                // StoneCircleLight
                 switch (scl) {
                     case "1":
                         updateScl.setText("Off");
@@ -532,9 +564,71 @@ public class MainActivity extends Activity {
                         updateScl.setText("ERROR");
                 }
 
-                if (socketOutput.contains("ServerUp,s1;"))  { updateServer.setText("On"); socketOutput = "s0"; }
-                else                                        { updateServer.setText("Off"); }
+                if (websocket != null ) {
+                    // CrimsonHome Server Information Split
+                    String delim1 = "[;]";
+                    String[] tokens = websocket.split(delim1);
+                    // Debug
+                    Log.d(TAG, "FirstSplit: " + tokens[1]);
+                    Log.d(TAG, "FirstSplit: " + tokens[2]);
+                    Log.d(TAG, "FirstSplit: " + tokens[3]);
 
+                    // CrimsonHome Server
+                    if (websocket.contains("ServerUp,s1;")) {
+                        updateServer.setText("On");
+                    } else {
+                        updateServer.setText("Off");
+                    }
+
+                    // CrimsonHome Uptime
+                    // We need to split the uptime multiple time
+                    // First split the parts by ,
+                    String delimUptime = "[,]";
+                    String[] uptimeSplit = tokens[2].split(delimUptime);
+                    Log.d(TAG, "Uptime Split: " + uptimeSplit[0]);
+                    Log.d(TAG, "Uptime Split: " + uptimeSplit[1]);
+                    Log.d(TAG, "Uptime Split: " + uptimeSplit[2]);
+                    Log.d(TAG, "Uptime Split: " + uptimeSplit[3]);
+
+                    // Second split the uptime by " "
+                    String delimUptime2 = "[ ]";
+                    String[] uptimeSplit2 = uptimeSplit[1].split(delimUptime2);
+                    Log.d(TAG, "Uptime Split2: " + uptimeSplit2[1]);
+                    Log.d(TAG, "Uptime Split2: " + uptimeSplit2[2]);
+                    Log.d(TAG, "Uptime Split2: " + uptimeSplit2[3]);
+
+                    // Third split the hours and minutes
+                    String delimUptime3 = "[:]";
+                    String[] uptimeSplit3 = uptimeSplit[2].split(delimUptime3);
+                    Log.d(TAG, "Uptime Split3: " + uptimeSplit3[0]);
+                    Log.d(TAG, "Uptime Split3: " + uptimeSplit3[1]);
+
+
+                    // Out of array into string
+                    String uptime = uptimeSplit2[3];
+                    if (uptimeSplit2[2].contains("up")) {
+                        uptimeServer.setText("Up");
+                        uptimeDetails.setTextSize(16.0f);
+                        uptimeDetails.setText("CrimsonHome" + "\n" +
+                                "Uptime: " + uptime + "days " + uptimeSplit3[0].replaceAll("\\s", "") + "hours " + uptimeSplit3[1] + "minutes" +
+                                "\n" +
+                                "Current time: " + uptimeSplit2[1]);
+                    } else {
+                        uptimeServer.setText("Down");
+                    }
+
+                    // CrimsonHome Service Apache
+                    if (websocket.contains("Apache,Apache2 is running")) {
+                        serviceApache.setText("On");
+                    } else {
+                        serviceApache.setText("Off");
+                    }
+
+                    // Set the variable back off
+                    //websocket = "s0";
+                }
+
+                // Hide prorgressbar
                 mProgressBar.setVisibility(View.INVISIBLE);
             }
 

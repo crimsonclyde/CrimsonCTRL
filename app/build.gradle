@@ -8,8 +8,8 @@ android {
         applicationId "net.darkpack.crimsonctrl"
         minSdkVersion 21
         targetSdkVersion 21
-        versionCode 23
-        versionName "1.7.4.1"
+        versionCode 25
+        versionName "1.8.1"
     }
     buildTypes {
         release {

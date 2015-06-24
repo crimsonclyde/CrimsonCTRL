@@ -34,6 +34,9 @@ public class SettingsConnector {
     public static final String PHOTO = "PHOTO";
     public static final String TEMP = "TEMP";
     public static final String TEMPSERVICEURL = "TEMPSERVICEURL";
+    public static final String WEBSOCKETURL = "WEBSOCKETURL";
+    public static final String WEBSOCKETPORT = "WEBSOCKETPORT";
+    public static final String WEBSOCKETOUTPUT = "WEBSOCKETOUTPUT";
 
 
 

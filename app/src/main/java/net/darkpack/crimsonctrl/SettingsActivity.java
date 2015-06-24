@@ -20,6 +20,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -39,7 +40,7 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class SettingsActivity extends Activity {
     public static final String TAG = SettingsActivity.class.getSimpleName();
-    EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass, mTempServiceUrl;
+    EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass, mTempServiceUrl, mWebsocketUrl, mWebsocketPort;
     ImageButton mShowAccessToken, mShowCamPass, mScanQrCode;
 
     @Override
@@ -185,6 +186,7 @@ public class SettingsActivity extends Activity {
                             mCamPass.setText(accesstokenSplit[1]);
                         }
 
+                        // 7 TemperatureServiceUrl
                         if ( seperateScanResult[7].contains("TemperatureServiceUrl") ) {
                             String tempServiceUrlSplit[] = seperateScanResult[7].split("::");
                             String mTempServiceUrlSplitted = tempServiceUrlSplit[1];
@@ -192,6 +194,22 @@ public class SettingsActivity extends Activity {
                             mTempServiceUrl.setText(mTempServiceUrlConverted);
 
                         }
+
+                        // 8 WebsocketUrl
+                        if ( seperateScanResult[8].contains("WebSocketUrl") ) {
+                            String webSocketUrlSplit[] = seperateScanResult[8].split("::");
+                            System.out.println("WebSocket URL :    " + webSocketUrlSplit[1]);
+                            mWebsocketUrl.setText(webSocketUrlSplit[1]);
+                        }
+
+                        // WebsocketPort
+                        if ( seperateScanResult[9].contains("WebSocketPort") ) {
+                            String webSocketPortSplit[] = seperateScanResult[9].split("::");
+                            System.out.println("WebSocket Port:    " + webSocketPortSplit[1]);
+                            mWebsocketUrl.setText(webSocketPortSplit[1]);
+                        }
+
+
 
                     }
                 });
@@ -214,6 +232,8 @@ public class SettingsActivity extends Activity {
         mCamUser        = (EditText) findViewById(R.id.edit_cam_user);
         mCamPass        = (EditText) findViewById(R.id.edit_cam_pass);
         mTempServiceUrl = (EditText) findViewById(R.id.edit_temp_service);
+        mWebsocketUrl   = (EditText) findViewById(R.id.edit_websocket_url);
+        mWebsocketPort  = (EditText) findViewById(R.id.edit_websocket_port);
         readSettings();
     }
 
@@ -226,6 +246,9 @@ public class SettingsActivity extends Activity {
         String camUserText      = mCamUser.getText().toString();
         String camPassText      = mCamPass.getText().toString();
         String tempServiceUrl   = mTempServiceUrl.getText().toString();
+        String websocketurl     = mWebsocketUrl.getText().toString();
+        String websocketport    = mWebsocketPort.getText().toString();
+
 
         if (coreIdText != null)
             SettingsConnector.writeString(this, SettingsConnector.COREID, coreIdText);
@@ -243,6 +266,10 @@ public class SettingsActivity extends Activity {
             SettingsConnector.writeString(this, SettingsConnector.CAMPASS, camPassText);
         if (tempServiceUrl != null)
             SettingsConnector.writeString(this, SettingsConnector.TEMPSERVICEURL, tempServiceUrl);
+        if (websocketurl != null)
+            SettingsConnector.writeString(this, SettingsConnector.WEBSOCKETURL, websocketurl );
+        if (websocketport != null)
+            SettingsConnector.writeString(this, SettingsConnector.WEBSOCKETPORT, websocketport);
 
         // User Feedback
         Toast.makeText(this, "Successfully saved", Toast.LENGTH_SHORT).show();
@@ -269,6 +296,8 @@ public class SettingsActivity extends Activity {
         mCamUser.setText(SettingsConnector.readString(this, SettingsConnector.CAMUSER, null));
         mCamPass.setText(SettingsConnector.readString(this, SettingsConnector.CAMPASS, null));
         mTempServiceUrl.setText(SettingsConnector.readString(this, SettingsConnector.TEMPSERVICEURL, null));
+        mWebsocketUrl.setText(SettingsConnector.readString(this, SettingsConnector.WEBSOCKETURL, null));
+        mWebsocketPort.setText(SettingsConnector.readString(this, SettingsConnector.WEBSOCKETPORT, null));
     }
 
 
@@ -371,6 +400,8 @@ public class SettingsActivity extends Activity {
             SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CAMUSER).commit();
             SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.CAMPASS).commit();
             SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.TEMPSERVICEURL).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.WEBSOCKETURL).commit();
+            SettingsConnector.getEditor(SettingsActivity.this).remove(SettingsConnector.WEBSOCKETPORT).commit();
             readSettings();
         }
     }
