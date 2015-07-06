@@ -31,5 +31,6 @@
     <string name="title_activity_temp">TempActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_test">TestActivity</string>
 
 </resources>

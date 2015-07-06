@@ -35,6 +35,10 @@
             android:name=".TempActivity"
             android:label="@string/title_activity_temp" >
         </activity>
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test" >
+        </activity>
     </application>
 
 </manifest>

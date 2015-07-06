@@ -18,16 +18,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.audiofx.BassBoost;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +55,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 /* ****************************************************************************************** */
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
     // Initiate Variables and Defaults
     public static final String TAG = HttpsClient.class.getSimpleName();
     protected final static int mRefreshTimeout = 60;
@@ -69,11 +72,24 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        // Toolbar instead of ActioneBar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setLogo(R.drawable.ic_launcher);
+        //toolbar.setNavigationIcon(R.drawable.chevron_left);
+        getSupportActionBar().setTitle("Control");
+
+
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
         Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
+
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
+        crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
+        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
         // Assign and declare the ProgressBar
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -97,58 +113,65 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    // Handle action bar item clicks here. The action bar will
-    // automatically handle clicks on the Home/Up button, so long
-    // as you specify a parent activity in AndroidManifest.xml.
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
 
-    // Handle presses on the action bar items
-    switch (item.getItemId()) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
 
-        // Refresh action
-        case R.id.action_refresh:
-            //Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
-            theFramework();
-            break;
+            // Refresh action
+            case R.id.action_refresh:
+                //Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
+                theFramework();
+                break;
 
-        // Cam Action
-        case R.id.action_cam:
-            //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();
+            // Cam Action
+            case R.id.action_cam:
+                //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();
 
-            // Change Activity
-            Intent intentCam = new Intent(MainActivity.this, MjpegActivity.class);
-            startActivity(intentCam);
-            break;
+                // Change Activity
+                Intent intentCam = new Intent(MainActivity.this, MjpegActivity.class);
+                startActivity(intentCam);
+                break;
 
-        // Temperature Plot
-        case R.id.action_temp:
-            //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
+            // Temperature Plot
+            case R.id.action_temp:
+                //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
 
-            // Change Activity
-            Intent intentTempPlot = new Intent(MainActivity.this, TempActivity.class);
-            startActivity(intentTempPlot);
-            break;
+                // Change Activity
+                Intent intentTempPlot = new Intent(MainActivity.this, TempActivity.class);
+                startActivity(intentTempPlot);
+                break;
 
-        // Settings action
-        case R.id.action_settings:
-            //Toast.makeText(this, "Starting - Settings Activity", Toast.LENGTH_SHORT).show();
+            // Settings action
+            case R.id.action_settings:
+                //Toast.makeText(this, "Starting - Settings Activity", Toast.LENGTH_SHORT).show();
 
-            // Change Activity
-            Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
-            startActivity(intentSettings);
-            break;
+                // Change Activity
+                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intentSettings);
+                break;
 
-        // Info Screen
-        case R.id.action_info:
-            // Just for debugging
-            //Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_LONG).show();
+            // Test Screen:
+            //case R.id.action_test:
+            //    Intent intentTest = new Intent(MainActivity.this, TestActivity.class);
+            //    startActivity(intentTest);
+            //    break;
 
-            // Change Activity
-            Intent intentInfo = new Intent(MainActivity.this, InfoActivity.class);
-            startActivity(intentInfo);
-            break;
 
-        default:
-            break;
+            // Info Screen
+            case R.id.action_info:
+                // Just for debugging
+                //Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_LONG).show();
+
+                // Change Activity
+                Intent intentInfo = new Intent(MainActivity.this, InfoActivity.class);
+                startActivity(intentInfo);
+                break;
+
+            default:
+                break;
         }
         return true;
 
@@ -196,58 +219,58 @@ public class MainActivity extends Activity {
             String socketurl   = SettingsConnector.readString(this, SettingsConnector.WEBSOCKETURL, null);
             String socketport  = SettingsConnector.readString(this, SettingsConnector.WEBSOCKETPORT, null);
 
-             // First run fix: If mStoredTime is empty set it to 05.11.1984 23:23:23
+            // First run fix: If mStoredTime is empty set it to 05.11.1984 23:23:23
             if ( mStoredTimestamp == null) { mStoredTimestamp = "468545003"; }
 
-                Log.d(TAG, "mStoredTimestamp:  " + mStoredTimestamp);
-                Log.d(TAG, "coreid:            " + coreid);
-                Log.d(TAG, "accesstoken:       " + accesstoken);
-                Log.d(TAG, "scl:               " + scl);
+            Log.d(TAG, "mStoredTimestamp:  " + mStoredTimestamp);
+            Log.d(TAG, "coreid:            " + coreid);
+            Log.d(TAG, "accesstoken:       " + accesstoken);
+            Log.d(TAG, "scl:               " + scl);
 
-                if (accesstoken == null || coreid == null || socketurl == null || socketport == null) {
-                    Log.d(TAG, "CoreID, AccessToken, SocketURL or SocketPort not set, starting SettingsActivity");
-                    Log.d(TAG, "CoreID:       " + coreid );
-                    Log.d(TAG, "AccessToken:  " + accesstoken);
-                    Log.d(TAG, "SocketURL:    " + socketurl);
-                    Log.d(TAG, "SocketPort:   " + socketport);
-                    Toast.makeText(MainActivity.this, "Core+Socket must be set ", Toast.LENGTH_LONG).show();
-                    Intent initSettings = new Intent(MainActivity.this, SettingsActivity.class);
-                    startActivity(initSettings);
-                } else if (scl == null) {
-                    // SCL Value is empty, write /default 1 (off)
-                    Log.d(TAG, "SCL value not set!");
-                    // Set initial default value (1=off)
-                    SettingsConnector.writeString(this, SettingsConnector.SCL, "1");
-                    // Restart MainActivity
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
-                } else {
-                    final int sTime = Integer.parseInt(mStoredTimestamp);
-
-                    // Debug
-                    Log.d(TAG, "StoredTimestamp:  " + sTime);
-                    Log.d(TAG, "CurrentTimestamp: " + cTime);
-
-                    // Decide if update is necessary
-                    if (cTime > sTime) {
-                        // Values stored are too old, do the refresh boogie
-                        Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        loadCrimsonCoreData();
-
-                    } else {
-                        // Values stored are not older than 60 secs, do nothing
-                        mProgressBar.setVisibility(View.VISIBLE);
-                        Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
-                        int pastTime = sTime - cTime;
-                        Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
-                        updateViews();
-                    }
-                }
-
+            if (accesstoken == null || coreid == null || socketurl == null || socketport == null) {
+                Log.d(TAG, "CoreID, AccessToken, SocketURL or SocketPort not set, starting SettingsActivity");
+                Log.d(TAG, "CoreID:       " + coreid );
+                Log.d(TAG, "AccessToken:  " + accesstoken);
+                Log.d(TAG, "SocketURL:    " + socketurl);
+                Log.d(TAG, "SocketPort:   " + socketport);
+                Toast.makeText(MainActivity.this, "Core+Socket must be set ", Toast.LENGTH_LONG).show();
+                Intent initSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(initSettings);
+            } else if (scl == null) {
+                // SCL Value is empty, write /default 1 (off)
+                Log.d(TAG, "SCL value not set!");
+                // Set initial default value (1=off)
+                SettingsConnector.writeString(this, SettingsConnector.SCL, "1");
+                // Restart MainActivity
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
             } else {
-                Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
+                final int sTime = Integer.parseInt(mStoredTimestamp);
+
+                // Debug
+                Log.d(TAG, "StoredTimestamp:  " + sTime);
+                Log.d(TAG, "CurrentTimestamp: " + cTime);
+
+                // Decide if update is necessary
+                if (cTime > sTime) {
+                    // Values stored are too old, do the refresh boogie
+                    Toast.makeText(this, "RELOAD DATA", Toast.LENGTH_LONG).show();
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    loadCrimsonCoreData();
+
+                } else {
+                    // Values stored are not older than 60 secs, do nothing
+                    mProgressBar.setVisibility(View.VISIBLE);
+                    Toast.makeText(this, "No update needed.", Toast.LENGTH_LONG).show();
+                    int pastTime = sTime - cTime;
+                    Log.d(TAG, "Data age in SharedPreferences:  " + pastTime);
+                    updateViews();
+                }
+            }
+
+        } else {
+            Toast.makeText(this, "Network is unavailable!", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -564,7 +587,7 @@ public class MainActivity extends Activity {
                         updateScl.setText("ERROR");
                 }
 
-                if (websocket != null ) {
+                if (websocket.contains("s1") ) {
                     // CrimsonHome Server Information Split
                     String delim1 = "[;]";
                     String[] tokens = websocket.split(delim1);
@@ -575,9 +598,9 @@ public class MainActivity extends Activity {
 
                     // CrimsonHome Server
                     if (websocket.contains("ServerUp,s1;")) {
-                        updateServer.setText("On");
+                        updateServer.setText("Up");
                     } else {
-                        updateServer.setText("Off");
+                        updateServer.setText("Down");
                     }
 
                     // CrimsonHome Uptime
@@ -593,35 +616,89 @@ public class MainActivity extends Activity {
                     // Second split the uptime by " "
                     String delimUptime2 = "[ ]";
                     String[] uptimeSplit2 = uptimeSplit[1].split(delimUptime2);
-                    Log.d(TAG, "Uptime Split2: " + uptimeSplit2[1]);
-                    Log.d(TAG, "Uptime Split2: " + uptimeSplit2[2]);
-                    Log.d(TAG, "Uptime Split2: " + uptimeSplit2[3]);
 
-                    // Third split the hours and minutes
+                    // Debug
+                    Log.d(TAG, "Uptime Split2-0     :" + uptimeSplit2[0]);
+                    Log.d(TAG, "Uptime Split2-1     :" + uptimeSplit2[1]);
+                    Log.d(TAG, "Uptime Split2-2     :" + uptimeSplit2[2]);
+                    Log.d(TAG, "Uptime Split2-3     :" + uptimeSplit2[3]);
+                    Log.d(TAG, "Uptime Split2-4     :" + uptimeSplit2[4]);
+                    Log.d(TAG, "Uptime Split-Length :" + uptimeSplit2.length);
+
+
+                    // Splitting the uptime
+                    int uptimeSplitLength = uptimeSplit2.length;
+                    String uptimeSplit3[] = null;
                     String delimUptime3 = "[:]";
-                    String[] uptimeSplit3 = uptimeSplit[2].split(delimUptime3);
-                    Log.d(TAG, "Uptime Split3: " + uptimeSplit3[0]);
-                    Log.d(TAG, "Uptime Split3: " + uptimeSplit3[1]);
 
+                    // In case server is up only minutes
+                    if (uptimeSplit2[4].contains("min")) {
+                        Log.d(TAG, "Uptime Split2-3 Hours:   " + uptimeSplit2[3]);
 
-                    // Out of array into string
-                    String uptime = uptimeSplit2[3];
-                    if (uptimeSplit2[2].contains("up")) {
-                        uptimeServer.setText("Up");
-                        uptimeDetails.setTextSize(16.0f);
-                        uptimeDetails.setText("CrimsonHome" + "\n" +
-                                "Uptime: " + uptime + "days " + uptimeSplit3[0].replaceAll("\\s", "") + "hours " + uptimeSplit3[1] + "minutes" +
-                                "\n" +
-                                "Current time: " + uptimeSplit2[1]);
-                    } else {
-                        uptimeServer.setText("Down");
+                        // Update the textviews
+                        if (uptimeSplit2[2].contains("up")) {
+                            uptimeServer.setText("Up");
+                            uptimeDetails.setTextSize(16.0f);
+                            uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
+                                    uptimeSplit2[3].replaceAll("\\s", "") + "minutes" +
+                                    "\n" +
+                                    "Current time: " + uptimeSplit2[1]);
+                        } else {
+                            uptimeServer.setText("Down");
+                        }
                     }
+
+                    // Days + Hours + Minutes
+                    else if (uptimeSplit2[4].contains("day") || uptimeSplit2[4].contains("days")) {
+                        uptimeSplit3 = uptimeSplit[2].split(delimUptime3);
+                        Log.d(TAG, "UptimeSplit3-0 Hours:    " + uptimeSplit3[0]);
+                        Log.d(TAG, "UptimeSplit3-1 Minutes:  " + uptimeSplit3[1]);
+
+                        // Update the textviews
+                        if (uptimeSplit2[2].contains("up")) {
+                            uptimeServer.setText("Up");
+                            uptimeDetails.setTextSize(16.0f);
+
+                            uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
+                                    uptimeSplit2[3].replaceAll("\\s", "") + uptimeSplit2[4].replaceAll("\\s", "") + " " +
+                                    uptimeSplit3[0].replaceAll("\\s", "") + "hours " +
+                                    uptimeSplit3[1].replaceAll("\\s", "") + "minutes" +
+                                    "\n" +
+                                    "Current time: " + uptimeSplit2[1]);
+                        } else {
+                            uptimeServer.setText("Down");
+
+                        }
+
+                    }
+
+                    // Hours + Minutes
+                    else if (uptimeSplit2[4].contains(":")) {
+                        uptimeSplit3 = uptimeSplit2[4].split(delimUptime3);
+                        Log.d(TAG, "Uptime Split4-0:   " + uptimeSplit3[0]);
+                        Log.d(TAG, "Uptime Split4-1:   " + uptimeSplit3[1]);
+
+                        // Update the textviews
+                        if (uptimeSplit2[2].contains("up")) {
+                            uptimeServer.setText("Up");
+                            uptimeDetails.setTextSize(16.0f);
+                            uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
+                                    uptimeSplit3[0].replaceAll("\\s", "") + "hours " +
+                                    uptimeSplit3[1].replaceAll("\\s", "") + "minutes" +
+                                    "\n" +
+                                    "Current time: " + uptimeSplit2[1]);
+                        } else {
+                            uptimeServer.setText("Down");
+                        }
+
+                    }
+
 
                     // CrimsonHome Service Apache
                     if (websocket.contains("Apache,Apache2 is running")) {
-                        serviceApache.setText("On");
+                        serviceApache.setText("Up");
                     } else {
-                        serviceApache.setText("Off");
+                        serviceApache.setText("Down");
                     }
 
                     // Set the variable back off
@@ -687,7 +764,7 @@ public class MainActivity extends Activity {
 
 
 
-        return null;
+            return null;
         }
     }
 

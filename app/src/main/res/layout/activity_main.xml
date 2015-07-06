@@ -11,48 +11,68 @@
     app:alpha_factor="1.9"
     tools:context=".MainActivity" >
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/maincontainer">
 
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:background="#FF660000"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.Toolbar>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:id="@+id/progressBar"
+            android:layout_below="@id/toolbar"
+            android:paddingBottom="7dp"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="true"
+            android:indeterminateBehavior="cycle"
+            android:elevation="2dp" />
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/headcontainer">
+            android:layout_height="wrap_content"
+            android:id="@+id/headcontainer"
+            android:paddingTop="?attr/actionBarSize">
 
 
-            <TextView
-                android:id="@+id/crimsonHead"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:background="@drawable/item_background"
-                android:text="@string/crimson"
-                android:textSize="10sp"
-                android:textColor="#FFCCCCCC"
-                android:textStyle="bold" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:background="#FF333333"
+                        android:elevation="1dp" />
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="10dip"
-                android:id="@+id/progressBar"
-                android:layout_below="@id/crimsonHead"
-                android:layout_centerHorizontal="true"
-                android:indeterminate="true"
-                android:indeterminateBehavior="cycle"
-                android:elevation="10dp" />
-    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/crimsonHead"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginTop="1dp"
+                        android:background="@drawable/item_background"
+                        android:text="@string/crimson"
+                        android:elevation="1dp" />
+
+
+
+        </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/srollcontainer"
+        android:paddingTop="10dp"
         android:layout_below="@id/headcontainer">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/cardcontainer">
 
             <!-- Temperature Card -->

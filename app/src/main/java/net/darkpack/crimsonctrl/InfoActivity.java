@@ -17,18 +17,21 @@ package net.darkpack.crimsonctrl;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class InfoActivity extends Activity {
+public class InfoActivity extends AppCompatActivity {
 
 
     @Override
@@ -36,11 +39,22 @@ public class InfoActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
+        // Toolbar instead of ActioneBar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setLogo(R.drawable.ic_launcher);
+        toolbar.setNavigationIcon(R.drawable.chevron_left);
+        getSupportActionBar().setTitle("About");
+
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
         Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
+
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
+        crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
+        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
         /* TextView font adjustments */
         TextView authorText    = (TextView) findViewById(R.id.authorTextView);

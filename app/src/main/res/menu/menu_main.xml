@@ -10,21 +10,21 @@
         android:orderInCategory="1"
         android:title="@string/action_refresh"
         android:icon="@drawable/ic_action_refresh"
-        android:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 
     // Cam
     <item
         android:id="@+id/action_cam"
         android:orderInCategory="2"
         android:title="@string/action_cam"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
     // Temperature Graph
     <item
         android:id="@+id/action_temp"
         android:orderInCategory="3"
         android:title="@string/action_temp"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
 
 
     // Settings
@@ -39,7 +39,8 @@
         android:id="@+id/action_info"
         android:orderInCategory="5"
         android:title="@string/action_info"
-        android:showAsAction="never"/>
+        app:showAsAction="never"/>
+
 
 
 

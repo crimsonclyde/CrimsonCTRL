@@ -13,27 +13,68 @@
     app:alpha_factor="1.9"
     tools:context=".SettingsActivity" >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <LinearLayout
+
+        // Toolbar + Head
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/mainlayout">
 
-        <TextView
-            android:id="@+id/crimsonHead"
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:background="#FF660000"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:background="@drawable/item_background"
-            android:text="@string/crimson"
-            android:textSize="10sp"
-            android:textColor="#FFCCCCCC"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.Toolbar>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/headcontainer"
+            android:paddingTop="?attr/actionBarSize">
 
 
-        <!-- Toolbar-->
-        <include
-            layout="@layout/settings_action_bar"
-            android:id="@+id/action_bar_layout" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="#FF333333"
+                android:elevation="1dp" />
+
+            <TextView
+                android:id="@+id/crimsonHead"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/item_background"
+                android:text="@string/crimson"
+                android:elevation="1dp" />
+
+            <!-- Extended Toolbar-->
+            <include
+                layout="@layout/settings_action_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/action_bar_layout"
+                android:layout_below="@id/crimsonHead" />
+
+        </RelativeLayout>
+        </RelativeLayout>
+
+
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/mainlayout"
+            android:id="@+id/cardlayout">
 
 
         <!-- CrimsonCore Card-->
@@ -51,7 +92,8 @@
 
             <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/mainlayout">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -156,7 +198,6 @@
 
             </RelativeLayout>
         </android.support.v7.widget.CardView>
-
 
         <!-- Control Function Card-->
         <android.support.v7.widget.CardView
@@ -301,7 +342,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             card_view:cardBackgroundColor="#FF333333"
-            card_view:cardCornerRadius="2dp" >
+            card_view:cardCornerRadius="2dp"
+            android:layout_below="@id/camCard">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -337,7 +379,6 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
-
         <!-- CrimsonHome WebSocket -->
         <android.support.v7.widget.CardView
             android:id="@+id/crimsonHomeWebSocket"
@@ -348,7 +389,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             card_view:cardBackgroundColor="#FF333333"
-            card_view:cardCornerRadius="2dp" >
+            card_view:cardCornerRadius="2dp"
+            android:layout_below="@id/tempCard">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -397,7 +439,7 @@
             </RelativeLayout>
         </android.support.v7.widget.CardView>
 
+        </RelativeLayout>
+    </RelativeLayout>
 
-
-    </LinearLayout>
 </com.nirhart.parallaxscroll.views.ParallaxScrollView>

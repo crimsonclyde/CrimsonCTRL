@@ -18,21 +18,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
-import android.graphics.Paint;
-import android.graphics.Shader;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -40,11 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidplot.Plot;
-import com.androidplot.ui.AnchorPosition;
-import com.androidplot.ui.SizeLayoutType;
-import com.androidplot.ui.SizeMetrics;
-import com.androidplot.ui.XLayoutStyle;
-import com.androidplot.ui.YLayoutStyle;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.*;
@@ -56,7 +49,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.net.ssl.HttpsURLConnection;
@@ -65,7 +57,7 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * A straightforward example of using AndroidPlot to plot some data.
  */
-public class TempActivity extends Activity implements AdapterView.OnItemSelectedListener {
+public class TempActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     public static final String TAG = TempActivity.class.getSimpleName();
     private XYPlot plot;
@@ -96,11 +88,23 @@ public class TempActivity extends Activity implements AdapterView.OnItemSelected
 
         setContentView(R.layout.activity_temp);
 
+        // Toolbar instead of ActioneBar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setLogo(R.drawable.ic_launcher);
+        toolbar.setNavigationIcon(R.drawable.chevron_left);
+        getSupportActionBar().setTitle("Temperature Trend");
+
+
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
-        Typeface fontFace = Typeface.createFromAsset(getAssets(), "fonts/VeraMono.ttf");
+        Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
+
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
+        crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
+        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
         /* Temperature Time Spinner */
         tempSpin = (Spinner) findViewById(R.id.temp_time_spinner);

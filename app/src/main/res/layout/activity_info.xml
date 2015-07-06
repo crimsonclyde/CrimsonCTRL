@@ -10,27 +10,54 @@
     app:parallax_factor="1.9"
     app:inner_parallax_factor="2.7"
     app:alpha_factor="1.9"
-    app:parallax_views_num="3"
+    app:parallax_views_num="4"
     tools:context=".InfoActivity" >
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/maincontainer">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:minHeight="?attr/actionBarSize"
+            android:background="#FF660000"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.Toolbar>
 
-       <TextView
-            android:id="@+id/crimsonHead"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:background="@drawable/item_background"
-            android:text="@string/crimson"
-            android:textSize="10sp"
-            android:textColor="#FFCCCCCC"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content"
+            android:id="@+id/headcontainer"
+            android:paddingTop="?attr/actionBarSize">
 
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:background="#FF333333"
+                android:elevation="1dp" />
 
-        <!-- Author Card -->
+            <TextView
+                android:id="@+id/crimsonHead"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="1dp"
+                android:background="@drawable/item_background"
+                android:text="@string/crimson"
+                android:elevation="1dp" />
+
+        </RelativeLayout>
+
+    <!-- Author Card -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headcontainer"
+        android:id="@+id/authorContainer">
+
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/authorCard"
@@ -41,7 +68,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
             card_view:cardBackgroundColor="#FF232323"
-            card_view:cardCornerRadius="2dp" >
+            card_view:cardCornerRadius="2dp"
+            android:paddingTop="20dp">
 
                 <RelativeLayout
                     android:layout_width="fill_parent"
@@ -113,15 +141,21 @@
                     </RelativeLayout>
 
             </android.support.v7.widget.CardView>
-
+    </RelativeLayout>
 
         <!-- Thankyou Card -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/authorContainer"
+            android:id="@+id/thxContainer">
+
+
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/thankYouCard"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/authorCard"
             android:elevation="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="5dp"
@@ -143,16 +177,20 @@
 
 
         </android.support.v7.widget.CardView>
-
+        </RelativeLayout>
 
 
         <!-- Copyright Card -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/thxContainer">
+
         <android.support.v7.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/copyrightCard"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/thankYouCard"
             android:elevation="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="5dp"
@@ -172,8 +210,9 @@
                         android:textColor="@android:color/secondary_text_dark" />
 
         </android.support.v7.widget.CardView>
+    </RelativeLayout>
 
 
+</RelativeLayout>
 
-    </LinearLayout>
 </com.nirhart.parallaxscroll.views.ParallaxScrollView>

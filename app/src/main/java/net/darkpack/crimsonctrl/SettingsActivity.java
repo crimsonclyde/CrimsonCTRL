@@ -19,12 +19,15 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.audiofx.BassBoost;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,7 +41,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 
-public class SettingsActivity extends Activity {
+public class SettingsActivity extends AppCompatActivity {
     public static final String TAG = SettingsActivity.class.getSimpleName();
     EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass, mTempServiceUrl, mWebsocketUrl, mWebsocketPort;
     ImageButton mShowAccessToken, mShowCamPass, mScanQrCode;
@@ -49,11 +52,23 @@ public class SettingsActivity extends Activity {
         setContentView(R.layout.activity_settings);
         init();
 
+        // Toolbar instead of ActioneBar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setLogo(R.drawable.ic_launcher);
+        toolbar.setNavigationIcon(R.drawable.chevron_left);
+        getSupportActionBar().setTitle("Settings");
+
+
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
         Typeface fontFace= Typeface.createFromAsset(getAssets(),"fonts/VeraMono.ttf");
+
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
+        crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
+        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
         /* Suppress opening virtual keyboard */
         getWindow().setSoftInputMode(
