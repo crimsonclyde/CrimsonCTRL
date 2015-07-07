@@ -221,7 +221,7 @@ public class SettingsActivity extends AppCompatActivity {
                         if ( seperateScanResult[9].contains("WebSocketPort") ) {
                             String webSocketPortSplit[] = seperateScanResult[9].split("::");
                             System.out.println("WebSocket Port:    " + webSocketPortSplit[1]);
-                            mWebsocketUrl.setText(webSocketPortSplit[1]);
+                            mWebsocketPort.setText(webSocketPortSplit[1]);
                         }
 
 
