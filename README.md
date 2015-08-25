@@ -1,8 +1,8 @@
 # CrimsonCTRL
 
 ![alt text](https://universe.crimson.space/wp-content/uploads/2015/02/CrimsonCTRL1-150x150.png "CrimsonCTRL Icon")
-CrimsonCTRL is my native Android application. It includes all features that are also used within the CrimsonSpace but stripped down to the basics and focused on being as easy to use as possible.
 CrimsonCTRL is a native Android Application within a home automation system build upon a Particle Core. Itention was to build a sleek, stripped down, logical user interface to see on a spot all states of sensor, servers and services running in the CrimsonUniverse.
+CrimsonCTRL is build specific for my environment, but the application is OpenSource, see Licence about further information. It should be easy to fork it and do some alterations to fit into your world.
 
  
 #### Features
