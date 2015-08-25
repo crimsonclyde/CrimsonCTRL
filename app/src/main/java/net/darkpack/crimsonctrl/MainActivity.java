@@ -14,28 +14,27 @@ package net.darkpack.crimsonctrl;
  * E-Mail : clyde at darkpack.net
  */
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,37 +48,124 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.net.UnknownHostException;
-
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import javax.net.ssl.HttpsURLConnection;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 
 
 /* ****************************************************************************************** */
 
 public class MainActivity extends AppCompatActivity {
-    // Initiate Variables and Defaults
+
+    // Declare variables & set some defaults
     public static final String TAG = HttpsClient.class.getSimpleName();
     protected final static int mRefreshTimeout = 60;
     protected String mStoredTimestamp;
     protected String mCurrentTimestamp;
     protected ProgressBar mProgressBar;
     protected Button scButton;
+    protected String mActivityTitle = "Control";
     public String socketOutput = "s0";
+    DrawerLayout mDrawerLayout;
+    ListView mDrawerList;
+    ActionBarDrawerToggle mDrawerToggle;
+    String[] mDrawerListItems;
 
 
-
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        // Toolbar instead of ActioneBar
+        // Assign Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.ic_launcher);
-        //toolbar.setNavigationIcon(R.drawable.chevron_left);
-        getSupportActionBar().setTitle("Control");
 
+        // Toolbar Navigation Drawer
+        mDrawerLayout       = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerList         = (ListView) findViewById(R.id.drawer_list);
+        mDrawerListItems    = getResources().getStringArray(R.array.drawer_items);
+
+        // Remove the current Activity from ArrayList
+        Log.d(TAG, "Remove current activity   :" + Arrays.toString(mDrawerListItems));
+        List<String> list = new ArrayList<String>(Arrays.asList(mDrawerListItems));
+        list.removeAll(Arrays.asList(mActivityTitle));
+        mDrawerListItems = list.toArray(new String[0]);
+        Log.d(TAG, "New Drawer List           :" + Arrays.toString(mDrawerListItems));
+
+        // Create the Adapter
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mDrawerListItems));
+
+        // Summoning onClickListener
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int editPosition = position + 1;
+                //Toast.makeText(MainActivity.this, "You selected item " + editPosition, Toast.LENGTH_SHORT).show();
+                switch (editPosition) {
+                    case 1:
+                        // Change Activity
+                        Intent intentCam = new Intent(MainActivity.this, MjpegActivity.class);
+                        startActivity(intentCam);
+                        break;
+
+                    case 2:
+                        // Change Activity
+                        Intent intentTempPlot = new Intent(MainActivity.this, TempActivity.class);
+                        startActivity(intentTempPlot);
+                        break;
+
+                    case 3:
+                        // Change Activity
+                        Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
+                        startActivity(intentSettings);
+                        break;
+
+                    case 4:
+                        // Change Activity
+                        Intent intentInfo = new Intent(MainActivity.this, InfoActivity.class);
+                        startActivity(intentInfo);
+                        break;
+
+                    default:
+                        break;
+                }
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close
+        ) {
+            public void onDrawerClosed(View v){
+                super.onDrawerClosed(v);
+                invalidateOptionsMenu();
+                syncState();
+            }
+            public void onDrawerOpened(View v){
+                super.onDrawerOpened(v);
+                invalidateOptionsMenu();
+                syncState();
+
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        // Initiate Toolbar
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Control");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
@@ -88,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
         crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
-        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextColor(Color.parseColor("#DBDBDB"));
         crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
         // Assign and declare the ProgressBar
@@ -103,7 +189,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     /* ****************************************************************************************** */
+    @Override
+    public void onPostCreate(Bundle savedInstanceState){
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -117,64 +216,19 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
 
-            // Refresh action
-            case R.id.action_refresh:
-                //Toast.makeText(this, "Refresh", Toast.LENGTH_SHORT).show();
-                theFramework();
-                break;
-
-            // Cam Action
-            case R.id.action_cam:
-                //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();
-
-                // Change Activity
-                Intent intentCam = new Intent(MainActivity.this, MjpegActivity.class);
-                startActivity(intentCam);
-                break;
-
-            // Temperature Plot
-            case R.id.action_temp:
-                //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
-
-                // Change Activity
-                Intent intentTempPlot = new Intent(MainActivity.this, TempActivity.class);
-                startActivity(intentTempPlot);
-                break;
-
-            // Settings action
-            case R.id.action_settings:
-                //Toast.makeText(this, "Starting - Settings Activity", Toast.LENGTH_SHORT).show();
-
-                // Change Activity
-                Intent intentSettings = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intentSettings);
-                break;
-
-            // Test Screen:
-            //case R.id.action_test:
-            //    Intent intentTest = new Intent(MainActivity.this, TestActivity.class);
-            //    startActivity(intentTest);
-            //    break;
-
-
-            // Info Screen
-            case R.id.action_info:
-                // Just for debugging
-                //Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_LONG).show();
-
-                // Change Activity
-                Intent intentInfo = new Intent(MainActivity.this, InfoActivity.class);
-                startActivity(intentInfo);
-                break;
-
-            default:
-                break;
+        // Toolbar Navigation Drawer
+        switch (item.getItemId()){
+            case android.R.id.home: {
+                if (mDrawerLayout.isDrawerOpen(mDrawerList)){
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                } else {
+                    mDrawerLayout.openDrawer(mDrawerList);
+                }
+                return true;
+            }
+            default: return super.onOptionsItemSelected(item);
         }
-        return true;
-
 
     }
 
@@ -196,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
      */
 
     public void theFramework() {
-        // Netowork availability check
+        // Network availability check
         if (isNetworkAvailable()) {
 
             Log.d(TAG, "**********************************************************************");
@@ -309,6 +363,8 @@ public class MainActivity extends AppCompatActivity {
         scButton.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+                Toast.makeText(MainActivity.this, "Act/Deactivating StoneCircle", Toast.LENGTH_LONG).show();
+
                 // Get CoreID + AccessToken from shared preferences
                 String coreid      = SettingsConnector.readString(MainActivity.this, SettingsConnector.COREID, null);
                 String accesstoken = SettingsConnector.readString(MainActivity.this, SettingsConnector.ACCESSTOKEN, null);
@@ -316,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
                 // Execute TODO: Remove hardcoded function name
                 new SclCtrl().execute("https://api.spark.io/v1/devices/"+coreid+"/events/pMisc/?access_token="+accesstoken);
 
-                return false;
+                return true;
             }
         });
 
@@ -605,93 +661,123 @@ public class MainActivity extends AppCompatActivity {
 
                     // CrimsonHome Uptime
                     // We need to split the uptime multiple time
-                    // First split the parts by ,
                     String delimUptime = "[,]";
                     String[] uptimeSplit = tokens[2].split(delimUptime);
-                    Log.d(TAG, "Uptime Split: " + uptimeSplit[0]);
-                    Log.d(TAG, "Uptime Split: " + uptimeSplit[1]);
-                    Log.d(TAG, "Uptime Split: " + uptimeSplit[2]);
-                    Log.d(TAG, "Uptime Split: " + uptimeSplit[3]);
+
+                    // Debug
+                    Log.d(TAG, "Uptime Split1-Length: " + uptimeSplit.length);
+                    for (int uptimeInt1 = 0; uptimeInt1 < uptimeSplit.length; uptimeInt1++) {
+                        Log.d(TAG, "Uptime Split1-" + uptimeInt1 + "     :" + uptimeSplit[uptimeInt1].replaceAll("\\s", ""));
+                    }
+
 
                     // Second split the uptime by " "
                     String delimUptime2 = "[ ]";
                     String[] uptimeSplit2 = uptimeSplit[1].split(delimUptime2);
 
                     // Debug
-                    Log.d(TAG, "Uptime Split2-0     :" + uptimeSplit2[0]);
-                    Log.d(TAG, "Uptime Split2-1     :" + uptimeSplit2[1]);
-                    Log.d(TAG, "Uptime Split2-2     :" + uptimeSplit2[2]);
-                    Log.d(TAG, "Uptime Split2-3     :" + uptimeSplit2[3]);
-                    Log.d(TAG, "Uptime Split2-4     :" + uptimeSplit2[4]);
-                    Log.d(TAG, "Uptime Split-Length :" + uptimeSplit2.length);
+                    Log.d(TAG, "Uptime Split-Length2: " + uptimeSplit2.length);
+                    for (int uptimeInt2 = 0; uptimeInt2 < uptimeSplit2.length; uptimeInt2++) {
+                        Log.d(TAG, "Uptime Split2-" + uptimeInt2 + "     :" + uptimeSplit2[uptimeInt2].replaceAll("\\s", ""));
+
+                    }
 
 
-                    // Splitting the uptime
+                    // Split the uptime into days, hours and minutes
                     int uptimeSplitLength = uptimeSplit2.length;
                     String uptimeSplit3[] = null;
                     String delimUptime3 = "[:]";
 
-                    // In case server is up only minutes
-                    if (uptimeSplit2[4].contains("min")) {
-                        Log.d(TAG, "Uptime Split2-3 Hours:   " + uptimeSplit2[3]);
 
-                        // Update the textviews
-                        if (uptimeSplit2[2].contains("up")) {
-                            uptimeServer.setText("Up");
-                            uptimeDetails.setTextSize(16.0f);
-                            uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
-                                    uptimeSplit2[3].replaceAll("\\s", "") + "minutes" +
-                                    "\n" +
-                                    "Current time: " + uptimeSplit2[1]);
-                        } else {
-                            uptimeServer.setText("Down");
+                    // In case server is up only some minutes
+                    if (uptimeSplitLength > 4) {
+                        if (uptimeSplit2[4].contains("min")) {
+                            Log.d(TAG, "Uptime Split2-3 Hours:   " + uptimeSplit2[3]);
+
+                            // Update the textviews
+                            if (uptimeSplit2[2].contains("up")) {
+                                uptimeServer.setText("");
+                                uptimeDetails.setTextSize(8.0f);
+                                uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
+                                        uptimeSplit2[3].replaceAll("\\s", "") + "minutes" +
+                                        "\n" +
+                                        "Current time: " + uptimeSplit2[1]);
+                            } else {
+                                uptimeServer.setText("CrimsonHome Down");
+                            }
                         }
                     }
 
-                    // Days + Hours + Minutes
-                    else if (uptimeSplit2[4].contains("day") || uptimeSplit2[4].contains("days")) {
-                        uptimeSplit3 = uptimeSplit[2].split(delimUptime3);
-                        Log.d(TAG, "UptimeSplit3-0 Hours:    " + uptimeSplit3[0]);
-                        Log.d(TAG, "UptimeSplit3-1 Minutes:  " + uptimeSplit3[1]);
-
+                    //
+                    // Days + Minutes, because there are no hours after midnight.
+                    if (uptimeSplitLength == 3) {
+                        if (uptimeSplit2[4].contains("day") || uptimeSplit2[4].contains("days") ) {
+                            uptimeSplit3 = uptimeSplit[2].split(delimUptime3);
+                            // Minutes
+                            Log.d(TAG, "UptimeSplit3-0 Hours:    " + uptimeSplit3[0]);
+                        }
                         // Update the textviews
                         if (uptimeSplit2[2].contains("up")) {
-                            uptimeServer.setText("Up");
-                            uptimeDetails.setTextSize(16.0f);
+                            uptimeServer.setText("");
+                            uptimeDetails.setTextSize(8.0f);
 
                             uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
                                     uptimeSplit2[3].replaceAll("\\s", "") + uptimeSplit2[4].replaceAll("\\s", "") + " " +
-                                    uptimeSplit3[0].replaceAll("\\s", "") + "hours " +
-                                    uptimeSplit3[1].replaceAll("\\s", "") + "minutes" +
+                                    uptimeSplit3[0].replaceAll("\\s", "") + "minutes" +
                                     "\n" +
                                     "Current time: " + uptimeSplit2[1]);
                         } else {
-                            uptimeServer.setText("Down");
-
+                            uptimeServer.setText("CrimsonHome Down");
                         }
 
+                    }
+
+
+
+                    // Days + Hours + Minutes
+                    if (uptimeSplitLength > 4) {
+                         if (uptimeSplit2[4].contains("day") || uptimeSplit2[4].contains("days")) {
+                             uptimeSplit3 = uptimeSplit[2].split(delimUptime3);
+                             Log.d(TAG, "UptimeSplit3-0 Hours:    " + uptimeSplit3[0]);
+                             Log.d(TAG, "UptimeSplit3-1 Minutes:  " + uptimeSplit3[1]);
+
+                             // Update the textviews
+                             if (uptimeSplit2[2].contains("up")) {
+                                 uptimeServer.setText("");
+                                 uptimeDetails.setTextSize(8.0f);
+
+                                 uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
+                                         uptimeSplit2[3].replaceAll("\\s", "") + uptimeSplit2[4].replaceAll("\\s", "") + " " +
+                                         uptimeSplit3[0].replaceAll("\\s", "") + "hours " +
+                                         uptimeSplit3[1].replaceAll("\\s", "") + "minutes" +
+                                         "\n" +
+                                         "Current time: " + uptimeSplit2[1]);
+                             } else {
+                                 uptimeServer.setText("CrimsonHome Down");
+                             }
+                         }
                     }
 
                     // Hours + Minutes
-                    else if (uptimeSplit2[4].contains(":")) {
-                        uptimeSplit3 = uptimeSplit2[4].split(delimUptime3);
-                        Log.d(TAG, "Uptime Split4-0:   " + uptimeSplit3[0]);
-                        Log.d(TAG, "Uptime Split4-1:   " + uptimeSplit3[1]);
+                        if (uptimeSplit2[3].contains(":")) {
+                            uptimeSplit3 = uptimeSplit2[3].split(delimUptime3);
+                            Log.d(TAG, "Uptime Split4-0     :" + uptimeSplit3[0]);
+                            Log.d(TAG, "Uptime Split4-1     :" + uptimeSplit3[1]);
 
-                        // Update the textviews
-                        if (uptimeSplit2[2].contains("up")) {
-                            uptimeServer.setText("Up");
-                            uptimeDetails.setTextSize(16.0f);
-                            uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
-                                    uptimeSplit3[0].replaceAll("\\s", "") + "hours " +
-                                    uptimeSplit3[1].replaceAll("\\s", "") + "minutes" +
-                                    "\n" +
-                                    "Current time: " + uptimeSplit2[1]);
-                        } else {
-                            uptimeServer.setText("Down");
+                            // Update the textviews
+                            if (uptimeSplit2[2].contains("up")) {
+                                uptimeServer.setText("");
+                                uptimeDetails.setTextSize(8.0f);
+                                uptimeDetails.setText("CrimsonHome" + "\n" + "Uptime: " +
+                                        uptimeSplit3[0].replaceAll("\\s", "") + "hours " +
+                                        uptimeSplit3[1].replaceAll("\\s", "") + "minutes" +
+                                        "\n" +
+                                        "Current time: " + uptimeSplit2[1]);
+                            } else {
+                                uptimeServer.setText("CrimsonHome Down");
+                            }
                         }
 
-                    }
 
 
                     // CrimsonHome Service Apache
@@ -749,20 +835,18 @@ public class MainActivity extends AppCompatActivity {
 
                     if (scl.equals("1")) {
                         // Send LOW to set relay ON
-                        Toast.makeText(MainActivity.this, "Switched ON", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "Switched ON", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "Set pin to low");
                         new PostClient().execute("LOW");
                     } else if (scl.equals("0")) {
                         // Send HIGH to set relay LOW
-                        Toast.makeText(MainActivity.this, "Switched OFF", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(MainActivity.this, "Switched OFF", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, "Set pin to high");
                         new PostClient().execute("HIGH");
                     }
 
                 }
             });
-
-
 
             return null;
         }

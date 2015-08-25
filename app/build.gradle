@@ -7,14 +7,15 @@ android {
     defaultConfig {
         applicationId "net.darkpack.crimsonctrl"
         minSdkVersion 21
-        targetSdkVersion 21
+        targetSdkVersion 22
         versionCode 26
         versionName "1.8.2"
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimized.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
     }
     sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/layout-land'] } }
@@ -24,8 +25,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.1.1'
-    compile 'com.android.support:cardview-v7:21.0.+'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:cardview-v7:22.2.1'
     compile 'com.google.zxing:core:3.1.0'
     compile 'com.google.zxing:android-integration:3.1.0'
     compile 'com.github.nirhart:parallaxscroll:1.0'

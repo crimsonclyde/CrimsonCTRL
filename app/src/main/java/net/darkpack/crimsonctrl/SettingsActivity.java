@@ -21,7 +21,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.media.audiofx.BassBoost;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.HideReturnsTransformationMethod;
@@ -33,18 +36,32 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class SettingsActivity extends AppCompatActivity {
     public static final String TAG = SettingsActivity.class.getSimpleName();
     EditText mCoreId, mAccessToken, mCamUrl, mCtrlPin, mCtrlValue, mCamUser, mCamPass, mTempServiceUrl, mWebsocketUrl, mWebsocketPort;
     ImageButton mShowAccessToken, mShowCamPass, mScanQrCode;
+    protected String mActivityTitle = "Settings";
+    DrawerLayout mDrawerLayout;
+    ListView mDrawerList;
+    ActionBarDrawerToggle mDrawerToggle;
+    String[] mDrawerListItems;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +69,90 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         init();
 
-        // Toolbar instead of ActioneBar
+        // Assign Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.ic_launcher);
-        toolbar.setNavigationIcon(R.drawable.chevron_left);
-        getSupportActionBar().setTitle("Settings");
 
+        // Toolbar Navigation Drawer
+        mDrawerLayout       = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerList         = (ListView) findViewById(R.id.drawer_list);
+        mDrawerListItems    = getResources().getStringArray(R.array.drawer_items);
+
+        // Remove the current Activity from ArrayList
+        Log.d(TAG, "List of all activities    :" + Arrays.toString(mDrawerListItems));
+        List<String> list = new ArrayList<String>(Arrays.asList(mDrawerListItems));
+        list.removeAll(Arrays.asList(mActivityTitle));
+        mDrawerListItems = list.toArray(new String[0]);
+        Log.d(TAG, "Current activity removed  :" + Arrays.toString(mDrawerListItems));
+
+        // Create the Adapter
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mDrawerListItems));
+
+        // Summoning onClickListener
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int editPosition = position + 1;
+                //Toast.makeText(MainActivity.this, "You selected item " + editPosition, Toast.LENGTH_SHORT).show();
+                switch (editPosition) {
+                    case 1:
+                        // Change Activity
+                        Intent intentCam = new Intent(SettingsActivity.this, MjpegActivity.class);
+                        startActivity(intentCam);
+                        break;
+
+                    case 2:
+                        // Change Activity
+                        Intent intentTempPlot = new Intent(SettingsActivity.this, TempActivity.class);
+                        startActivity(intentTempPlot);
+                        break;
+
+                    case 3:
+                        // Change Activity
+                        Intent intentSettings = new Intent(SettingsActivity.this, SettingsActivity.class);
+                        startActivity(intentSettings);
+                        break;
+
+                    case 4:
+                        // Change Activity
+                        Intent intentInfo = new Intent(SettingsActivity.this, InfoActivity.class);
+                        startActivity(intentInfo);
+                        break;
+
+                    default:
+                        break;
+                }
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close
+        ) {
+            public void onDrawerClosed(View v){
+                super.onDrawerClosed(v);
+                invalidateOptionsMenu();
+                syncState();
+            }
+            public void onDrawerOpened(View v){
+                super.onDrawerOpened(v);
+                invalidateOptionsMenu();
+                syncState();
+
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        // Initiate Toolbar
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
@@ -67,7 +161,7 @@ public class SettingsActivity extends AppCompatActivity {
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
         crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
-        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextColor(Color.parseColor("#DBDBDB"));
         crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
         /* Suppress opening virtual keyboard */
@@ -94,15 +188,16 @@ public class SettingsActivity extends AppCompatActivity {
         /* Visibility Button Core Access Token */
         mShowAccessToken = (ImageButton) findViewById(R.id.accesstokenImageButton);
         mShowAccessToken.setImageDrawable(getBaseContext().getResources().getDrawable(R.drawable.selector));
+
         mShowAccessToken.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View button) {
                 button.setSelected(!button.isSelected());
 
                 if (button.isSelected()) {
-                    mAccessToken.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                } else {
                     mAccessToken.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else {
+                    mAccessToken.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
             }
         });
@@ -117,10 +212,10 @@ public class SettingsActivity extends AppCompatActivity {
                 button.setSelected(!button.isSelected());
 
                 if (button.isSelected()) {
-                    mCamPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    mCamPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
 
                 } else {
-                    mCamPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    mCamPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 }
 
             }
@@ -330,50 +425,20 @@ public class SettingsActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        // Handle presses on the action bar items
-        switch (item.getItemId()) {
 
-            // MainActivity
-            case R.id.action_main:
-                // Just for debugging
-                //Toast.makeText(this, "Starting - Main Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
 
-                // Change Activity
-                Intent intentMain = new Intent(SettingsActivity.this, MainActivity.class);
-                startActivity(intentMain);
-                break;
-
-            // Temperature Plot
-            case R.id.action_temp:
-                //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
-
-                // Change Activity
-                Intent intentTempPlot = new Intent(SettingsActivity.this, TempActivity.class);
-                startActivity(intentTempPlot);
-                break;
-
-            // Camera Activity
-            case R.id.action_cam:
-                //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
-
-                // Change Activity
-                Intent intentControl = new Intent(SettingsActivity.this, MjpegActivity.class);
-                startActivity(intentControl);
-                break;
-
-            // Info action
-            case R.id.action_info:
-                //Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
-
-                // Change Activity
-                Intent intentInfo = new Intent(SettingsActivity.this, InfoActivity.class);
-                startActivity(intentInfo);
-                break;
-
-            default:
-                break;
+        // Toolbar Navigation Drawer
+        switch (item.getItemId()){
+            case android.R.id.home: {
+                if (mDrawerLayout.isDrawerOpen(mDrawerList)){
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                } else {
+                    mDrawerLayout.openDrawer(mDrawerList);
+                }
+                return true;
+            }
+            default: return super.onOptionsItemSelected(item);
         }
-        return true;
 
     }
 

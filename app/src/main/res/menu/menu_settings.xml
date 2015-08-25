@@ -3,31 +3,5 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="net.darkpack.crimsonctrl.SettingsActivity">
 
-    // Main
-    <item
-        android:id="@+id/action_main"
-        android:orderInCategory="1"
-        android:title="@string/action_main"
-        android:showAsAction="never"/>
 
-    // Temperature Graph
-    <item
-        android:id="@+id/action_temp"
-        android:orderInCategory="2"
-        android:title="@string/action_temp"
-        android:showAsAction="never"/>
-
-    // Camera
-    <item
-        android:id="@+id/action_cam"
-        android:title="@string/action_cam"
-        android:orderInCategory="3"
-        android:showAsAction="never" />
-
-    // Info
-    <item
-        android:id="@+id/action_info"
-        android:orderInCategory="4"
-        android:title="@string/action_info"
-        android:showAsAction="never"/>
 </menu>
