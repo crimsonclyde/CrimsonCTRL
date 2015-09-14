@@ -104,12 +104,11 @@
                                 android:id="@+id/coreCard"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:elevation="10dp"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginStart="5dp"
-                                android:layout_marginEnd="5dp"
-                                card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                                card_view:cardCornerRadius="2dp">
+                                android:elevation="2dp"
+                                card_view:cardBackgroundColor="#FFF2F2F2"
+                                card_view:cardCornerRadius="0dp">
 
 
                                 <LinearLayout
@@ -143,11 +142,19 @@
                                             android:id="@+id/accesstokenImageButton"
                                             android:scaleType="fitXY"
                                             android:layout_marginEnd="10dp"
-                                            android:layout_marginTop="2dp"
+                                            android:layout_marginTop="8dp"
                                             android:layout_alignParentEnd="true"
                                             android:background="@android:color/transparent"
-                                            android:layout_marginBottom="2dp"
                                             android:src="@drawable/selector" />
+
+                                        <ImageView
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="4dp"
+                                            android:src="@drawable/line"
+                                            android:layout_below="@id/headlineCrimsonCore"
+                                            android:id="@+id/lineCrimsonCore"
+                                            android:elevation="0dp"
+                                            android:layout_marginBottom="4dp"/>
 
                                     </RelativeLayout>
 
@@ -215,12 +222,12 @@
                                 android:id="@+id/camCard"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:elevation="10dp"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginStart="5dp"
                                 android:layout_marginEnd="5dp"
-                                card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                                card_view:cardCornerRadius="2dp">
+                                android:elevation="2dp"
+                                card_view:cardBackgroundColor="#FFF2F2F2"
+                                card_view:cardCornerRadius="0dp">
 
 
                             <LinearLayout
@@ -254,11 +261,19 @@
                                             android:id="@+id/campassImageButton"
                                             android:scaleType="fitXY"
                                             android:layout_marginEnd="10dp"
-                                            android:layout_marginTop="2dp"
+                                            android:layout_marginTop="8dp"
                                             android:layout_alignParentEnd="true"
                                             android:background="@android:color/transparent"
-                                            android:layout_marginBottom="2dp"
                                             android:src="@drawable/selector" />
+
+                                        <ImageView
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="4dp"
+                                            android:src="@drawable/line"
+                                            android:layout_below="@id/headlineCrimsonCam"
+                                            android:id="@+id/lineCrimsonCam"
+                                            android:elevation="0dp"
+                                            android:layout_marginBottom="4dp"/>
 
                                     </RelativeLayout>
 
@@ -311,12 +326,12 @@
                                 android:id="@+id/crimsonHomeWebSocket"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:elevation="10dp"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginStart="5dp"
                                 android:layout_marginEnd="5dp"
-                                card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                                card_view:cardCornerRadius="2dp">
+                                android:elevation="2dp"
+                                card_view:cardBackgroundColor="#FFF2F2F2"
+                                card_view:cardCornerRadius="0dp">
 
 
                                 <LinearLayout
@@ -338,6 +353,15 @@
                                         android:textAlignment="center"
                                         android:textStyle="bold"
                                         android:textColor="@color/primary_text_default_material_light" />
+
+                                    <ImageView
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="4dp"
+                                        android:src="@drawable/line"
+                                        android:layout_below="@id/headlineCrimsonHomeWebSocket"
+                                        android:id="@+id/lineCrimsonHomeWebSocket"
+                                        android:elevation="0dp"
+                                        android:layout_marginBottom="4dp"/>
 
                                     <EditText
                                         android:layout_height="wrap_content"
@@ -374,12 +398,12 @@
                                 android:id="@+id/tempCard"
                                 android:layout_width="fill_parent"
                                 android:layout_height="wrap_content"
-                                android:elevation="10dp"
                                 android:layout_marginTop="10dp"
                                 android:layout_marginStart="5dp"
                                 android:layout_marginEnd="5dp"
-                                card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                                card_view:cardCornerRadius="2dp">
+                                android:elevation="2dp"
+                                card_view:cardBackgroundColor="#FFF2F2F2"
+                                card_view:cardCornerRadius="0dp">
 
 
                                     <LinearLayout
@@ -401,6 +425,15 @@
                                             android:textAlignment="center"
                                             android:textStyle="bold"
                                             android:textColor="@color/primary_text_default_material_light" />
+
+                                        <ImageView
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="4dp"
+                                            android:src="@drawable/line"
+                                            android:layout_below="@id/headlineCrimsonHomeMySQL"
+                                            android:id="@+id/lineCrimsonHomeMySQL"
+                                            android:elevation="0dp"
+                                            android:layout_marginBottom="4dp"/>
 
                                         <EditText
                                             android:layout_height="wrap_content"

@@ -1,101 +1,124 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<com.nirhart.parallaxscroll.views.ParallaxScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF000000"
-    app:parallax_factor="1.9"
-    app:inner_parallax_factor="1.9"
-    app:alpha_factor="1.9"
-    tools:context=".TempActivity" >
+    android:orientation="vertical"
+    tools:context=".TempActivity">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize"
+        android:popupTheme="@style/Theme.AppCompat"
+        android:theme="@style/Toolbar" />
 
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer"
+        style="@style/Theme.AppCompat.Light"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    // Toolbar + Head
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:id="@+id/mainlayout">
-
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:minHeight="?attr/actionBarSize"
-            android:background="#FF660000"
+        <!-- Main View -->
+        <com.nirhart.parallaxscroll.views.ParallaxScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v7.widget.Toolbar>
+            android:layout_height="match_parent"
+            android:background="#FFFFFFFF"
+            app:alpha_factor="1.9"
+            app:inner_parallax_factor="2.7"
+            app:parallax_factor="1.9"
+            app:parallax_views_num="1"
+            tools:context=".MainActivity">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/headcontainer"
-            android:paddingTop="?attr/actionBarSize">
 
-
-            <TextView
+            <LinearLayout
+                android:id="@+id/maincontainer"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:background="#FF333333"
-                android:elevation="1dp" />
-
-            <TextView
-                android:id="@+id/crimsonHead"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="1dp"
-                android:background="@drawable/item_background"
-                android:text="@string/crimson"
-                android:elevation="1dp" />
-
-            <Spinner
-                android:id="@+id/temp_time_spinner"
-                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:elevation="10dp"
-                android:layout_below="@id/crimsonHead"
-                android:clickable="false"
-                android:spinnerMode="dropdown"
-                android:gravity="center"
-                android:backgroundTintMode="multiply"
-                android:backgroundTint="@android:color/white"
-                android:dropDownWidth="wrap_content"
-                android:dropDownSelector="@android:color/black" />
+                android:background="#FFFFFFFF"
+                android:orientation="vertical">
 
 
-        </RelativeLayout>
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/seperatorAboveHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFFFFFFF"
+                    android:elevation="1dp" />
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mainlayout">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#FF660000">
+
+                    <TextView
+                        android:id="@+id/crimsonHead"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/item_background"
+                        android:elevation="1dp"
+                        android:text="@string/crimson" />
+
+                    <TextView
+                        android:id="@+id/seperatorBelowHead"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/crimsonHead"
+                        android:background="#FFF"
+                        android:elevation="1dp" />
+
+                    <Spinner
+                        android:id="@+id/temp_time_spinner"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:elevation="10dp"
+                        android:layout_below="@id/crimsonHead"
+                        android:clickable="false"
+                        android:spinnerMode="dropdown"
+                        android:gravity="center"
+                        android:backgroundTintMode="multiply"
+                        android:backgroundTint="@android:color/white"
+                        android:dropDownWidth="wrap_content"
+                        android:dropDownSelector="@android:color/black" />
 
 
-            <com.androidplot.xy.XYPlot
-                android:id="@+id/weatherPlot"
-                android:layout_width="fill_parent"
-                android:layout_height="300dp"
-                android:layout_margin="10sp"
-                android:background="#000000"
-                android:elevation="1dp"
-                androidPlot.title="Temperature Trend"
-                android:layout_weight="1" />
+                </RelativeLayout>
 
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
 
 
-    
+                    <com.androidplot.xy.XYPlot
+                        android:id="@+id/weatherPlot"
+                        android:layout_width="fill_parent"
+                        android:layout_height="300dp"
+                        android:layout_margin="10sp"
+                        android:background="#000000"
+                        android:elevation="1dp"
+                        androidPlot.title="Temperature Trend"
+                        android:layout_weight="1" />
 
 
-    </RelativeLayout>
-</com.nirhart.parallaxscroll.views.ParallaxScrollView>
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+        </com.nirhart.parallaxscroll.views.ParallaxScrollView>
+
+        <!-- Toolbar Drawer List View -->
+        <ListView
+            android:id="@+id/drawer_list"
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:layout_gravity="start"
+            android:background="#FF660000"
+            android:choiceMode="singleChoice"
+            android:elevation="1dp" />
+
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

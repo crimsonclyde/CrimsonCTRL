@@ -43,7 +43,7 @@ public class InfoActivity extends AppCompatActivity {
 
     // Declare variables & set some defaults
     public static final String TAG = InfoActivity.class.getSimpleName();
-    protected String mActivityTitle = "Info";
+    protected String mActivityTitle = "About";
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mDrawerToggle;

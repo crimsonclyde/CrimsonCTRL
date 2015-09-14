@@ -23,6 +23,8 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,6 +35,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +54,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import javax.net.ssl.HttpsURLConnection;
 
 
@@ -59,7 +64,12 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class TempActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    public static final String TAG = TempActivity.class.getSimpleName();
+    public static final String TAG = InfoActivity.class.getSimpleName();
+    protected String mActivityTitle = "Temperature";
+    DrawerLayout mDrawerLayout;
+    ListView mDrawerList;
+    ActionBarDrawerToggle mDrawerToggle;
+    String[] mDrawerListItems;
     private XYPlot plot;
     String result = "";
     JSONObject jObject = null;
@@ -88,13 +98,90 @@ public class TempActivity extends AppCompatActivity implements AdapterView.OnIte
 
         setContentView(R.layout.activity_temp);
 
-        // Toolbar instead of ActioneBar
+        // Assign Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.ic_launcher);
-        toolbar.setNavigationIcon(R.drawable.chevron_left);
-        getSupportActionBar().setTitle("Temperature Trend");
 
+        // Toolbar Navigation Drawer
+        mDrawerLayout       = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerList         = (ListView) findViewById(R.id.drawer_list);
+        mDrawerListItems    = getResources().getStringArray(R.array.drawer_items);
+
+        // Remove the current Activity from ArrayList
+        Log.d(TAG, "List of all activities    :" + Arrays.toString(mDrawerListItems));
+        List<String> list = new ArrayList<String>(Arrays.asList(mDrawerListItems));
+        list.removeAll(Arrays.asList(mActivityTitle));
+        mDrawerListItems = list.toArray(new String[0]);
+        Log.d(TAG, "Current activity removed  :" + Arrays.toString(mDrawerListItems));
+
+        // Create the Adapter
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mDrawerListItems));
+
+        // Summoning onClickListener
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int editPosition = position + 1;
+                //Toast.makeText(MainActivity.this, "You selected item " + editPosition, Toast.LENGTH_SHORT).show();
+                switch (editPosition) {
+                    case 1:
+                        // Change Activity
+                        Intent intentControl = new Intent(TempActivity.this, MainActivity.class);
+                        startActivity(intentControl);
+                        break;
+
+                    case 2:
+                        // Change Activity
+                        Intent intentCam = new Intent(TempActivity.this, MjpegActivity.class);
+                        startActivity(intentCam);
+                        break;
+
+                    case 3:
+                        // Change Activity
+                        Intent intentTemperature = new Intent(TempActivity.this, SettingsActivity.class);
+                        startActivity(intentTemperature);
+                        break;
+
+                    case 4:
+                        // Change Activity
+                        Intent intentInfo = new Intent(TempActivity.this, InfoActivity.class);
+                        startActivity(intentInfo);
+                        break;
+
+                    default:
+                        break;
+                }
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close
+        ) {
+            public void onDrawerClosed(View v){
+                super.onDrawerClosed(v);
+                invalidateOptionsMenu();
+                syncState();
+            }
+            public void onDrawerOpened(View v){
+                super.onDrawerOpened(v);
+                invalidateOptionsMenu();
+                syncState();
+
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        // Initiate Toolbar
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Temperature Trend");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
@@ -103,7 +190,7 @@ public class TempActivity extends AppCompatActivity implements AdapterView.OnIte
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
         crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
-        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextColor(Color.parseColor("#DBDBDB"));
         crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
         /* Temperature Time Spinner */
@@ -126,13 +213,13 @@ public class TempActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Check if WebSerice URL is set
         if ( tempserviceurl == null ) {
-            Toast.makeText(TempActivity.this, "TempService URL empty", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Temperature Service URL NOT set: Starting Settings Activity");
             Intent initSettings = new Intent(TempActivity.this, SettingsActivity.class);
             startActivity(initSettings);
 
         } else {
-            // Run the pull request
-            //Toast.makeText(TempActivity.this, "TempService URL OK", Toast.LENGTH_LONG).show();
+            //Run the pull request
+            //Log.d(TAG, "Temperature Service URL set: Initiate WebServiceClient");
             //new WebServiceClient().execute(tempserviceurl);
         }
 
@@ -183,9 +270,11 @@ public class TempActivity extends AppCompatActivity implements AdapterView.OnIte
                 break;
         }
 
-        Log.d(TAG, "TempTime:       " + tempTime);
-
         new WebServiceClient().execute(tempserviceurl);
+        Log.d(TAG, "TempTime:                    " + tempTime);
+        Log.d(TAG, "Temperature Service URL set: Initiate WebServiceClient");
+
+
 
 
 
@@ -219,51 +308,19 @@ public class TempActivity extends AppCompatActivity implements AdapterView.OnIte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        // Handle presses on the action bar items
+        // Toolbar Navigation Drawer
         switch (item.getItemId()) {
-
-
-            // Cam Action
-            case R.id.action_main:
-                //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();
-
-                // Main Activity
-                Intent intentMain = new Intent(TempActivity.this, MainActivity.class);
-                startActivity(intentMain);
-                break;
-
-            // Camera Activity
-            case R.id.action_cam:
-                //Toast.makeText(this, "Starting - Temperature Graph Activity", Toast.LENGTH_SHORT).show();
-
-                // Change Activity
-                Intent intentCam = new Intent(TempActivity.this, MjpegActivity.class);
-                startActivity(intentCam);
-                break;
-
-            // Settings action
-            case R.id.action_settings:
-                //Toast.makeText(this, "Starting - Settings Activity", Toast.LENGTH_SHORT).show();
-
-                // Change Activity
-                Intent intentSettings = new Intent(TempActivity.this, SettingsActivity.class);
-                startActivity(intentSettings);
-                break;
-
-            // Info Screen
-            case R.id.action_info:
-                // Just for debugging
-                //Toast.makeText(this, "Starting - Info Activity", Toast.LENGTH_LONG).show();
-
-                // Change Activity
-                Intent intentInfo = new Intent(TempActivity.this, InfoActivity.class);
-                startActivity(intentInfo);
-                break;
-
+            case android.R.id.home: {
+                if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                } else {
+                    mDrawerLayout.openDrawer(mDrawerList);
+                }
+                return true;
+            }
             default:
-                break;
+                return super.onOptionsItemSelected(item);
         }
-        return true;
 
 
     }
@@ -281,9 +338,7 @@ public class TempActivity extends AppCompatActivity implements AdapterView.OnIte
         private Exception exception;
 
 
-
         public Number[] doInBackground(String... urls) {
-
             Log.d(TAG, "**********************************************************************");
             Log.d(TAG, "*****        _____                                 _            ******");
             Log.d(TAG, "*****       |   __|___ ___ _____ ___ _ _ _ ___ ___| |_          ******");

@@ -11,8 +11,8 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:popupTheme="@style/Theme.AppCompat"
-        app:theme="@style/Toolbar" />
+        android:popupTheme="@style/Theme.AppCompat"
+        android:theme="@style/Toolbar" />
 
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer"
@@ -92,9 +92,9 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="10dp"
-                            android:elevation="10dp"
-                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                            card_view:cardCornerRadius="2dp">
+                            android:elevation="2dp"
+                            card_view:cardBackgroundColor="#FFF2F2F2"
+                            card_view:cardCornerRadius="0dp">
 
 
                             <RelativeLayout
@@ -118,21 +118,20 @@
 
                                 <ImageView
                                     android:layout_width="fill_parent"
-                                    android:layout_height="fill_parent"
+                                    android:layout_height="4dp"
                                     android:src="@drawable/line"
                                     android:layout_below="@id/headlineCard1"
                                     android:id="@+id/headline1"
-                                    android:elevation="10dp"/>
-
-
-
+                                    android:elevation="0dp"
+                                    android:layout_marginBottom="4dp"/>
 
                                 <ImageView
                                     android:id="@+id/authorImageView"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:layout_below="@id/headline1"
-                                    android:src="@drawable/accountboxoutline" />
+                                    android:src="@drawable/accountboxoutline"
+                                    android:layout_marginTop="5dp"/>
 
                                 <TextView
                                     android:id="@+id/author"
@@ -143,7 +142,7 @@
                                     android:layout_below="@id/headline1"
                                     android:layout_toEndOf="@id/authorImageView"
                                     android:elegantTextHeight="true"
-                                    android:elevation="1dp"
+                                    android:elevation="0dp"
                                     android:text="@string/about_author_name"
                                     android:textColor="@android:color/primary_text_light_nodisable"
                                     android:textColorHint="@android:color/secondary_text_light_nodisable"
@@ -151,8 +150,8 @@
 
                                 <ImageView
                                     android:id="@+id/emailImageView"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:layout_below="@+id/authorImageView"
                                     android:src="@drawable/email" />
 
@@ -162,7 +161,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@id/authorImageView"
                                     android:layout_marginStart="10dp"
-                                    android:layout_marginTop="5dp"
+                                    android:layout_marginTop="0dp"
                                     android:layout_toEndOf="@id/emailImageView"
                                     android:autoLink="email"
                                     android:text="@string/about_author_email"
@@ -172,8 +171,8 @@
 
                                 <ImageView
                                     android:id="@+id/homeImageView"
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
                                     android:layout_below="@+id/emailImageView"
                                     android:src="@drawable/home" />
 
@@ -183,14 +182,13 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@id/emailImageView"
                                     android:layout_marginStart="10dp"
-                                    android:layout_marginTop="5dp"
+                                    android:layout_marginTop="0dp"
                                     android:layout_toEndOf="@id/homeImageView"
                                     android:autoLink="web"
-                                    android:text="http://clyde.darkpack.net"
+                                    android:text="@string/about_author_hp"
                                     android:textColor="@android:color/secondary_text_dark"
                                     android:textColorLink="#FFCC2323"
-                                    android:textSize="16sp"
-                                    tools:ignore="HardcodedString" />
+                                    android:textSize="16sp" />
 
 
                             </RelativeLayout>
@@ -206,9 +204,9 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="10dp"
-                            android:elevation="10dp"
-                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                            card_view:cardCornerRadius="2dp">
+                            android:elevation="2dp"
+                            card_view:cardBackgroundColor="#FFF2F2F2"
+                            card_view:cardCornerRadius="0dp">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -241,6 +239,15 @@
                                     android:scaleType="fitXY"
                                     android:src="@drawable/chevron_down" />
 
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="4dp"
+                                    android:src="@drawable/line"
+                                    android:layout_below="@id/headlineCard2"
+                                    android:id="@+id/headline2"
+                                    android:elevation="0dp"
+                                    android:layout_marginBottom="4dp"/>
+
                                 <TextView
                                     android:id="@+id/holderAbout"
                                     android:layout_width="match_parent"
@@ -269,9 +276,9 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="10dp"
-                            android:elevation="10dp"
-                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                            card_view:cardCornerRadius="2dp">
+                            android:elevation="2dp"
+                            card_view:cardBackgroundColor="#FFF2F2F2"
+                            card_view:cardCornerRadius="0dp">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -304,6 +311,15 @@
                                     android:scaleType="fitXY"
                                     android:src="@drawable/chevron_down" />
 
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="4dp"
+                                    android:src="@drawable/line"
+                                    android:layout_below="@id/headlineCard3"
+                                    android:id="@+id/headline3"
+                                    android:elevation="0dp"
+                                    android:layout_marginBottom="4dp"/>
+
                                 <TextView
                                     android:id="@+id/holderThx"
                                     android:layout_width="match_parent"
@@ -329,9 +345,9 @@
                             android:layout_marginEnd="5dp"
                             android:layout_marginStart="5dp"
                             android:layout_marginTop="10dp"
-                            android:elevation="10dp"
-                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
-                            card_view:cardCornerRadius="2dp">
+                            android:elevation="2dp"
+                            card_view:cardBackgroundColor="#FFF2F2F2"
+                            card_view:cardCornerRadius="0dp">
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -363,6 +379,15 @@
                                     android:elevation="1dp"
                                     android:scaleType="fitXY"
                                     android:src="@drawable/chevron_down" />
+
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="4dp"
+                                    android:src="@drawable/line"
+                                    android:layout_below="@id/headlineCard4"
+                                    android:id="@+id/headline4"
+                                    android:elevation="0dp"
+                                    android:layout_marginBottom="4dp"/>
 
                                 <TextView
                                     android:id="@+id/holderLegal"
