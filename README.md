@@ -1,16 +1,17 @@
 # CrimsonCTRL
 
 ![alt text](https://universe.crimson.space/wp-content/uploads/2015/02/CrimsonCTRL1-150x150.png "CrimsonCTRL Icon")
-CrimsonCTRL is my native Android application. It includes all features that are also used within the CrimsonSpace but stripped down to the basics and focused on being as easy to use as possible.
+CrimsonCTRL is a native Android Application within a home automation system build upon a Particle Core. Itention was to build a sleek, stripped down, logical user interface to see on a spot all states of sensor, servers and services running in the CrimsonUniverse.
+CrimsonCTRL is build specific for my environment, but the application is OpenSource, see licence part of this file about further information. It should be easy to fork it and do some alterations to fit into your world.
 
  
 #### Features
 - Receiving the current temperature, state of the stone circle control relay and the resistance of the photo resistor
-- Long-press triggers the CrimsonCore to set the relay to on Voilà the stone circle is illuminated
-- Linux server and service information including server status, uptime and Apache2 service. Created with WebSocket.
+- Long-press triggers controls a relay to switch on a electronic device like a bulb or anything else
+- Linux server and service information including server status, uptime and Apache2 service
 - MJPEG Support; Fetches the MJPEG Stream from CrimsonHome
-- Temperature Graph; Get the trend from the weather temperature measured by CrimsonCore.
-- Settings; A settings page to add/alter/delete your enviroment. To make things easy it´s possible to scan a QR Code to get all variables set
+- Temperature Graph; Get the trend from the weather temperature measured by CrimsonCore
+- Settings; A settings page to add, edit or delete your enviroment. To make things easy it´s possible to scan a QR Code to get all variables set
 
 #### Licence
 Copyright (C) 2015  CrimsonClyde
