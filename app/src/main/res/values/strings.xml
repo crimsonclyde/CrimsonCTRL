@@ -44,4 +44,32 @@
     <string name="drawer_close">Close</string>
 
 
+    <!-- About / Info Activity -->
+    <string name="about_author">Author</string>
+    <string name="about_author_name">CrimsonClyde</string>
+    <string name="about_author_email">clyde@darkpack.net</string>
+    <string name="about_author_hp">http://clyde.darkpack.net</string>
+
+    <string name="about_app">Application Info</string>
+    <string name="about_app_text_collapsed">CrimsonCTRL is a native Android Application within a home automation system build upon a Particle Core. Itention was to build a sleek, stripped down, logical user interface to see on a spot all states of sensor, servers and services running in the CrimsonUniverse. </string>
+    <string name="about_app_text_expanded">CrimsonCTRL is a native Android Application within a home automation system build upon a Particle Core. Itention was to build a sleek, stripped down, logical user interface to see on a spot all states of sensor, servers and services running in the CrimsonUniverse. CrimsonCTRL is build specific for my environment, but the application is OpenSource, see licence part of this file about further information. It should be easy to fork it and do some alterations to fit into your world.
+\n\n
+Features
+\n\n
+- Receiving the current temperature, state of the stone circle control relay and the resistance of the photo resistor\n
+- Long-press triggers controls a relay to switch on a electronic device like a bulb or anything else\n
+- Linux server and service information including server status, uptime and Apache2 service\n
+- MJPEG Support; Fetches the MJPEG Stream from CrimsonHome\n
+- Temperature Graph; Get the trend from the weather temperature measured by CrimsonCore\n
+- Settings; A settings page to add, edit or delete your enviroment. To make things easy it´s possible to scan a QR Code to get all variables set</string>
+
+    <string name="about_thx">Acknowledgment</string>
+    <string name="about_thx_text_collapsed">Without a few people this application simple would not exist. These people direct me to my first build and helped me out with some questions I have to start this up.</string>
+    <string name="about_thx_text_expanded">Without a few people this application simple would not exist. These people direct me to my first build and helped me out with some questions I have to start this up.  <![CDATA[ <br/><b> ]]>4nt1g<![CDATA[</b>]]>, without you and your huge work on the httpsurlconnection and parsing the JSON Data I were totally lost.<![CDATA[ <br/><b> ]]>seelenfänger<![CDATA[</b>]]>, for your initial code example. You were right with your Java-Fu, my apologize.<![CDATA[ <br/><b> ]]>bonnie<![CDATA[</b>]]>, for just being there over the past years. &#9829;\n</string>
+
+    <string name="about_legal">Copyright</string>
+    <string name="about_legal_text_collapsed">&#0169; 2015 CrimsonClyde\n\nGNU Affero General Public License</string>
+    <string name="about_legal_text_expanded">&#0169; 2015 CrimsonClyde\n\nThis program is free software; you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\nYou should have received a copy of the GNU General Public License along with this program; if not, see http://www.gnu.org/licenses.\n\nAdditional permission under GNU GPL version 3 section 7</string>
+
+
 </resources>

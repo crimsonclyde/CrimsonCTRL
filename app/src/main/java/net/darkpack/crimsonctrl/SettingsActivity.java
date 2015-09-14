@@ -96,20 +96,20 @@ public class SettingsActivity extends AppCompatActivity {
                 switch (editPosition) {
                     case 1:
                         // Change Activity
-                        Intent intentCam = new Intent(SettingsActivity.this, MjpegActivity.class);
-                        startActivity(intentCam);
+                        Intent intentControl = new Intent(SettingsActivity.this, MainActivity.class);
+                        startActivity(intentControl);
                         break;
 
                     case 2:
                         // Change Activity
-                        Intent intentTempPlot = new Intent(SettingsActivity.this, TempActivity.class);
-                        startActivity(intentTempPlot);
+                        Intent intentCam = new Intent(SettingsActivity.this, MjpegActivity.class);
+                        startActivity(intentCam);
                         break;
 
                     case 3:
                         // Change Activity
-                        Intent intentSettings = new Intent(SettingsActivity.this, SettingsActivity.class);
-                        startActivity(intentSettings);
+                        Intent intentTemperature = new Intent(SettingsActivity.this, TempActivity.class);
+                        startActivity(intentTemperature);
                         break;
 
                     case 4:

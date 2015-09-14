@@ -1,219 +1,407 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.nirhart.parallaxscroll.views.ParallaxScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FF000000"
-    app:parallax_factor="1.9"
-    app:inner_parallax_factor="2.7"
-    app:alpha_factor="1.9"
-    app:parallax_views_num="4"
-    tools:context=".InfoActivity" >
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
-    <RelativeLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/maincontainer">
+        android:layout_height="?attr/actionBarSize"
+        app:popupTheme="@style/Theme.AppCompat"
+        app:theme="@style/Toolbar" />
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:minHeight="?attr/actionBarSize"
-            android:background="#FF660000"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v7.widget.Toolbar>
-
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/headcontainer"
-            android:paddingTop="?attr/actionBarSize">
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:background="#FF333333"
-                android:elevation="1dp" />
-
-            <TextView
-                android:id="@+id/crimsonHead"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_marginTop="1dp"
-                android:background="@drawable/item_background"
-                android:text="@string/crimson"
-                android:elevation="1dp" />
-
-        </RelativeLayout>
-
-    <!-- Author Card -->
-    <RelativeLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer"
+        style="@style/Theme.AppCompat.Light"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/headcontainer"
-        android:id="@+id/authorContainer">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/authorCard"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:elevation="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            card_view:cardBackgroundColor="#FF232323"
-            card_view:cardCornerRadius="2dp"
-            android:paddingTop="20dp">
+        <!-- Main View -->
+        <com.nirhart.parallaxscroll.views.ParallaxScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFFFF"
+            app:alpha_factor="1.9"
+            app:inner_parallax_factor="2.7"
+            app:parallax_factor="1.9"
+            app:parallax_views_num="1"
+            tools:context=".MainActivity">
+
+
+            <LinearLayout
+                android:id="@+id/maincontainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFFFF"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/seperatorAboveHead"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#FFFFFFFF"
+                    android:elevation="1dp" />
+
 
                 <RelativeLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:id="@+id/authorImageView"
-                        android:src="@drawable/accountboxoutline" />
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:background="#FF660000">
 
                     <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/authorTextView"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"
-                        android:text="CrimsonClyde"
-                        android:textSize="16sp"
-                        android:layout_toEndOf="@id/authorImageView"
-                        android:textColor="#FFCC2323"
-                        tools:ignore="HardcodedText"/>
-
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:id="@+id/emailImageView"
-                        android:src="@drawable/email"
-                        android:layout_below="@+id/authorImageView" />
+                        android:id="@+id/crimsonHead"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/item_background"
+                        android:elevation="1dp"
+                        android:text="@string/crimson" />
 
                     <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/emailTextView"
-                        android:autoLink="email"
-                        android:text="clyde@darkpack.net"
-                        android:textSize="16sp"
-                        android:layout_alignTop="@+id/emailImageView"
-                        android:layout_toEndOf="@+id/emailImageView"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"
-                        android:textColorLink="#FFCC2323"
-                        android:textColor="@android:color/secondary_text_dark"
-                        tools:ignore="HardcodedString"/>
+                        android:id="@+id/seperatorBelowHead"
+                        android:layout_width="match_parent"
+                        android:layout_height="1.5dp"
+                        android:layout_below="@id/crimsonHead"
+                        android:background="#FF000000"
+                        android:elevation="1dp" />
 
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:id="@+id/homeImageView"
-                        android:src="@drawable/home"
-                        android:layout_below="@+id/emailImageView"/>
 
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/homeTextView"
-                        android:autoLink="web"
-                        android:text="http://clyde.darkpack.net"
-                        android:textSize="16sp"
-                        android:layout_alignTop="@+id/homeImageView"
-                        android:layout_toEndOf="@+id/homeImageView"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="5dp"
-                        android:textColorLink="#FFCC2323"
-                        android:textColor="@android:color/secondary_text_dark"
-                        tools:ignore="HardcodedString" />
+                </RelativeLayout>
 
-                    </RelativeLayout>
 
-            </android.support.v7.widget.CardView>
-    </RelativeLayout>
+                <ScrollView
+                    android:id="@+id/srollcontainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-        <!-- Thankyou Card -->
-        <RelativeLayout
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <!-- CardView Author -->
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/card1"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="10dp"
+                            android:elevation="10dp"
+                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
+                            card_view:cardCornerRadius="2dp">
+
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/headlineCard1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginRight="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:height="30dp"
+                                    android:elegantTextHeight="true"
+                                    android:text="@string/about_author"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/primary_text_default_material_light"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <ImageView
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="fill_parent"
+                                    android:src="@drawable/line"
+                                    android:layout_below="@id/headlineCard1"
+                                    android:id="@+id/headline1"
+                                    android:elevation="10dp"/>
+
+
+
+
+                                <ImageView
+                                    android:id="@+id/authorImageView"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_below="@id/headline1"
+                                    android:src="@drawable/accountboxoutline" />
+
+                                <TextView
+                                    android:id="@+id/author"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="3dp"
+                                    android:layout_below="@id/headline1"
+                                    android:layout_toEndOf="@id/authorImageView"
+                                    android:elegantTextHeight="true"
+                                    android:elevation="1dp"
+                                    android:text="@string/about_author_name"
+                                    android:textColor="@android:color/primary_text_light_nodisable"
+                                    android:textColorHint="@android:color/secondary_text_light_nodisable"
+                                    android:textSize="16sp" />
+
+                                <ImageView
+                                    android:id="@+id/emailImageView"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_below="@+id/authorImageView"
+                                    android:src="@drawable/email" />
+
+                                <TextView
+                                    android:id="@+id/emailTextView"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/authorImageView"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_toEndOf="@id/emailImageView"
+                                    android:autoLink="email"
+                                    android:text="@string/about_author_email"
+                                    android:textColor="@android:color/secondary_text_dark"
+                                    android:textColorLink="#FFCC2323"
+                                    android:textSize="16sp" />
+
+                                <ImageView
+                                    android:id="@+id/homeImageView"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_below="@+id/emailImageView"
+                                    android:src="@drawable/home" />
+
+                                <TextView
+                                    android:id="@+id/homeTextView"
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/emailImageView"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_toEndOf="@id/homeImageView"
+                                    android:autoLink="web"
+                                    android:text="http://clyde.darkpack.net"
+                                    android:textColor="@android:color/secondary_text_dark"
+                                    android:textColorLink="#FFCC2323"
+                                    android:textSize="16sp"
+                                    tools:ignore="HardcodedString" />
+
+
+                            </RelativeLayout>
+
+                        </android.support.v7.widget.CardView>
+
+
+                        <!-- CardView About -->
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/card2"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="10dp"
+                            android:elevation="10dp"
+                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
+                            card_view:cardCornerRadius="2dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/headlineCard2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginRight="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:height="30dp"
+                                    android:elegantTextHeight="true"
+                                    android:text="@string/about_app"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/primary_text_default_material_light"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <ImageButton
+                                    android:id="@+id/buttonCard2"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@android:color/transparent"
+                                    android:elevation="1dp"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/chevron_down" />
+
+                                <TextView
+                                    android:id="@+id/holderAbout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_below="@id/headlineCard2"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginRight="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:elegantTextHeight="true"
+                                    android:elevation="1dp"
+                                    android:textColor="@android:color/primary_text_light_nodisable"
+                                    android:textColorHint="@android:color/secondary_text_light_nodisable"
+                                    android:textSize="12sp" />
+
+                            </RelativeLayout>
+
+
+                        </android.support.v7.widget.CardView>
+
+
+                        <!-- CardView  Acknowledgments-->
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/card3"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="10dp"
+                            android:elevation="10dp"
+                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
+                            card_view:cardCornerRadius="2dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/headlineCard3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginRight="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:height="30dp"
+                                    android:elegantTextHeight="true"
+                                    android:text="@string/about_thx"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/primary_text_default_material_light"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <ImageButton
+                                    android:id="@+id/buttonCard3"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@android:color/transparent"
+                                    android:elevation="1dp"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/chevron_down" />
+
+                                <TextView
+                                    android:id="@+id/holderThx"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_below="@id/headlineCard3"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginRight="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:elegantTextHeight="true"
+                                    android:elevation="1dp"
+                                    android:textColor="@android:color/primary_text_light_nodisable"
+                                    android:textColorHint="@android:color/secondary_text_light_nodisable"
+                                    android:textSize="12sp" />
+
+                            </RelativeLayout>
+                        </android.support.v7.widget.CardView>
+
+                        <!-- CardView  Legal-->
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/card4"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="10dp"
+                            android:elevation="10dp"
+                            card_view:cardBackgroundColor="@color/secondary_text_disabled_material_light"
+                            card_view:cardCornerRadius="2dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/headlineCard4"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginRight="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:height="30dp"
+                                    android:elegantTextHeight="true"
+                                    android:text="@string/about_legal"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/primary_text_default_material_light"
+                                    android:textSize="20sp"
+                                    android:textStyle="bold" />
+
+                                <ImageButton
+                                    android:id="@+id/buttonCard4"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_marginEnd="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:background="@android:color/transparent"
+                                    android:elevation="1dp"
+                                    android:scaleType="fitXY"
+                                    android:src="@drawable/chevron_down" />
+
+                                <TextView
+                                    android:id="@+id/holderLegal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_below="@id/headlineCard4"
+                                    android:layout_marginLeft="3dp"
+                                    android:layout_marginRight="3dp"
+                                    android:layout_marginTop="5dp"
+                                    android:elegantTextHeight="true"
+                                    android:elevation="1dp"
+                                    android:textColor="@android:color/primary_text_light_nodisable"
+                                    android:textColorHint="@android:color/secondary_text_light_nodisable"
+                                    android:textSize="12sp" />
+
+                            </RelativeLayout>
+
+
+
+                        </android.support.v7.widget.CardView>
+
+
+                    </LinearLayout>
+
+                </ScrollView>
+
+
+            </LinearLayout>
+        </com.nirhart.parallaxscroll.views.ParallaxScrollView>
+
+        <!-- Toolbar Drawer List View -->
+        <ListView
+            android:id="@+id/drawer_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/authorContainer"
-            android:id="@+id/thxContainer">
+            android:layout_height="210dp"
+            android:layout_gravity="start"
+            android:background="#FF660000"
+            android:choiceMode="singleChoice"
+            android:elevation="1dp" />
 
-
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/thankYouCard"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:elevation="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            card_view:cardBackgroundColor="#FF232323"
-            card_view:cardCornerRadius="2dp">
-
-
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/thankYouTextView"
-                        android:text="@string/thankyou_text"
-                        android:layout_marginTop="10dp"
-                        android:textColorLink="#FFCC2323"
-                        android:textColor="@android:color/secondary_text_dark"/>
-
-
-
-        </android.support.v7.widget.CardView>
-        </RelativeLayout>
-
-
-        <!-- Copyright Card -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/thxContainer">
-
-        <android.support.v7.widget.CardView
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/copyrightCard"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:elevation="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            card_view:cardBackgroundColor="#FF232323"
-            card_view:cardCornerRadius="2dp">
-
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/copyrightTextView"
-                        android:autoLink="all"
-                        android:text="@string/copyright"
-                        android:layout_marginTop="10dp"
-                        android:textColorLink="#FFCC2323"
-                        android:textColor="@android:color/secondary_text_dark" />
-
-        </android.support.v7.widget.CardView>
-    </RelativeLayout>
-
-
-</RelativeLayout>
-
-</com.nirhart.parallaxscroll.views.ParallaxScrollView>
+    </android.support.v4.widget.DrawerLayout>
+</LinearLayout>

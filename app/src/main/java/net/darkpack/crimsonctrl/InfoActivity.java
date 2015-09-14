@@ -15,23 +15,42 @@ package net.darkpack.crimsonctrl;
  * E-Mail : clyde_AT_darkpack.net
  */
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 
 public class InfoActivity extends AppCompatActivity {
+
+    // Declare variables & set some defaults
+    public static final String TAG = InfoActivity.class.getSimpleName();
+    protected String mActivityTitle = "Info";
+    DrawerLayout mDrawerLayout;
+    ListView mDrawerList;
+    ActionBarDrawerToggle mDrawerToggle;
+    String[] mDrawerListItems;
+    ImageButton expandCard2, expandCard3, expandCard4;
+    TextView holdCard2, holdCard3, holdCard4;
+
 
 
     @Override
@@ -39,12 +58,90 @@ public class InfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        // Toolbar instead of ActioneBar
+        // Assign Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Toolbar Navigation Drawer
+        mDrawerLayout       = (DrawerLayout) findViewById(R.id.drawer);
+        mDrawerList         = (ListView) findViewById(R.id.drawer_list);
+        mDrawerListItems    = getResources().getStringArray(R.array.drawer_items);
+
+        // Remove the current Activity from ArrayList
+        Log.d(TAG, "List of all activities    :" + Arrays.toString(mDrawerListItems));
+        List<String> list = new ArrayList<String>(Arrays.asList(mDrawerListItems));
+        list.removeAll(Arrays.asList(mActivityTitle));
+        mDrawerListItems = list.toArray(new String[0]);
+        Log.d(TAG, "Current activity removed  :" + Arrays.toString(mDrawerListItems));
+
+        // Create the Adapter
+        mDrawerList.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, mDrawerListItems));
+
+        // Summoning onClickListener
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int editPosition = position + 1;
+                //Toast.makeText(MainActivity.this, "You selected item " + editPosition, Toast.LENGTH_SHORT).show();
+                switch (editPosition) {
+                    case 1:
+                        // Change Activity
+                        Intent intentControl = new Intent(InfoActivity.this, MainActivity.class);
+                        startActivity(intentControl);
+                        break;
+
+                    case 2:
+                        // Change Activity
+                        Intent intentCam = new Intent(InfoActivity.this, MjpegActivity.class);
+                        startActivity(intentCam);
+                        break;
+
+                    case 3:
+                        // Change Activity
+                        Intent intentTemperature = new Intent(InfoActivity.this, TempActivity.class);
+                        startActivity(intentTemperature);
+                        break;
+
+                    case 4:
+                        // Change Activity
+                        Intent intentInfo = new Intent(InfoActivity.this, SettingsActivity.class);
+                        startActivity(intentInfo);
+                        break;
+
+                    default:
+                        break;
+                }
+                mDrawerLayout.closeDrawer(mDrawerList);
+            }
+        });
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                toolbar,
+                R.string.drawer_open,
+                R.string.drawer_close
+        ) {
+            public void onDrawerClosed(View v){
+                super.onDrawerClosed(v);
+                invalidateOptionsMenu();
+                syncState();
+            }
+            public void onDrawerOpened(View v){
+                super.onDrawerOpened(v);
+                invalidateOptionsMenu();
+                syncState();
+
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
+
+        // Initiate Toolbar
         setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.ic_launcher);
-        toolbar.setNavigationIcon(R.drawable.chevron_left);
         getSupportActionBar().setTitle("About");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         /* Header font adjustments */
         TextView crimsonHead = (TextView) findViewById(R.id.crimsonHead);
@@ -53,24 +150,100 @@ public class InfoActivity extends AppCompatActivity {
         crimsonHead.setTypeface(fontFace);
         crimsonHead.setGravity(Gravity.CENTER);
         crimsonHead.setTypeface(crimsonHead.getTypeface(), Typeface.BOLD);
-        crimsonHead.setTextColor(Color.parseColor("#FFCCCCCC"));
+        crimsonHead.setTextColor(Color.parseColor("#DBDBDB"));
         crimsonHead.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10.f);
 
-        /* TextView font adjustments */
-        TextView authorText    = (TextView) findViewById(R.id.authorTextView);
-        TextView emailText     = (TextView) findViewById(R.id.emailTextView);
-        TextView homeText      = (TextView) findViewById(R.id.homeTextView);
-        TextView thankYouText  = (TextView) findViewById(R.id.thankYouTextView);
-        TextView copyrightText = (TextView) findViewById(R.id.copyrightTextView);
-        authorText.setTypeface(fontFace);
-        emailText.setTypeface(fontFace);
-        homeText.setTypeface(fontFace);
-        thankYouText.setTypeface(fontFace);
-        copyrightText.setTypeface(fontFace);
 
-        /* Transform HTML Link*/
-        thankYouText.setText(Html.fromHtml(getString(R.string.thankyou_text)));
-        thankYouText.setMovementMethod(LinkMovementMethod.getInstance());
+        /*
+         * OnClickListener for collapse and expand CardView
+         */
+
+
+        // Card2 - Application Info
+        expandCard2 = (ImageButton) findViewById(R.id.buttonCard2);
+        holdCard2 = (TextView) findViewById(R.id.holderAbout);
+        final int COLLAPSED = 0;
+        final int EXPANDED = 1;
+
+        // Set defaults
+        holdCard2.setText(R.string.about_app_text_collapsed);
+        holdCard2.setTag(COLLAPSED);
+
+        // OnClicklistener including conditional statement
+        expandCard2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = (int) holdCard2.getTag();
+
+                if (i == EXPANDED) {
+                    holdCard2.setText(R.string.about_app_text_collapsed);
+                    holdCard2.setTag(COLLAPSED);
+
+                } else {
+                    holdCard2.setText(R.string.about_app_text_expanded);
+                    holdCard2.setTag(EXPANDED);
+                }
+
+            }
+        });
+
+        // Card3 - Application Info
+        expandCard3 = (ImageButton) findViewById(R.id.buttonCard3);
+        holdCard3 = (TextView) findViewById(R.id.holderThx);
+        final int COLLAPSED3 = 0;
+        final int EXPANDED3 = 1;
+
+        // Set defaults
+        holdCard3.setText(R.string.about_thx_text_collapsed);
+        holdCard3.setTag(COLLAPSED);
+
+        // OnClicklistener including conditional statement
+        expandCard3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = (int)holdCard3.getTag();
+
+                if (i == EXPANDED3 ) {
+                    holdCard3.setText(R.string.about_thx_text_collapsed);
+                    holdCard3.setTag(COLLAPSED3);
+
+                } else {
+                    holdCard3.setText(R.string.about_thx_text_expanded);
+                    holdCard3.setTag(EXPANDED3);
+                }
+
+            }
+        });
+
+        // Card4 - Legal
+        expandCard4 = (ImageButton) findViewById(R.id.buttonCard4);
+        holdCard4 = (TextView) findViewById(R.id.holderLegal);
+        final int COLLAPSED4 = 0;
+        final int EXPANDED4 = 1;
+
+        // Set defaults
+        holdCard4.setText(R.string.about_legal_text_collapsed);
+        holdCard4.setTag(COLLAPSED);
+
+        // OnClicklistener including conditional statement
+        expandCard4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int i = (int)holdCard4.getTag();
+
+                if (i == EXPANDED4 ) {
+                    holdCard4.setText(R.string.about_legal_text_collapsed);
+                    holdCard4.setTag(COLLAPSED4);
+
+                } else {
+                    holdCard4.setText(R.string.about_legal_text_expanded);
+                    holdCard4.setTag(EXPANDED4);
+                }
+
+            }
+        });
+
+
     }
 
 
@@ -87,49 +260,18 @@ public class InfoActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        // Handle presses on the action bar items
+        // Toolbar Navigation Drawer
         switch (item.getItemId()) {
-
-            // MainActivity
-            case R.id.action_main:
-                // Just for debugging
-                //Toast.makeText(this, "Starting - Main Activity", Toast.LENGTH_SHORT).show();        // Could be removed, only for debugging reasons
-
-                // Change Activity
-                Intent intentMain = new Intent(InfoActivity.this, MainActivity.class);
-                startActivity(intentMain);
-                break;
-
-            // Temperature Plot
-            case R.id.action_temp:
-                //Toast.makeText(this, "Starting - Temperature Plot Activity", Toast.LENGTH_SHORT).show();
-
-                // Change Activity
-                Intent intentTempPlot = new Intent(InfoActivity.this, TempActivity.class);
-                startActivity(intentTempPlot);
-                break;
-
-            // Camera Activity
-            case R.id.action_cam:
-                //Toast.makeText(this, "Starting - Camera Activity", Toast.LENGTH_SHORT).show();     // Could be removed, only for debugging reasons
-
-                // Change Activity
-                Intent intentControl = new Intent(InfoActivity.this, MjpegActivity.class);
-                startActivity(intentControl);
-                break;
-
-            // Settings action
-            case R.id.action_settings:
-                //Toast.makeText(this, "Starting Settings Activity", Toast.LENGTH_SHORT).show();      // Could be removed, only for debugging reasons
-
-                // Change Activity
-                Intent intentSettings = new Intent(InfoActivity.this, SettingsActivity.class);
-                startActivity(intentSettings);
-                break;
-
+            case android.R.id.home: {
+                if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+                    mDrawerLayout.closeDrawer(mDrawerList);
+                } else {
+                    mDrawerLayout.openDrawer(mDrawerList);
+                }
+                return true;
+            }
             default:
-                break;
+                return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 }
