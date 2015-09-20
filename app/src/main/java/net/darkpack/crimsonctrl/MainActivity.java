@@ -219,6 +219,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Toolbar Navigation Drawer
         switch (item.getItemId()){
+            case R.id.action_refresh:
+                // Simple refresh by calling theFramework
+                theFramework();
+                return true;
+
             case android.R.id.home: {
                 if (mDrawerLayout.isDrawerOpen(mDrawerList)){
                     mDrawerLayout.closeDrawer(mDrawerList);
@@ -226,6 +231,9 @@ public class MainActivity extends AppCompatActivity {
                     mDrawerLayout.openDrawer(mDrawerList);
                 }
                 return true;
+
+
+
             }
             default: return super.onOptionsItemSelected(item);
         }
@@ -430,59 +438,109 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG, "*******************    String Builder     *****************************");
                 String line = null;
+                int i = 0;
                 BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
                 Data data = new Data();
                 while ((line = br.readLine()) != null) {
-                    if (line.contains("event")) {
-                        //do nothing since the event tag is of no interest
-                        Log.d(TAG, "Loop: no needed content detected, try once again...");
+                    Log.d(TAG, "Buffered Reader: Line contains: " + line);
+
+                    if (line.isEmpty()) {
+                        // No content
+                        // Set a counter to avoid a a infinity loop
+                        i++;
+                        Log.d(TAG, "Event: No needed content detected, try once again...");
+                        Log.d(TAG, "IsEmpty: Line contains        :  " + line);
+                        Log.d(TAG, "IsEmpty: Counter contains     :" + i);
+
+
+                        if ( i >= 4 ) {
+                            // Injecting default values into the line variable
+                            // otherwise the app will crash
+                            Log.d(TAG, "IsEmpty: Reached 4 loop so injecting phantom values into line variable");
+                            data.setDate("1984-12-04");
+                            data.setTime("23:59:59");
+                            data.setWifi(999);
+                            data.setTemp("99");
+                            data.setPhoto(9999);
+                            data.setSCL(9);         // 1 off, 0 on
+                            break;
+                        }
                         continue;
                     }
-                    if (line.contains("data: ")) {
-                        //convert to JSON (stripping the beginning "data: "
-                        JSONObject jObject = new JSONObject(line.substring(6));
-                        String json_data = (String) jObject.get("data");
-                        //convert again
-                        jObject = new JSONObject(json_data);
 
-                        //reading photocell
-                        if (jObject.has("Photocell")) {
-                            data.setPhoto(jObject.getInt("Photocell"));
+                        if (line.contains("event")) {
+                            // Doing nothing since the event tag is of no interest
+                            // Set a counter to avoid a infinity loop
+                            i++;
+                            Log.d(TAG, "Event: No needed content detected, try once again...");
+                            Log.d(TAG, "Event: Line contains          :  " + line);
+                            Log.d(TAG, "Event: Counter contains       :" + i);
+
+
+                            if ( i >= 4 ) {
+                                // Injecting default values into the line variable
+                                // otherwise the app will crash
+                                Log.d(TAG, "Event: Reached 4 loop so injecting phantom values into line variable");
+                                data.setDate("1984-12-04");
+                                data.setTime("23:59:59");
+                                data.setWifi(999);
+                                data.setTemp("99");
+                                data.setPhoto(9999);
+                                data.setSCL(9);         // 1 off, 0 on
+                                break;
+                            }
+                            continue;
                         }
 
-                        //reading temp
-                        if (jObject.has("Temperature")) {
-                            data.setTemp(jObject.getString("Temperature"));
+
+
+                        if (line.contains("data: ")) {
+                            //convert to JSON (stripping the beginning "data: "
+                            Log.d(TAG, "Strip data: ");
+                            JSONObject jObject = new JSONObject(line.substring(6));
+                            String json_data = (String) jObject.get("data");
+                            //convert again
+                            jObject = new JSONObject(json_data);
+
+                            //reading photocell
+                            if (jObject.has("Photocell")) {
+                                data.setPhoto(jObject.getInt("Photocell"));
+                            }
+
+                            //reading temp
+                            if (jObject.has("Temperature")) {
+                                data.setTemp(jObject.getString("Temperature"));
+                            }
+                            //reading wifi signal strength (RSSI)
+                            if (jObject.has("RSSI")) {
+                                data.setWifi(jObject.getInt("RSSI"));
+                            }
+
+                            //reading StoneCircleLight (SCL)
+                            if (jObject.has("SCL")) {
+                                data.setSCL(jObject.getInt("SCL"));
+                            }
+
+                            //reading date
+                            if (jObject.has("Day")) {
+                                //build date
+                                data.setDate(jObject.getInt("Year") + "-" + jObject.getInt("Month") + "-" + jObject.getInt("Day"));
+                            }
+                            //reading time
+                            if (jObject.has("Hours")) {
+                                //build time
+                                data.setTime(jObject.getInt("Hours") + ":" + jObject.getInt("Minutes") + ":" + jObject.getInt("Seconds"));
+                            }
                         }
-                        //reading wifi signal strength (RSSI)
-                        if (jObject.has("RSSI")) {
-                            data.setWifi(jObject.getInt("RSSI"));
+                        //check if we have all needed data
+                        if (data.isReady()) {
+                            //exit endless connection
+                            Log.d(TAG, "*********************    Data received    ****************************");
+                            Log.d(TAG, "data:  " + data);
+                            Log.d(TAG, "Datestamp test:  " + data.getDatestamp());
+                            break;
                         }
 
-                        //reading StoneCircleLight (SCL)
-                        if (jObject.has("SCL")) {
-                            data.setSCL(jObject.getInt("SCL"));
-                        }
-
-                        //reading date
-                        if (jObject.has("Day")) {
-                            //build date
-                            data.setDate(jObject.getInt("Year") + "-" + jObject.getInt("Month") + "-" + jObject.getInt("Day"));
-                        }
-                        //reading time
-                        if (jObject.has("Hours")) {
-                            //build time
-                            data.setTime(jObject.getInt("Hours") + ":" + jObject.getInt("Minutes") + ":" + jObject.getInt("Seconds"));
-                        }
-                    }
-                    //check if we have all needed data
-                    if (data.isReady()) {
-                        //exit endless connection
-                        Log.d(TAG, "*********************    Data received    ****************************");
-                        Log.d(TAG, "data:  " + data);
-                        Log.d(TAG, "Datestamp test:  " + data.getDatestamp());
-                        break;
-                    }
                 }
 
                 // Now we create finalized containers for further usage
@@ -624,12 +682,14 @@ public class MainActivity extends AppCompatActivity {
                 // Update the TextViews
                 Log.d(TAG, "*****************    Update TextView       ***************************");
                 // Temperature State
-                if      (temp != null)  { updateTemp.setText(temp); }
-                else                    { updateTemp.setText("ERROR"); }
+                if      (temp != null)      { updateTemp.setText(temp); }
+                if      (temp.equals("99")) { updateTemp.setText("--"); }
+                else                        { updateTemp.setText("ERROR"); }
 
                 // Photoresistor State
-                if      (photo != null) { updatePhoto.setText(photo); }
-                else                    { updatePhoto.setText("ERROR"); }
+                if      (photo != null)          { updatePhoto.setText(photo); }
+                if      (photo.equals("9999"))   { updatePhoto.setText("--");  }
+                else                             { updatePhoto.setText("ERROR"); }
 
                 // StoneCircleLight
                 switch (scl) {
@@ -638,6 +698,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case "0":
                         updateScl.setText("On");
+                        break;
+                    case "9":
+                        updateScl.setText("--");
                         break;
                     default:
                         updateScl.setText("ERROR");
