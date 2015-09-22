@@ -453,42 +453,23 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "IsEmpty: Counter contains     :" + i);
 
 
-                        if ( i >= 4 ) {
+                        if ( i >= 7 ) {
                             // Injecting default values into the line variable
                             // otherwise the app will crash
                             Log.d(TAG, "IsEmpty: Reached 4 loop so injecting phantom values into line variable");
-                            data.setDate("1984-12-04");
-                            data.setTime("23:59:59");
-                            data.setWifi(999);
-                            data.setTemp("99");
-                            data.setPhoto(9999);
-                            data.setSCL(9);         // 1 off, 0 on
+                            data.setDate("1984-12-04");         // 1984-12-04
+                            data.setTime("23:59:59");           // 23:59:59
+                            data.setWifi(999);                  // 999
+                            data.setTemp("99");                 // 99
+                            data.setPhoto(9999);                // 9999
+                            data.setSCL(9);                     // 1 off, 0 on, 9 phantom
                             break;
                         }
                         continue;
                     }
 
                         if (line.contains("event")) {
-                            // Doing nothing since the event tag is of no interest
-                            // Set a counter to avoid a infinity loop
-                            i++;
-                            Log.d(TAG, "Event: No needed content detected, try once again...");
-                            Log.d(TAG, "Event: Line contains          :  " + line);
-                            Log.d(TAG, "Event: Counter contains       :" + i);
 
-
-                            if ( i >= 4 ) {
-                                // Injecting default values into the line variable
-                                // otherwise the app will crash
-                                Log.d(TAG, "Event: Reached 4 loop so injecting phantom values into line variable");
-                                data.setDate("1984-12-04");
-                                data.setTime("23:59:59");
-                                data.setWifi(999);
-                                data.setTemp("99");
-                                data.setPhoto(9999);
-                                data.setSCL(9);         // 1 off, 0 on
-                                break;
-                            }
                             continue;
                         }
 
@@ -682,14 +663,14 @@ public class MainActivity extends AppCompatActivity {
                 // Update the TextViews
                 Log.d(TAG, "*****************    Update TextView       ***************************");
                 // Temperature State
-                if      (temp != null)      { updateTemp.setText(temp); }
+                if      (temp.isEmpty())    { updateTemp.setText("ERROR"); }
                 if      (temp.equals("99")) { updateTemp.setText("--"); }
-                else                        { updateTemp.setText("ERROR"); }
+                else                        { updateTemp.setText(temp); }
 
                 // Photoresistor State
-                if      (photo != null)          { updatePhoto.setText(photo); }
+                if      (photo.isEmpty())        { updatePhoto.setText("ERROR"); }
                 if      (photo.equals("9999"))   { updatePhoto.setText("--");  }
-                else                             { updatePhoto.setText("ERROR"); }
+                else                             { updatePhoto.setText(photo); }
 
                 // StoneCircleLight
                 switch (scl) {
